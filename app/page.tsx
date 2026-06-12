@@ -7,14 +7,10 @@ type Situation = {
   sampleSlug: string;
 };
 
-type PlanningExample = {
-  slug: string;
+type SamplePlan = {
   title: string;
-  profile: string;
-  blindSpots: string[];
-  deliverable: string;
-  samplePdf: string;
-  sampleButtonText: string;
+  description: string;
+  slug: string;
 };
 
 export default function Home() {
@@ -22,282 +18,206 @@ export default function Home() {
     {
       title: "I own a business",
       description:
-        "Income is meaningful, taxes are inconsistent, and future growth or a sale may create larger planning decisions.",
+        "Coordinate business income, retirement plan design, estimated taxes, and personal tax strategy.",
       sampleSlug: "business-owner",
     },
     {
       title: "I am retiring soon",
       description:
-        "Roth conversions, withdrawals, RMDs, Social Security, Medicare IRMAA, and charitable giving may need to be coordinated.",
+        "Review Roth conversions, RMDs, Social Security, Medicare IRMAA, and withdrawal sequencing.",
       sampleSlug: "pre-retiree-large-iras",
     },
     {
       title: "I have a high income",
       description:
-        "High income can hide missed planning opportunities around investments, deductions, retirement plans, and charitable giving.",
+        "Look for tax planning opportunities around retirement plans, giving, investments, and deductions.",
       sampleSlug: "high-income-family",
     },
     {
       title: "I have taxable investments",
       description:
-        "Capital gains, losses, turnover, asset location, and concentrated positions can quietly shape your tax bill.",
+        "Identify capital gains exposure, tax-loss harvesting opportunities, and portfolio tax drag.",
       sampleSlug: "taxable-investment-account",
     },
     {
       title: "I give to charity",
       description:
-        "The asset you give, the timing of the gift, and the vehicle you use may matter as much as the amount you give.",
+        "Coordinate generosity with appreciated stock, donor-advised funds, bunching, and future QCDs.",
       sampleSlug: "charitable-giving",
     },
     {
       title: "I may sell something big",
       description:
-        "A business, property, stock position, or liquidity event should be reviewed before the transaction happens.",
+        "Plan before selling a business, property, stock position, or other highly appreciated asset.",
       sampleSlug: "large-capital-gain",
     },
   ];
 
-  const examples: PlanningExample[] = [
+  const samplePlans: SamplePlan[] = [
     {
-      slug: "high-income-family",
-      title: "The High-Income Family",
-      profile:
-        "A family earning significant W-2 income feels like taxes eat everything but does not know what else can be done.",
-      blindSpots: [
-        "Backdoor Roth or retirement contribution opportunities",
-        "Charitable bunching and donor-advised fund strategy",
-        "Taxable investment account efficiency",
-      ],
-      deliverable:
-        "A written summary showing potential planning opportunities, year-end action items, and CPA coordination notes.",
-      samplePdf: "/sample-plans/high-income-family-tax-plan-sample.pdf",
-      sampleButtonText: "View Sample High-Income Family Plan",
-    },
-    {
+      title: "Business Owner Tax Planning",
+      description:
+        "S-Corp income, retirement plan design, QBI, estimated taxes, and CPA coordination.",
       slug: "business-owner",
-      title: "The Business Owner",
-      profile:
-        "A business owner has strong income, inconsistent cash flow, and wants to know whether the business and personal tax strategy are connected.",
-      blindSpots: [
-        "Retirement plan design",
-        "Estimated tax coordination",
-        "Entity and compensation planning discussion points",
-      ],
-      deliverable:
-        "A planning PDF outlining business owner tax topics, retirement plan opportunities, and CPA questions.",
-      samplePdf: "/sample-plans/business-owner-tax-plan-sample.pdf",
-      sampleButtonText: "View Sample Business Owner Plan",
     },
     {
+      title: "Pre-Retiree with Large IRAs",
+      description:
+        "Roth conversion planning, future RMDs, Medicare IRMAA, and retirement tax mapping.",
       slug: "pre-retiree-large-iras",
-      title: "The Pre-Retiree with Large IRAs",
-      profile:
-        "A couple in their early 60s has built large pre-tax IRA balances and wants to avoid being forced into heavy RMDs later.",
-      blindSpots: [
-        "Roth conversion windows",
-        "RMD and QCD planning",
-        "Social Security and Medicare IRMAA awareness",
-      ],
-      deliverable:
-        "A retirement tax map showing which years may deserve deeper Roth conversion and withdrawal analysis.",
-      samplePdf: "/sample-plans/roth-conversion-ladder-sample.pdf",
-      sampleButtonText: "View Sample Roth Conversion Plan",
     },
     {
+      title: "High-Income Family Planning",
+      description:
+        "Backdoor Roth, charitable giving, tax-loss harvesting, asset location, and year-end planning.",
+      slug: "high-income-family",
+    },
+    {
+      title: "Large Capital Gain Planning",
+      description:
+        "Pre-sale planning, depreciation recapture, NIIT, charitable strategy, installment sale, and 1031 review.",
       slug: "large-capital-gain",
-      title: "The Large Capital Gain",
-      profile:
-        "A family expects to sell a property, business interest, or concentrated stock position that could create a major tax bill.",
-      blindSpots: [
-        "Capital gains planning before the sale",
-        "Charitable giving before the liquidity event",
-        "Estimated tax planning",
-      ],
-      deliverable:
-        "A pre-sale planning summary identifying tax-sensitive decisions to review before the transaction closes.",
-      samplePdf: "/sample-plans/large-capital-gain-tax-plan-sample.pdf",
-      sampleButtonText: "View Sample Capital Gain Plan",
     },
     {
+      title: "Investment Tax-Efficiency Review",
+      description:
+        "Unrealized gains, harvestable losses, asset location, tax drag, and concentrated positions.",
       slug: "taxable-investment-account",
-      title: "The Taxable Investment Account",
-      profile:
-        "A household has a large brokerage account but does not know whether the portfolio is being managed with tax efficiency in mind.",
-      blindSpots: [
-        "Tax-loss harvesting opportunities",
-        "Unrealized capital gains exposure",
-        "Asset location and turnover review",
-      ],
-      deliverable:
-        "An investment tax-efficiency review showing potential tax planning issues inside the taxable portfolio.",
-      samplePdf: "/sample-plans/taxable-investment-account-sample.pdf",
-      sampleButtonText: "View Sample Investment Tax Review",
     },
     {
+      title: "Charitable Giving Strategy",
+      description:
+        "Appreciated stock gifting, donor-advised fund bunching, deduction planning, and future QCDs.",
       slug: "charitable-giving",
-      title: "The Charitably Inclined Family",
-      profile:
-        "A family gives to church and charities every year but usually writes checks without reviewing the best way to give.",
-      blindSpots: [
-        "Appreciated asset gifting",
-        "Donor-advised fund strategy",
-        "Bunching deductions or QCD planning",
-      ],
-      deliverable:
-        "A charitable giving strategy summary showing potential ways to coordinate generosity with tax planning.",
-      samplePdf: "/sample-plans/charitable-giving-tax-plan-sample.pdf",
-      sampleButtonText: "View Sample Charitable Giving Plan",
     },
   ];
 
   return (
     <main className="min-h-screen bg-white text-slate-950">
-      <section className="border-b border-slate-200 bg-slate-950 px-4 py-5 text-white sm:px-6">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-          <Link href="/" className="text-base font-bold tracking-tight sm:text-lg">
-            Unity Tax Planning
+      <section className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 px-4 py-5 text-white backdrop-blur sm:px-6">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-blue-700 shadow-lg shadow-blue-900/30">
+              <span className="text-xl font-black tracking-tight text-white">
+                U
+              </span>
+            </div>
+
+            <div className="leading-tight">
+              <p className="text-xl font-black tracking-tight sm:text-2xl">
+                Unity
+              </p>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-300">
+                Tax Planning
+              </p>
+            </div>
           </Link>
 
-          <nav className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
+          <nav className="hidden items-center gap-10 text-base font-semibold text-slate-300 md:flex">
             <a href="#situations" className="hover:text-white">
               Situations
             </a>
-            <a href="#review" className="hover:text-white">
-              What We Review
-            </a>
-            <a href="#deliverable" className="hover:text-white">
+            <a href="#receive" className="hover:text-white">
               What You Receive
             </a>
-            <a href="#examples" className="hover:text-white">
-              Examples
+            <a href="#samples" className="hover:text-white">
+              Samples
             </a>
           </nav>
 
           <Link
             href="/tax-opportunity-scan"
-            className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-slate-100 sm:px-5"
+            className="rounded-full bg-white px-6 py-3 text-base font-black text-slate-950 shadow-lg hover:bg-blue-50 sm:px-8"
           >
             <span className="sm:hidden">Start</span>
-            <span className="hidden sm:inline">Find Blind Spots</span>
+            <span className="hidden sm:inline">Start Review</span>
           </Link>
         </div>
       </section>
 
-      <section className="bg-slate-950 px-4 pb-16 pt-14 text-white sm:px-6 md:pb-32 md:pt-28">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div>
-            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-blue-300 sm:text-sm">
-              The Tax Blind Spot Review
+      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-5xl">
+            <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-blue-300 sm:text-base">
+              Tax Planning Before It Becomes Tax History
             </p>
 
-            <h1 className="mb-6 max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl md:text-7xl">
-              Your tax return shows what happened. It does not show what you missed.
+            <h1 className="mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
+              Your tax return shows what happened.
+              <span className="block text-blue-300">
+                We help identify what may have been missed.
+              </span>
             </h1>
 
-            <p className="mb-8 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
+            <p className="mb-10 max-w-3xl text-xl font-medium leading-9 text-slate-300 sm:text-2xl">
               Unity Tax Planning helps business owners, high-income families,
-              and retirees identify tax planning blind spots before year-end
-              decisions, retirement transitions, investment gains, or business
-              events create costly surprises.
+              retirees, and investors uncover tax planning opportunities before
+              important decisions are made.
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row">
               <Link
                 href="/tax-opportunity-scan"
-                className="w-full rounded-xl bg-blue-500 px-6 py-4 text-center font-semibold text-white hover:bg-blue-400 sm:w-auto"
+                className="w-full rounded-2xl bg-blue-500 px-8 py-5 text-center text-lg font-black text-white shadow-xl shadow-blue-950/30 hover:bg-blue-400 sm:w-auto"
               >
-                Find My Tax Blind Spots
+                Start My Tax Blind Spot Review
               </Link>
 
               <a
-                href="#deliverable"
-                className="w-full rounded-xl border border-slate-700 px-6 py-4 text-center font-semibold text-white hover:bg-slate-900 sm:w-auto"
+                href="#samples"
+                className="w-full rounded-2xl border-2 border-slate-700 px-8 py-5 text-center text-lg font-black text-white hover:border-blue-400 hover:bg-slate-900 sm:w-auto"
               >
-                See What You Receive
+                View Sample Plans
               </a>
             </div>
 
-            <p className="mt-6 max-w-xl text-sm leading-6 text-slate-500">
-              This review is designed to identify planning areas worth
-              discussing. It is not tax preparation, legal advice, accounting
-              advice, or a guarantee of tax savings.
+            <p className="mt-8 max-w-2xl text-base leading-7 text-slate-500">
+              This is not tax preparation, legal advice, accounting advice, or a
+              guarantee of tax savings.
             </p>
-          </div>
-
-          <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl sm:p-8">
-            <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-blue-300 sm:text-sm">
-              Do Any of These Sound Familiar?
-            </p>
-
-            <div className="space-y-5">
-              {[
-                "I make good money, but I feel like taxes eat everything.",
-                "My CPA is good, but I only hear about taxes after the year is over.",
-                "I have a taxable investment account and do not know if it is tax-efficient.",
-                "I may sell a business, property, or stock position.",
-                "I am retiring soon and do not know which accounts to use first.",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="border-b border-slate-800 pb-5 last:border-b-0 last:pb-0"
-                >
-                  <p className="text-base font-semibold leading-7 text-white">
-                    “{item}”
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
 
-      <section id="situations" className="px-4 py-16 sm:px-6 md:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 grid gap-6 md:mb-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
-            <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-blue-600 sm:text-sm">
-                Choose Your Situation
-              </p>
-
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
-                Tax planning should start with what is actually happening in your life.
-              </h2>
-            </div>
-
-            <p className="text-base leading-8 text-slate-600 sm:text-lg">
-              Most tax planning websites list strategies. This review starts
-              with your situation, then determines which planning topics may
-              deserve attention.
+      <section id="situations" className="px-4 py-20 sm:px-6 md:py-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-14 max-w-4xl">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-600 sm:text-base">
+              Choose Your Situation
             </p>
+
+            <h2 className="text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
+              Start with what is actually happening in your life.
+            </h2>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {situations.map((situation) => (
               <article
                 key={situation.title}
-                className="rounded-3xl border border-slate-200 p-6 transition hover:border-blue-400 hover:shadow-lg sm:p-8"
+                className="rounded-[2rem] border-2 border-slate-300 bg-white p-8 shadow-lg transition hover:-translate-y-1 hover:border-blue-500 hover:shadow-2xl sm:p-9"
               >
-                <h3 className="mb-4 text-xl font-semibold sm:text-2xl">
+                <h3 className="mb-5 text-2xl font-black tracking-tight sm:text-3xl">
                   {situation.title}
                 </h3>
 
-                <p className="leading-7 text-slate-600">
+                <p className="text-lg font-medium leading-8 text-slate-600">
                   {situation.description}
                 </p>
 
-                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Link
                     href={`/example-plans/${situation.sampleSlug}`}
-                    className="flex w-full justify-center rounded-xl bg-blue-600 px-5 py-3 text-center text-sm font-semibold text-white hover:bg-blue-500 sm:w-auto"
+                    className="flex w-full justify-center rounded-xl bg-blue-600 px-5 py-4 text-center text-base font-black text-white hover:bg-blue-500 sm:w-auto"
                   >
                     View Sample
                   </Link>
 
                   <Link
                     href="/tax-opportunity-scan"
-                    className="flex w-full justify-center rounded-xl border border-slate-300 px-5 py-3 text-center text-sm font-semibold text-slate-700 hover:border-blue-500 hover:text-blue-600 sm:w-auto"
+                    className="flex w-full justify-center rounded-xl border-2 border-slate-300 px-5 py-4 text-center text-base font-black text-slate-800 hover:border-blue-500 hover:text-blue-600 sm:w-auto"
                   >
-                    Find Tax Blind Spots
+                    Find Blind Spots
                   </Link>
                 </div>
               </article>
@@ -306,305 +226,144 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="review" className="bg-slate-950 px-4 py-16 text-white sm:px-6 md:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 grid gap-6 md:mb-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-            <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-blue-300 sm:text-sm">
-                What We Review
-              </p>
+      <section
+        id="receive"
+        className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32"
+      >
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-14 max-w-4xl">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-300 sm:text-base">
+              What You Receive
+            </p>
 
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
-                A focused review of the areas most likely to affect your future tax picture.
-              </h2>
-            </div>
+            <h2 className="text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
+              A clear planning summary, not a generic tax checklist.
+            </h2>
 
-            <p className="text-base leading-8 text-slate-300 sm:text-lg">
-              A tax return records history. Planning looks for decisions that
-              may need to happen before the year ends, before a transaction
-              closes, or before retirement income begins.
+            <p className="mt-6 max-w-3xl text-xl font-medium leading-9 text-slate-300 sm:text-2xl">
+              The goal is to turn your tax return, financial details, and
+              planning questions into a more organized plan of action.
             </p>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-3">
-            <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
-              <h3 className="mb-5 text-xl font-semibold sm:text-2xl">
-                Income & Retirement
-              </h3>
-
-              <div className="space-y-3 text-slate-300">
-                <p>• Roth conversion opportunities</p>
-                <p>• IRA withdrawal sequencing</p>
-                <p>• RMD and QCD planning</p>
-                <p>• Social Security tax impact</p>
-                <p>• Medicare IRMAA awareness</p>
-              </div>
-            </div>
-
-            <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
-              <h3 className="mb-5 text-xl font-semibold sm:text-2xl">
-                Investments & Gains
-              </h3>
-
-              <div className="space-y-3 text-slate-300">
-                <p>• Taxable investment accounts</p>
-                <p>• Capital gains exposure</p>
-                <p>• Tax-loss harvesting topics</p>
-                <p>• Asset location</p>
-                <p>• Concentrated positions</p>
-              </div>
-            </div>
-
-            <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
-              <h3 className="mb-5 text-xl font-semibold sm:text-2xl">
-                Business, Giving & Legacy
-              </h3>
-
-              <div className="space-y-3 text-slate-300">
-                <p>• Business owner tax planning topics</p>
-                <p>• Retirement plan coordination</p>
-                <p>• Charitable giving strategy</p>
-                <p>• Estate and trust coordination</p>
-                <p>• Liquidity event planning</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:mt-10 sm:p-8">
-            <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-              <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                Your CPA prepares the return. Planning may require a different conversation.
-              </h3>
-
-              <p className="text-base leading-8 text-slate-300 sm:text-lg">
-                Many CPAs do excellent work preparing accurate tax returns.
-                Tax planning looks forward and connects income, investments,
-                retirement accounts, charitable giving, estate planning, business
-                ownership, and family goals before decisions are made.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="deliverable" className="bg-slate-100 px-4 py-16 sm:px-6 md:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 grid gap-6 md:mb-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
-            <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-blue-600 sm:text-sm">
-                What You Receive
-              </p>
-
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
-                A clear tax planning deliverable, not just a conversation.
-              </h2>
-            </div>
-
-            <p className="text-base leading-8 text-slate-600 sm:text-lg">
-              The review is designed to turn your tax return, financial details,
-              and planning questions into a clear set of observations,
-              opportunities, and next steps.
-            </p>
-          </div>
-
-          <div className="grid gap-5 lg:grid-cols-3">
-            <div className="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
-              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-blue-600 sm:text-sm">
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="rounded-[2rem] border-2 border-slate-700 bg-slate-900 p-8 shadow-2xl shadow-black/30 sm:p-9">
+              <p className="mb-5 text-sm font-black uppercase tracking-[0.24em] text-blue-300">
                 Step 01
               </p>
 
-              <h3 className="mb-4 text-xl font-semibold sm:text-2xl">
-                Secure Document Review
+              <h3 className="mb-5 text-2xl font-black sm:text-3xl">
+                Document Review
               </h3>
 
-              <p className="mb-6 leading-7 text-slate-600">
-                After the initial intake, you may be asked to provide documents
-                needed to understand the full tax picture.
+              <p className="text-lg font-medium leading-8 text-slate-300">
+                We review the information needed to understand your tax picture,
+                such as returns, income estimates, investment accounts, business
+                details, or charitable giving.
               </p>
-
-              <div className="space-y-3 text-slate-700">
-                <p>• Prior-year tax return</p>
-                <p>• Current-year income estimates</p>
-                <p>• Brokerage and retirement account statements</p>
-                <p>• Business income details, if applicable</p>
-                <p>• Charitable giving or liquidity event details</p>
-              </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
-              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-blue-600 sm:text-sm">
+            <div className="rounded-[2rem] border-2 border-blue-500 bg-slate-900 p-8 shadow-2xl shadow-blue-950/40 sm:p-9">
+              <p className="mb-5 text-sm font-black uppercase tracking-[0.24em] text-blue-300">
                 Step 02
               </p>
 
-              <h3 className="mb-4 text-xl font-semibold sm:text-2xl">
-                Tax Planning Analysis
+              <h3 className="mb-5 text-2xl font-black sm:text-3xl">
+                Planning Analysis
               </h3>
 
-              <p className="mb-6 leading-7 text-slate-600">
-                Your information is reviewed for planning opportunities,
-                coordination gaps, and areas that may deserve deeper analysis.
+              <p className="text-lg font-medium leading-8 text-slate-300">
+                We look for planning opportunities around income, investments,
+                retirement accounts, charitable giving, business ownership, or
+                upcoming transactions.
               </p>
-
-              <div className="space-y-3 text-slate-700">
-                <p>• Roth conversion opportunities</p>
-                <p>• Capital gains and tax-loss harvesting topics</p>
-                <p>• Charitable giving strategies</p>
-                <p>• Retirement withdrawal sequencing</p>
-                <p>• Business owner planning opportunities</p>
-              </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
-              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-blue-600 sm:text-sm">
+            <div className="rounded-[2rem] border-2 border-slate-700 bg-slate-900 p-8 shadow-2xl shadow-black/30 sm:p-9">
+              <p className="mb-5 text-sm font-black uppercase tracking-[0.24em] text-blue-300">
                 Step 03
               </p>
 
-              <h3 className="mb-4 text-xl font-semibold sm:text-2xl">
-                Written Tax Plan PDF
+              <h3 className="mb-5 text-2xl font-black sm:text-3xl">
+                Written Plan + Next Steps
               </h3>
 
-              <p className="mb-6 leading-7 text-slate-600">
-                When a deeper plan is appropriate, you receive a written tax
-                planning summary designed to make next steps clear.
+              <p className="text-lg font-medium leading-8 text-slate-300">
+                You receive a written planning summary with potential
+                opportunities, priority items, implementation notes, and areas
+                to coordinate with your CPA or other professionals.
               </p>
-
-              <div className="space-y-3 text-slate-700">
-                <p>• Tax Blind Spot Summary</p>
-                <p>• Potential tax savings opportunities</p>
-                <p>• Priority map of planning items</p>
-                <p>• CPA coordination notes</p>
-                <p>• Action list and review call</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 rounded-3xl bg-slate-950 p-6 text-white sm:mt-10 sm:p-8">
-            <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-              <div>
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-blue-300 sm:text-sm">
-                  Final Deliverable
-                </p>
-
-                <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl">
-                  The goal is to move from “I think I may be missing something”
-                  to a clear, organized plan of action.
-                </h3>
-              </div>
-
-              <div className="space-y-4 text-slate-300">
-                <p>
-                  The final plan may include potential tax savings strategies,
-                  estimated opportunity areas, planning risks, implementation
-                  priorities, and coordination notes for your CPA, attorney, or
-                  financial advisor.
-                </p>
-
-                <p>
-                  Potential opportunities depend on your specific facts and
-                  should be reviewed with qualified professionals before
-                  implementation.
-                </p>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="examples" className="px-4 py-16 sm:px-6 md:py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 grid gap-6 md:mb-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+      <section id="samples" className="px-4 py-20 sm:px-6 md:py-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-14 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
             <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-blue-600 sm:text-sm">
-                Hypothetical Planning Examples
+              <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-600 sm:text-base">
+                Sample Planning Scenarios
               </p>
 
-              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
-                What the process can look like from start to finish.
+              <h2 className="text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
+                See what a tax planning deliverable can look like.
               </h2>
             </div>
 
-            <p className="text-base leading-8 text-slate-600 sm:text-lg">
-              These examples are hypothetical and are designed to show how
-              different tax blind spots may turn into a written planning
-              summary, coordinated next steps, and a more complete wealth
-              conversation.
+            <p className="text-xl font-medium leading-9 text-slate-600 sm:text-2xl">
+              Each sample page explains the scenario, the planning issue, the
+              opportunities reviewed, and includes a sample report.
             </p>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-2">
-            {examples.map((example) => (
-              <article
-                key={example.title}
-                className="rounded-3xl border border-slate-200 p-6 sm:p-8"
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {samplePlans.map((plan) => (
+              <Link
+                key={plan.slug}
+                href={`/example-plans/${plan.slug}`}
+                className="group rounded-[2rem] border-2 border-slate-300 bg-white p-8 shadow-lg transition hover:-translate-y-1 hover:border-blue-500 hover:shadow-2xl sm:p-9"
               >
-                <h3 className="mb-4 text-xl font-semibold sm:text-2xl">
-                  {example.title}
+                <h3 className="mb-5 text-2xl font-black tracking-tight group-hover:text-blue-600 sm:text-3xl">
+                  {plan.title}
                 </h3>
 
-                <p className="mb-6 leading-7 text-slate-600">
-                  {example.profile}
+                <p className="mb-8 text-lg font-medium leading-8 text-slate-600">
+                  {plan.description}
                 </p>
 
-                <div className="mb-6 rounded-2xl bg-slate-100 p-5">
-                  <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-blue-600 sm:text-sm">
-                    Possible Blind Spots
-                  </p>
-
-                  <div className="space-y-2 text-sm leading-6 text-slate-700">
-                    {example.blindSpots.map((item) => (
-                      <p key={item}>• {item}</p>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-slate-200 p-5">
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-blue-600 sm:text-sm">
-                    Potential Deliverable
-                  </p>
-
-                  <p className="text-sm leading-6 text-slate-600">
-                    {example.deliverable}
-                  </p>
-
-                  <Link
-                    href={`/example-plans/${example.slug}`}
-                    className="mt-5 flex w-full justify-center rounded-xl bg-blue-600 px-5 py-3 text-center text-sm font-semibold text-white hover:bg-blue-500 sm:inline-flex sm:w-auto"
-                  >
-                    View Scenario Breakdown
-                  </Link>
-                </div>
-              </article>
+                <span className="text-base font-black text-blue-600">
+                  View Sample →
+                </span>
+              </Link>
             ))}
           </div>
 
-          <p className="mt-8 text-sm leading-6 text-slate-500">
-            These examples and sample plans are hypothetical and for
-            illustrative purposes only. They do not represent actual client
-            experiences and should not be interpreted as tax, legal, accounting,
-            investment, or financial advice. Potential tax savings, projections,
-            and planning opportunities depend on each household’s specific facts
-            and should be reviewed with qualified professionals before
-            implementation.
+          <p className="mt-10 text-base leading-7 text-slate-500">
+            Sample plans are hypothetical and for illustrative purposes only.
+            They do not represent actual client experiences and should not be
+            interpreted as tax, legal, accounting, investment, or financial
+            advice.
           </p>
         </div>
       </section>
 
-      <section className="bg-blue-600 px-4 py-16 text-white sm:px-6 md:py-20">
-        <div className="mx-auto max-w-4xl text-center">
-          <h2 className="mb-6 text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
-            Get a clearer picture of what your tax plan may be missing.
+      <section className="bg-blue-600 px-4 py-20 text-white sm:px-6 md:py-28">
+        <div className="mx-auto max-w-5xl text-center">
+          <h2 className="mb-8 text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
+            Ready to see what your tax plan may be missing?
           </h2>
 
-          <p className="mb-8 text-lg leading-8 text-blue-100 sm:text-xl">
+          <p className="mx-auto mb-10 max-w-3xl text-xl font-medium leading-9 text-blue-100 sm:text-2xl">
             Start with a short intake. If there is a fit, the next step is a
             deeper review of your documents and a written tax planning summary.
           </p>
 
           <Link
             href="/tax-opportunity-scan"
-            className="inline-block w-full rounded-xl bg-white px-6 py-4 font-semibold text-blue-600 hover:bg-blue-50 sm:w-auto"
+            className="inline-block w-full rounded-2xl bg-white px-8 py-5 text-lg font-black text-blue-600 shadow-xl hover:bg-blue-50 sm:w-auto"
           >
-            Find My Tax Blind Spots
+            Start My Tax Blind Spot Review
           </Link>
         </div>
       </section>
