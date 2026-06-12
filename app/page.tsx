@@ -105,7 +105,7 @@ export default function Home() {
 
             <div className="leading-tight">
               <p className="text-xl font-black tracking-tight sm:text-2xl">
-                Unity
+                UNITY
               </p>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-300">
                 Tax Planning
