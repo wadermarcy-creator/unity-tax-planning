@@ -94,7 +94,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white text-slate-950">
-      <section className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 px-4 py-5 text-white backdrop-blur sm:px-6">
+      <section className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 px-4 py-4 text-white backdrop-blur sm:px-6">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-blue-700 shadow-lg shadow-blue-900/30">
@@ -114,26 +114,56 @@ export default function Home() {
           </Link>
 
           <nav className="hidden items-center gap-10 text-base font-semibold text-slate-300 md:flex">
-  <a href="#situations" className="hover:text-white">
-    Situations
-  </a>
-  <a href="#receive" className="hover:text-white">
-    What You Receive
-  </a>
-  <a href="#samples" className="hover:text-white">
-    Samples
-  </a>
-  <Link href="/pricing" className="hover:text-white">
-    Pricing
-  </Link>
-</nav>
+            <a href="#situations" className="hover:text-white">
+              Situations
+            </a>
+            <a href="#receive" className="hover:text-white">
+              What You Receive
+            </a>
+            <a href="#samples" className="hover:text-white">
+              Samples
+            </a>
+            <Link href="/pricing" className="hover:text-white">
+              Pricing
+            </Link>
+          </nav>
 
           <Link
             href="/tax-opportunity-scan"
-            className="rounded-full bg-white px-6 py-3 text-base font-black text-slate-950 shadow-lg hover:bg-blue-50 sm:px-8"
+            className="rounded-full bg-white px-5 py-3 text-sm font-black text-slate-950 shadow-lg hover:bg-blue-50 sm:px-8 sm:text-base"
           >
             <span className="sm:hidden">Start</span>
             <span className="hidden sm:inline">Start Review</span>
+          </Link>
+        </div>
+
+        <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1 md:hidden">
+          <a
+            href="#situations"
+            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
+          >
+            Situations
+          </a>
+
+          <a
+            href="#receive"
+            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
+          >
+            What You Receive
+          </a>
+
+          <a
+            href="#samples"
+            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
+          >
+            Samples
+          </a>
+
+          <Link
+            href="/pricing"
+            className="shrink-0 rounded-full border border-blue-500 bg-blue-500 px-4 py-2 text-sm font-bold text-white"
+          >
+            Pricing
           </Link>
         </div>
       </section>
@@ -348,6 +378,92 @@ export default function Home() {
             interpreted as tax, legal, accounting, investment, or financial
             advice.
           </p>
+        </div>
+      </section>
+
+      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-28">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 max-w-4xl">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-300 sm:text-base">
+              Pricing
+            </p>
+
+            <h2 className="text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
+              Start with the right level of review.
+            </h2>
+
+            <p className="mt-6 max-w-3xl text-xl font-medium leading-9 text-slate-300 sm:text-2xl">
+              Choose the level of planning that fits your situation. More
+              complex needs can be discussed before any engagement begins.
+            </p>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="rounded-[2rem] border-2 border-slate-700 bg-slate-900 p-8 shadow-2xl shadow-black/30 sm:p-9">
+              <h3 className="mb-5 text-2xl font-black sm:text-3xl">
+                Tax Blind Spot Review
+              </h3>
+
+              <p className="mb-5 text-2xl font-black text-blue-300">
+                Starting at $995
+              </p>
+
+              <p className="text-lg font-medium leading-8 text-slate-300">
+                A focused review to identify potential tax planning
+                opportunities that may be easy to miss.
+              </p>
+            </div>
+
+            <div className="rounded-[2rem] border-2 border-blue-500 bg-slate-900 p-8 shadow-2xl shadow-blue-950/40 sm:p-9">
+              <p className="mb-5 inline-block rounded-full bg-blue-500 px-4 py-2 text-sm font-black uppercase tracking-[0.18em] text-white">
+                Most Popular
+              </p>
+
+              <h3 className="mb-5 text-2xl font-black sm:text-3xl">
+                Comprehensive Tax Planning
+              </h3>
+
+              <p className="mb-5 text-2xl font-black text-blue-300">
+                Starting at $3,500
+              </p>
+
+              <p className="text-lg font-medium leading-8 text-slate-300">
+                A deeper planning engagement for business owners, pre-retirees,
+                and families with multiple moving parts.
+              </p>
+            </div>
+
+            <div className="rounded-[2rem] border-2 border-slate-700 bg-slate-900 p-8 shadow-2xl shadow-black/30 sm:p-9">
+              <h3 className="mb-5 text-2xl font-black sm:text-3xl">
+                Advanced Planning
+              </h3>
+
+              <p className="mb-5 text-2xl font-black text-blue-300">
+                Custom Engagement
+              </p>
+
+              <p className="text-lg font-medium leading-8 text-slate-300">
+                For complex situations involving large gains, business sales,
+                estate planning, and multi-advisor coordination.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <Link
+              href="/pricing"
+              className="w-full rounded-2xl bg-blue-500 px-8 py-5 text-center text-lg font-black text-white shadow-xl shadow-blue-950/30 hover:bg-blue-400 sm:w-auto"
+            >
+              View Full Pricing
+            </Link>
+
+            <Link
+              href="/tax-opportunity-scan"
+              className="w-full rounded-2xl border-2 border-slate-700 px-8 py-5 text-center text-lg font-black text-white hover:border-blue-400 hover:bg-slate-900 sm:w-auto"
+            >
+              Start My Review
+            </Link>
+          </div>
         </div>
       </section>
 
