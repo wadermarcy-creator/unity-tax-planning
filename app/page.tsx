@@ -114,16 +114,19 @@ export default function Home() {
           </Link>
 
           <nav className="hidden items-center gap-10 text-base font-semibold text-slate-300 md:flex">
-            <a href="#situations" className="hover:text-white">
-              Situations
-            </a>
-            <a href="#receive" className="hover:text-white">
-              What You Receive
-            </a>
-            <a href="#samples" className="hover:text-white">
-              Samples
-            </a>
-          </nav>
+  <a href="#situations" className="hover:text-white">
+    Situations
+  </a>
+  <a href="#receive" className="hover:text-white">
+    What You Receive
+  </a>
+  <a href="#samples" className="hover:text-white">
+    Samples
+  </a>
+  <Link href="/pricing" className="hover:text-white">
+    Pricing
+  </Link>
+</nav>
 
           <Link
             href="/tax-opportunity-scan"
