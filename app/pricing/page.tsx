@@ -121,8 +121,8 @@ export default function PricingPage() {
             <Link href="/#situations" className="hover:text-white">
               Situations
             </Link>
-            <Link href="/#receive" className="hover:text-white">
-              What You Receive
+            <Link href="/how-it-works" className="hover:text-white">
+              How It Works
             </Link>
             <Link href="/#samples" className="hover:text-white">
               Samples
@@ -150,10 +150,10 @@ export default function PricingPage() {
           </Link>
 
           <Link
-            href="/#receive"
+            href="/how-it-works"
             className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
           >
-            What You Receive
+            How It Works
           </Link>
 
           <Link
@@ -431,12 +431,21 @@ export default function PricingPage() {
             begins.
           </p>
 
-          <Link
-            href="/tax-opportunity-scan"
-            className="inline-block w-full rounded-2xl bg-white px-8 py-5 text-lg font-black text-blue-600 shadow-xl hover:bg-blue-50 sm:w-auto"
-          >
-            Start My Tax Blind Spot Review
-          </Link>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Link
+              href="/tax-opportunity-scan"
+              className="inline-block w-full rounded-2xl bg-white px-8 py-5 text-lg font-black text-blue-600 shadow-xl hover:bg-blue-50 sm:w-auto"
+            >
+              Start My Tax Blind Spot Review
+            </Link>
+
+            <Link
+              href="/how-it-works"
+              className="inline-block w-full rounded-2xl border-2 border-blue-300 px-8 py-5 text-lg font-black text-white hover:bg-blue-500 sm:w-auto"
+            >
+              See How It Works
+            </Link>
+          </div>
         </div>
       </section>
 

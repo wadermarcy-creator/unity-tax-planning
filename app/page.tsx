@@ -117,9 +117,9 @@ export default function Home() {
             <a href="#situations" className="hover:text-white">
               Situations
             </a>
-            <a href="#receive" className="hover:text-white">
-              What You Receive
-            </a>
+            <Link href="/how-it-works" className="hover:text-white">
+              How It Works
+            </Link>
             <a href="#samples" className="hover:text-white">
               Samples
             </a>
@@ -145,12 +145,12 @@ export default function Home() {
             Situations
           </a>
 
-          <a
-            href="#receive"
+          <Link
+            href="/how-it-works"
             className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
           >
-            What You Receive
-          </a>
+            How It Works
+          </Link>
 
           <a
             href="#samples"
@@ -327,6 +327,15 @@ export default function Home() {
                 to coordinate with your CPA or other professionals.
               </p>
             </div>
+          </div>
+
+          <div className="mt-10">
+            <Link
+              href="/how-it-works"
+              className="inline-block w-full rounded-2xl border-2 border-slate-700 px-8 py-5 text-center text-lg font-black text-white hover:border-blue-400 hover:bg-slate-900 sm:w-auto"
+            >
+              See How It Works
+            </Link>
           </div>
         </div>
       </section>
