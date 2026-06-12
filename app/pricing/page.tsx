@@ -111,24 +111,32 @@ export default function PricingPage() {
               <p className="text-xl font-black tracking-tight sm:text-2xl">
                 UNITY
               </p>
+
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-300">
                 Tax Planning
               </p>
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-10 text-base font-semibold text-slate-300 md:flex">
+          <nav className="hidden items-center gap-8 text-base font-semibold text-slate-300 lg:flex">
             <Link href="/#situations" className="hover:text-white">
               Situations
             </Link>
+
             <Link href="/how-it-works" className="hover:text-white">
               How It Works
             </Link>
+
             <Link href="/#samples" className="hover:text-white">
               Samples
             </Link>
+
             <Link href="/pricing" className="text-white">
               Pricing
+            </Link>
+
+            <Link href="/faq" className="hover:text-white">
+              FAQ
             </Link>
           </nav>
 
@@ -141,7 +149,7 @@ export default function PricingPage() {
           </Link>
         </div>
 
-        <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1 md:hidden">
+        <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1 lg:hidden">
           <Link
             href="/#situations"
             className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
@@ -168,6 +176,13 @@ export default function PricingPage() {
             className="shrink-0 rounded-full border border-blue-500 bg-blue-500 px-4 py-2 text-sm font-bold text-white"
           >
             Pricing
+          </Link>
+
+          <Link
+            href="/faq"
+            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
+          >
+            FAQ
           </Link>
         </div>
       </section>
@@ -325,9 +340,11 @@ export default function PricingPage() {
               <div className="p-4 text-xs font-black uppercase tracking-[0.16em] sm:p-6 sm:text-sm">
                 Service
               </div>
+
               <div className="p-4 text-center text-xs font-black uppercase tracking-[0.16em] sm:p-6 sm:text-sm">
                 Tax Prep
               </div>
+
               <div className="p-4 text-center text-xs font-black uppercase tracking-[0.16em] sm:p-6 sm:text-sm">
                 Tax Planning
               </div>
@@ -341,9 +358,11 @@ export default function PricingPage() {
                 <div className="p-4 text-sm font-bold text-white sm:p-6 sm:text-base">
                   {service}
                 </div>
+
                 <div className="p-4 text-center text-xl font-black text-slate-500 sm:p-6">
                   {taxPrep}
                 </div>
+
                 <div className="p-4 text-center text-xl font-black text-blue-300 sm:p-6">
                   {taxPlanning}
                 </div>
@@ -376,6 +395,7 @@ export default function PricingPage() {
               <h3 className="mb-4 text-2xl font-black">
                 Is this tax preparation?
               </h3>
+
               <p className="text-lg font-medium leading-8 text-slate-600">
                 No. This is proactive tax planning. Tax preparation is focused
                 on filing a return. Tax planning is focused on identifying
@@ -387,6 +407,7 @@ export default function PricingPage() {
               <h3 className="mb-4 text-2xl font-black">
                 Do you replace my CPA?
               </h3>
+
               <p className="text-lg font-medium leading-8 text-slate-600">
                 No. The goal is to work alongside your CPA or tax preparer by
                 providing planning ideas, coordination notes, and financial
@@ -398,6 +419,7 @@ export default function PricingPage() {
               <h3 className="mb-4 text-2xl font-black">
                 What if I need more than the starting review?
               </h3>
+
               <p className="text-lg font-medium leading-8 text-slate-600">
                 If your situation requires more advanced planning, that will be
                 discussed before any engagement begins. You will know the scope
@@ -409,12 +431,22 @@ export default function PricingPage() {
               <h3 className="mb-4 text-2xl font-black">
                 Is tax savings guaranteed?
               </h3>
+
               <p className="text-lg font-medium leading-8 text-slate-600">
                 No. Tax planning can identify opportunities, tradeoffs, and
                 timing strategies, but there is no guarantee of savings or a
                 specific tax result.
               </p>
             </div>
+          </div>
+
+          <div className="mt-10">
+            <Link
+              href="/faq"
+              className="inline-block w-full rounded-2xl border-2 border-slate-300 bg-white px-8 py-5 text-center text-lg font-black text-slate-950 shadow-lg hover:border-blue-500 hover:text-blue-600 sm:w-auto"
+            >
+              View All Frequently Asked Questions
+            </Link>
           </div>
         </div>
       </section>

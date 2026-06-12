@@ -113,18 +113,25 @@ export default function Home() {
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-10 text-base font-semibold text-slate-300 md:flex">
+          <nav className="hidden items-center gap-8 text-base font-semibold text-slate-300 lg:flex">
             <a href="#situations" className="hover:text-white">
               Situations
             </a>
+
             <Link href="/how-it-works" className="hover:text-white">
               How It Works
             </Link>
+
             <a href="#samples" className="hover:text-white">
               Samples
             </a>
+
             <Link href="/pricing" className="hover:text-white">
               Pricing
+            </Link>
+
+            <Link href="/faq" className="hover:text-white">
+              FAQ
             </Link>
           </nav>
 
@@ -137,7 +144,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1 md:hidden">
+        <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1 lg:hidden">
           <a
             href="#situations"
             className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
@@ -161,9 +168,16 @@ export default function Home() {
 
           <Link
             href="/pricing"
-            className="shrink-0 rounded-full border border-blue-500 bg-blue-500 px-4 py-2 text-sm font-bold text-white"
+            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
           >
             Pricing
+          </Link>
+
+          <Link
+            href="/faq"
+            className="shrink-0 rounded-full border border-blue-500 bg-blue-500 px-4 py-2 text-sm font-bold text-white"
+          >
+            FAQ
           </Link>
         </div>
       </section>
@@ -467,10 +481,10 @@ export default function Home() {
             </Link>
 
             <Link
-              href="/tax-opportunity-scan"
+              href="/faq"
               className="w-full rounded-2xl border-2 border-slate-700 px-8 py-5 text-center text-lg font-black text-white hover:border-blue-400 hover:bg-slate-900 sm:w-auto"
             >
-              Start My Review
+              Read Frequently Asked Questions
             </Link>
           </div>
         </div>

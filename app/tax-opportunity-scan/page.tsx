@@ -48,8 +48,13 @@ export default function TaxOpportunityScanPage() {
     if (urgency === "Within 3 months") score += 10;
     if (urgency === "This year") score += 5;
 
-    if (desiredService === "Comprehensive Tax Planning Review") score += 15;
-    if (desiredService === "Advanced Planning or Family Office Coordination") {
+    if (desiredService === "Comprehensive Tax Planning Review") {
+      score += 15;
+    }
+
+    if (
+      desiredService === "Advanced Planning or Family Office Coordination"
+    ) {
       score += 25;
     }
 
@@ -210,13 +215,14 @@ export default function TaxOpportunityScanPage() {
               <p className="text-xl font-black tracking-tight sm:text-2xl">
                 UNITY
               </p>
+
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-300">
                 Tax Planning
               </p>
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-10 text-base font-semibold text-slate-300 md:flex">
+          <nav className="hidden items-center gap-8 text-base font-semibold text-slate-300 lg:flex">
             <Link href="/#situations" className="hover:text-white">
               Situations
             </Link>
@@ -232,6 +238,10 @@ export default function TaxOpportunityScanPage() {
             <Link href="/pricing" className="hover:text-white">
               Pricing
             </Link>
+
+            <Link href="/faq" className="hover:text-white">
+              FAQ
+            </Link>
           </nav>
 
           <Link
@@ -242,7 +252,7 @@ export default function TaxOpportunityScanPage() {
           </Link>
         </div>
 
-        <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1 md:hidden">
+        <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1 lg:hidden">
           <Link
             href="/#situations"
             className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
@@ -269,6 +279,13 @@ export default function TaxOpportunityScanPage() {
             className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
           >
             Pricing
+          </Link>
+
+          <Link
+            href="/faq"
+            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
+          >
+            FAQ
           </Link>
         </div>
       </section>
@@ -330,7 +347,9 @@ export default function TaxOpportunityScanPage() {
                   </div>
 
                   <div>
-                    <p className="font-black text-white">Secure document review</p>
+                    <p className="font-black text-white">
+                      Secure document review
+                    </p>
                     <p className="mt-1 leading-7 text-slate-300">
                       Relevant documents are requested through a secure process,
                       not through this intake form.
@@ -590,7 +609,9 @@ export default function TaxOpportunityScanPage() {
                     <option>Plan for a large sale or capital gain</option>
                     <option>Improve investment tax efficiency</option>
                     <option>Give to charity more efficiently</option>
-                    <option>Coordinate tax, estate, and financial planning</option>
+                    <option>
+                      Coordinate tax, estate, and financial planning
+                    </option>
                     <option>I am not sure yet</option>
                   </select>
                 </div>
