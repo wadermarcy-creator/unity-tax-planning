@@ -35,10 +35,7 @@ export default function DisclosureFooter() {
             aria-label="Footer navigation"
             className="flex max-w-xl flex-wrap gap-x-6 gap-y-3 text-sm font-bold"
           >
-            <Link
-              href="/how-it-works"
-              className="transition hover:text-white"
-            >
+            <Link href="/how-it-works" className="transition hover:text-white">
               How It Works
             </Link>
 
@@ -46,7 +43,7 @@ export default function DisclosureFooter() {
               Pricing
             </Link>
 
-            <Link href="/#samples" className="transition hover:text-white">
+            <Link href="/example-plans" className="transition hover:text-white">
               Sample Plans
             </Link>
 
@@ -91,17 +88,17 @@ export default function DisclosureFooter() {
             </h2>
 
             <p>
-              Wade Marcy is also associated with Unity Financial Planning
-              Group, a registered investment adviser. Unity Tax Planning and
-              Unity Financial Planning Group are separate businesses that
-              provide different services under separate agreements.
+              Wade Marcy is also associated with Unity Financial Planning Group,
+              a registered investment adviser. Unity Tax Planning and Unity
+              Financial Planning Group are separate businesses that provide
+              different services under separate agreements.
             </p>
 
             <p className="mt-3">
               Unity Tax Planning does not provide investment advisory services,
               portfolio management, securities recommendations, or investment
-              implementation. Investment advisory services, when applicable,
-              are offered separately through Unity Financial Planning Group.
+              implementation. Investment advisory services, when applicable, are
+              offered separately through Unity Financial Planning Group.
             </p>
           </section>
 
@@ -142,8 +139,8 @@ export default function DisclosureFooter() {
               general educational, analytical, and planning purposes. Unless
               expressly included in a separate written engagement, Unity Tax
               Planning does not provide tax-return preparation, legal advice,
-              legal document preparation, accounting services, audit services,
-              or legal opinions.
+              legal document preparation, accounting services, audit services, or
+              legal opinions.
             </p>
 
             <p className="mt-3">
@@ -183,8 +180,8 @@ export default function DisclosureFooter() {
             <p>
               Tax-planning opportunities depend on each client&apos;s individual
               circumstances, applicable law, timing, implementation, and the
-              involvement of other professional advisers. Unity Tax Planning
-              does not guarantee tax savings, investment performance, financial
+              involvement of other professional advisers. Unity Tax Planning does
+              not guarantee tax savings, investment performance, financial
               results, or any particular planning outcome.
             </p>
           </section>
@@ -195,10 +192,10 @@ export default function DisclosureFooter() {
             </h2>
 
             <p>
-              Sample plans, scenarios, calculations, illustrations, case
-              studies, and planning examples are hypothetical and are provided
-              solely for educational purposes. They do not represent actual
-              client experiences unless expressly stated otherwise.
+              Sample plans, scenarios, calculations, illustrations, case studies,
+              and planning examples are hypothetical and are provided solely for
+              educational purposes. They do not represent actual client
+              experiences unless expressly stated otherwise.
             </p>
 
             <p className="mt-3">
@@ -214,16 +211,16 @@ export default function DisclosureFooter() {
             </h2>
 
             <p>
-              Artificial intelligence and other technology-assisted tools may
-              be used to organize information, summarize documents, identify
+              Artificial intelligence and other technology-assisted tools may be
+              used to organize information, summarize documents, identify
               possible planning topics, produce preliminary calculations, or
               support internal analysis.
             </p>
 
             <p className="mt-3">
               These tools do not replace professional judgment. AI-generated or
-              technology-assisted output may be incomplete or contain errors
-              and should be reviewed by an appropriately qualified professional
+              technology-assisted output may be incomplete or contain errors and
+              should be reviewed by an appropriately qualified professional
               before being relied upon or implemented.
             </p>
           </section>
@@ -255,9 +252,9 @@ export default function DisclosureFooter() {
             <p>
               Do not submit Social Security numbers, complete account numbers,
               passwords, complete tax returns, medical information, or other
-              highly sensitive personal information through general website
-              forms or ordinary email. Secure document-submission instructions
-              will be provided when appropriate.
+              highly sensitive personal information through general website forms
+              or ordinary email. Secure document-submission instructions will be
+              provided when appropriate.
             </p>
           </section>
 
@@ -270,8 +267,8 @@ export default function DisclosureFooter() {
               Unity Tax Planning may coordinate with a client&apos;s CPA,
               accountant, attorney, investment adviser, insurance professional,
               or other adviser when authorized by the client. Each professional
-              remains independently responsible for the services and advice
-              they provide.
+              remains independently responsible for the services and advice they
+              provide.
             </p>
           </section>
         </div>
@@ -299,8 +296,8 @@ export default function DisclosureFooter() {
 
           <p className="max-w-2xl lg:text-right">
             Information is subject to change without notice. This disclosure
-            should be read together with the applicable engagement agreement
-            and any required regulatory disclosures.
+            should be read together with the applicable engagement agreement and
+            any required regulatory disclosures.
           </p>
         </div>
       </div>

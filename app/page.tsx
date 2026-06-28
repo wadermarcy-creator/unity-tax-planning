@@ -1,26 +1,31 @@
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 import DisclosureFooter from "@/components/DisclosureFooter";
 
 const process = [
   {
     step: "01",
     title: "Discover",
-    description: "We learn about your income, business, investments, goals, and concerns.",
+    description:
+      "We learn about your income, business, investments, goals, and concerns.",
   },
   {
     step: "02",
     title: "Analyze",
-    description: "We review your situation for proactive tax planning opportunities.",
+    description:
+      "We review your situation for proactive tax planning opportunities.",
   },
   {
     step: "03",
     title: "Strategize",
-    description: "We prioritize the strategies that may have the greatest impact.",
+    description:
+      "We prioritize the strategies that may have the greatest impact.",
   },
   {
     step: "04",
     title: "Implement",
-    description: "We help coordinate next steps with your CPA, attorney, and advisory team.",
+    description:
+      "We help coordinate next steps with your CPA, attorney, and advisory team.",
   },
 ];
 
@@ -57,51 +62,8 @@ const strategies = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#030817] text-white">
-      {/* NAV */}
-      <header className="border-b border-white/10 bg-[#080d1d]">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-lg font-bold text-white shadow-lg shadow-blue-600/30">
-              U
-            </div>
-            <div>
-              <div className="text-xl font-extrabold tracking-tight text-white">
-                UNITY
-              </div>
-              <div className="text-xs font-bold tracking-[0.28em] text-blue-300">
-                TAX PLANNING
-              </div>
-            </div>
-          </Link>
+      <Navbar />
 
-          <nav className="hidden items-center gap-8 text-sm font-semibold text-slate-300 md:flex">
-            <Link href="/situations" className="transition hover:text-white">
-              Situations
-            </Link>
-            <Link href="/how-it-works" className="transition hover:text-white">
-              How It Works
-            </Link>
-            <Link href="/samples" className="transition hover:text-white">
-              Samples
-            </Link>
-            <Link href="/pricing" className="transition hover:text-white">
-              Pricing
-            </Link>
-            <Link href="/faq" className="transition hover:text-white">
-              FAQ
-            </Link>
-          </nav>
-
-          <Link
-            href="/tax-opportunity-scan"
-            className="rounded-full bg-white px-6 py-3 text-sm font-bold text-[#030817] shadow-sm transition hover:bg-blue-100"
-          >
-            Start My Assessment
-          </Link>
-        </div>
-      </header>
-
-      {/* HERO */}
       <section className="mx-auto grid max-w-7xl items-center gap-14 px-6 py-24 lg:grid-cols-[1.05fr_0.95fr] lg:py-32">
         <div>
           <p className="mb-7 text-sm font-bold uppercase tracking-[0.32em] text-blue-300">
@@ -114,7 +76,10 @@ export default function Home() {
 
           <p className="mt-8 max-w-2xl text-xl leading-9 text-slate-300">
             Tax preparation records history. Tax strategy changes it. Start with
-            a <strong className="text-white">Unity Tax Opportunity Assessment™</strong>{" "}
+            a{" "}
+            <strong className="text-white">
+              Unity Tax Opportunity Assessment™
+            </strong>{" "}
             and discover opportunities while there is still time to act.
           </p>
 
@@ -127,10 +92,10 @@ export default function Home() {
             </Link>
 
             <Link
-              href="/samples"
+              href="/example-plans"
               className="rounded-full border border-white/15 bg-white/5 px-8 py-4 text-center text-base font-bold text-white transition hover:bg-white/10"
             >
-              View Sample Plans
+              See Sample Tax Plans
             </Link>
           </div>
         </div>
@@ -167,7 +132,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHY UNITY */}
       <section className="border-y border-white/10 bg-white text-[#030817]">
         <div className="mx-auto max-w-7xl px-6 py-24">
           <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr]">
@@ -200,7 +164,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FRAMEWORK */}
       <section className="bg-[#030817] px-6 py-24">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
@@ -233,7 +196,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHO WE HELP */}
       <section className="bg-white px-6 py-24 text-[#030817]">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
@@ -263,7 +225,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* STRATEGIES */}
       <section className="bg-slate-50 px-6 py-24 text-[#030817]">
         <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
@@ -292,7 +253,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="bg-[#030817] px-6 py-24">
         <div className="mx-auto max-w-5xl text-center">
           <p className="text-sm font-bold uppercase tracking-[0.32em] text-blue-300">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 import DisclosureFooter from "@/components/DisclosureFooter";
 
 export const metadata: Metadata = {
@@ -15,95 +16,10 @@ export const metadata: Metadata = {
   },
 };
 
-const navigationItems = [
-  {
-    label: "Situations",
-    href: "/#situations",
-  },
-  {
-    label: "How It Works",
-    href: "/how-it-works",
-  },
-  {
-    label: "Samples",
-    href: "/#samples",
-  },
-  {
-    label: "Pricing",
-    href: "/pricing",
-  },
-  {
-    label: "FAQ",
-    href: "/faq",
-  },
-];
-
 export default function PrivacyPolicyPage() {
   return (
     <main className="min-h-screen bg-white text-slate-950">
-      <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 text-white shadow-xl shadow-slate-950/10 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 sm:px-6">
-          <Link href="/" className="flex shrink-0 items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-blue-700 shadow-lg shadow-blue-950/40">
-              <span className="text-xl font-black">U</span>
-            </div>
-
-            <div className="leading-tight">
-              <p className="text-xl font-black tracking-tight">UNITY</p>
-
-              <p className="text-[0.65rem] font-bold uppercase tracking-[0.24em] text-blue-300">
-                Tax Planning
-              </p>
-            </div>
-          </Link>
-
-          <nav
-            aria-label="Primary navigation"
-            className="hidden items-center gap-7 lg:flex"
-          >
-            {navigationItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="text-sm font-bold text-slate-300 transition hover:text-white"
-              >
-                {item.label}
-              </Link>
-            ))}
-
-            <Link
-              href="/tax-opportunity-scan"
-              className="rounded-full bg-blue-500 px-5 py-3 text-sm font-black text-white shadow-lg transition hover:bg-blue-400"
-            >
-              Start a Review
-            </Link>
-          </nav>
-        </div>
-
-        <nav
-          aria-label="Mobile navigation"
-          className="overflow-x-auto border-t border-slate-800 px-4 py-3 lg:hidden"
-        >
-          <div className="mx-auto flex w-max min-w-full items-center gap-2">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="whitespace-nowrap rounded-full border border-slate-700 bg-slate-900 px-4 py-2 text-xs font-black text-slate-200 transition hover:border-blue-400 hover:text-white"
-              >
-                {item.label}
-              </Link>
-            ))}
-
-            <Link
-              href="/tax-opportunity-scan"
-              className="whitespace-nowrap rounded-full bg-blue-500 px-4 py-2 text-xs font-black text-white"
-            >
-              Start a Review
-            </Link>
-          </div>
-        </nav>
-      </header>
+      <Navbar />
 
       <section className="relative overflow-hidden bg-slate-950 px-4 py-20 text-white sm:px-6 sm:py-28">
         <div className="pointer-events-none absolute inset-0">

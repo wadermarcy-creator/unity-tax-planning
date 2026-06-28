@@ -1,98 +1,11 @@
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 import DisclosureFooter from "@/components/DisclosureFooter";
 
 export default function ThankYouPage() {
   return (
     <main className="min-h-screen bg-white text-slate-950">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 px-4 py-4 text-white backdrop-blur sm:px-6">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-blue-700 shadow-lg shadow-blue-900/30">
-              <span className="text-xl font-black text-white">U</span>
-            </div>
-
-            <div className="leading-tight">
-              <p className="text-xl font-black tracking-tight sm:text-2xl">
-                UNITY
-              </p>
-
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-300">
-                Tax Planning
-              </p>
-            </div>
-          </Link>
-
-          <nav className="hidden items-center gap-8 text-base font-semibold text-slate-300 lg:flex">
-            <Link href="/#situations" className="transition hover:text-white">
-              Situations
-            </Link>
-
-            <Link
-              href="/how-it-works"
-              className="transition hover:text-white"
-            >
-              How It Works
-            </Link>
-
-            <Link href="/#samples" className="transition hover:text-white">
-              Samples
-            </Link>
-
-            <Link href="/pricing" className="transition hover:text-white">
-              Pricing
-            </Link>
-
-            <Link href="/faq" className="transition hover:text-white">
-              FAQ
-            </Link>
-          </nav>
-
-          <Link
-            href="/"
-            className="rounded-full border-2 border-slate-700 px-5 py-3 text-sm font-black text-white transition hover:border-blue-400 hover:bg-slate-900 sm:px-7 sm:text-base"
-          >
-            Home
-          </Link>
-        </div>
-
-        <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1 lg:hidden">
-          <Link
-            href="/#situations"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            Situations
-          </Link>
-
-          <Link
-            href="/how-it-works"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            How It Works
-          </Link>
-
-          <Link
-            href="/#samples"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            Samples
-          </Link>
-
-          <Link
-            href="/pricing"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            Pricing
-          </Link>
-
-          <Link
-            href="/faq"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            FAQ
-          </Link>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Confirmation Hero */}
       <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
@@ -103,11 +16,11 @@ export default function ThankYouPage() {
             </div>
 
             <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-blue-300 sm:text-base">
-              Submission Received
+              Assessment Received
             </p>
 
             <h1 className="mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
-              Your Tax Blind Spot Review has been submitted.
+              Your Unity Tax Opportunity Assessment™ has been submitted.
             </h1>
 
             <p className="max-w-3xl text-xl font-medium leading-9 text-slate-300 sm:text-2xl">
@@ -139,7 +52,7 @@ export default function ThankYouPage() {
               </div>
 
               <h3 className="mb-5 text-2xl font-black tracking-tight sm:text-3xl">
-                I review your intake
+                I review your assessment
               </h3>
 
               <p className="text-lg font-medium leading-8 text-slate-600">
@@ -271,8 +184,8 @@ export default function ThankYouPage() {
               </h3>
 
               <p className="mt-5 text-lg font-medium leading-8 text-slate-300">
-                Compare the Tax Blind Spot Review, comprehensive planning, and
-                advanced coordination engagements.
+                Compare the Unity Tax Opportunity Assessment™, comprehensive
+                planning, and advanced coordination engagements.
               </p>
 
               <span className="mt-7 inline-block font-black text-blue-300">
@@ -327,7 +240,7 @@ export default function ThankYouPage() {
             </Link>
 
             <Link
-              href="/#samples"
+              href="/example-plans"
               className="inline-block w-full rounded-2xl border-2 border-blue-300 px-8 py-5 text-lg font-black text-white transition hover:bg-blue-500 sm:w-auto"
             >
               View Sample Plans

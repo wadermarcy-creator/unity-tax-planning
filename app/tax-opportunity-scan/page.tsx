@@ -3,17 +3,126 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
 import DisclosureFooter from "@/components/DisclosureFooter";
+
+type QualificationAnswers = {
+  profile: string;
+  income: string;
+  assets: string;
+  concern: string;
+  team: string;
+};
 
 export default function TaxOpportunityScanPage() {
   const router = useRouter();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
+  const [showAssessment, setShowAssessment] = useState(false);
+  const [qualificationAnswers, setQualificationAnswers] =
+    useState<QualificationAnswers>({
+      profile: "",
+      income: "",
+      assets: "",
+      concern: "",
+      team: "",
+    });
+
+  function calculateQualificationRating() {
+    let score = 0;
+
+    if (qualificationAnswers.profile === "Business owner") score += 30;
+    if (qualificationAnswers.profile === "Real estate investor") score += 20;
+    if (qualificationAnswers.profile === "High-income W-2 professional")
+      score += 15;
+    if (qualificationAnswers.profile === "Retired or approaching retirement")
+      score += 15;
+
+    if (qualificationAnswers.income === "$250k - $500k") score += 15;
+    if (qualificationAnswers.income === "$500k - $1M") score += 25;
+    if (qualificationAnswers.income === "$1M+") score += 35;
+
+    if (qualificationAnswers.assets === "$500k - $1M") score += 10;
+    if (qualificationAnswers.assets === "$1M - $5M") score += 25;
+    if (qualificationAnswers.assets === "$5M+") score += 35;
+
+    if (qualificationAnswers.concern === "Selling a business or asset")
+      score += 25;
+    if (qualificationAnswers.concern === "Business tax planning") score += 25;
+    if (qualificationAnswers.concern === "Retirement tax strategy") score += 20;
+    if (qualificationAnswers.concern === "Capital gains") score += 20;
+    if (qualificationAnswers.concern === "Estate or legacy planning")
+      score += 15;
+
+    if (qualificationAnswers.team === "CPA and financial advisor") score += 10;
+    if (qualificationAnswers.team === "CPA only") score += 8;
+
+    return score;
+  }
+
+  function getQualificationLabel() {
+    const score = calculateQualificationRating();
+
+    if (score >= 90) return "Very High Planning Potential";
+    if (score >= 65) return "High Planning Potential";
+    if (score >= 40) return "Moderate Planning Potential";
+    return "Early Planning Review";
+  }
+
+  function getSuggestedOpportunities() {
+    const opportunities: string[] = [];
+
+    if (qualificationAnswers.profile === "Business owner") {
+      opportunities.push("Business tax strategy");
+      opportunities.push("Retirement plan design");
+      opportunities.push("Entity structure review");
+    }
+
+    if (qualificationAnswers.profile === "Real estate investor") {
+      opportunities.push("Real estate tax planning");
+      opportunities.push("Capital gains planning");
+    }
+
+    if (qualificationAnswers.concern === "Retirement tax strategy") {
+      opportunities.push("Roth conversion planning");
+      opportunities.push("RMD and income sequencing");
+    }
+
+    if (qualificationAnswers.concern === "Capital gains") {
+      opportunities.push("Capital gains planning");
+      opportunities.push("Charitable strategies");
+    }
+
+    if (qualificationAnswers.concern === "Selling a business or asset") {
+      opportunities.push("Liquidity event planning");
+      opportunities.push("Pre-sale tax strategy");
+    }
+
+    if (qualificationAnswers.concern === "Estate or legacy planning") {
+      opportunities.push("Estate coordination");
+      opportunities.push("Charitable and legacy planning");
+    }
+
+    if (opportunities.length === 0) {
+      opportunities.push("Income tax planning");
+      opportunities.push("Investment tax efficiency");
+      opportunities.push("Long-term planning coordination");
+    }
+
+    return Array.from(new Set(opportunities)).slice(0, 5);
+  }
+
+  const qualificationComplete =
+    qualificationAnswers.profile &&
+    qualificationAnswers.income &&
+    qualificationAnswers.assets &&
+    qualificationAnswers.concern &&
+    qualificationAnswers.team;
 
   function calculateLeadScore(formData: FormData) {
-    let score = 0;
+    let score = calculateQualificationRating();
 
     const householdIncome = formData.get("household_income");
     const investableAssets = formData.get("investable_assets");
@@ -48,13 +157,9 @@ export default function TaxOpportunityScanPage() {
     if (urgency === "Within 3 months") score += 10;
     if (urgency === "This year") score += 5;
 
-    if (desiredService === "Comprehensive Tax Planning Review") {
-      score += 15;
-    }
+    if (desiredService === "Comprehensive Tax Strategy Review") score += 15;
 
-    if (
-      desiredService === "Advanced Planning or Family Office Coordination"
-    ) {
+    if (desiredService === "Advanced Planning or Family Office Coordination") {
       score += 25;
     }
 
@@ -62,10 +167,10 @@ export default function TaxOpportunityScanPage() {
   }
 
   function calculateLeadGrade(score: number) {
-    if (score >= 100) return "A+ Lead";
-    if (score >= 75) return "A Lead";
-    if (score >= 50) return "B Lead";
-    if (score >= 25) return "C Lead";
+    if (score >= 130) return "A+ Assessment";
+    if (score >= 100) return "A Assessment";
+    if (score >= 70) return "B Assessment";
+    if (score >= 40) return "C Assessment";
     return "Nurture";
   }
 
@@ -133,6 +238,14 @@ export default function TaxOpportunityScanPage() {
     );
 
     return [
+      "UNITY TAX OPPORTUNITY ASSESSMENT™",
+      `QUALIFICATION PROFILE: ${qualificationAnswers.profile || "Not provided"}`,
+      `QUALIFICATION INCOME: ${qualificationAnswers.income || "Not provided"}`,
+      `QUALIFICATION ASSETS: ${qualificationAnswers.assets || "Not provided"}`,
+      `QUALIFICATION CONCERN: ${qualificationAnswers.concern || "Not provided"}`,
+      `QUALIFICATION TEAM: ${qualificationAnswers.team || "Not provided"}`,
+      `PLANNING OPPORTUNITY RATING: ${getQualificationLabel()}`,
+      `SUGGESTED AREAS: ${getSuggestedOpportunities().join(", ")}`,
       `PRIMARY CONCERN: ${primaryConcern}`,
       `PLANNING GOAL: ${planningGoal}`,
       `PLANNING TOPICS: ${
@@ -184,7 +297,7 @@ export default function TaxOpportunityScanPage() {
     if (error) {
       console.error(error);
       setMessage(
-        "Something went wrong while submitting your review. Please try again.",
+        "Something went wrong while submitting your assessment. Please try again.",
       );
       setIsSubmitting(false);
       return;
@@ -202,99 +315,13 @@ export default function TaxOpportunityScanPage() {
 
   return (
     <main className="min-h-screen bg-white text-slate-950">
-      <section className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 px-4 py-4 text-white backdrop-blur sm:px-6">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-blue-700 shadow-lg shadow-blue-900/30">
-              <span className="text-xl font-black tracking-tight text-white">
-                U
-              </span>
-            </div>
-
-            <div className="leading-tight">
-              <p className="text-xl font-black tracking-tight sm:text-2xl">
-                UNITY
-              </p>
-
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-300">
-                Tax Planning
-              </p>
-            </div>
-          </Link>
-
-          <nav className="hidden items-center gap-8 text-base font-semibold text-slate-300 lg:flex">
-            <Link href="/#situations" className="hover:text-white">
-              Situations
-            </Link>
-
-            <Link href="/how-it-works" className="hover:text-white">
-              How It Works
-            </Link>
-
-            <Link href="/#samples" className="hover:text-white">
-              Samples
-            </Link>
-
-            <Link href="/pricing" className="hover:text-white">
-              Pricing
-            </Link>
-
-            <Link href="/faq" className="hover:text-white">
-              FAQ
-            </Link>
-          </nav>
-
-          <Link
-            href="/"
-            className="rounded-full border-2 border-slate-700 px-5 py-3 text-sm font-black text-white transition hover:border-blue-400 hover:bg-slate-900 sm:px-7 sm:text-base"
-          >
-            Home
-          </Link>
-        </div>
-
-        <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1 lg:hidden">
-          <Link
-            href="/#situations"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            Situations
-          </Link>
-
-          <Link
-            href="/how-it-works"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            How It Works
-          </Link>
-
-          <Link
-            href="/#samples"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            Samples
-          </Link>
-
-          <Link
-            href="/pricing"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            Pricing
-          </Link>
-
-          <Link
-            href="/faq"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            FAQ
-          </Link>
-        </div>
-      </section>
+      <Navbar />
 
       <section className="bg-slate-950 px-4 pb-20 pt-16 text-white sm:px-6 md:pb-28 md:pt-24">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
-          <div className="lg:sticky lg:top-36">
+          <div className="lg:sticky lg:top-32">
             <p className="mb-5 text-sm font-black uppercase tracking-[0.26em] text-blue-300 sm:text-base">
-              Tax Blind Spot Review
+              Unity Tax Opportunity Assessment™
             </p>
 
             <h1 className="mb-7 text-5xl font-black tracking-tight sm:text-6xl lg:text-7xl">
@@ -302,9 +329,9 @@ export default function TaxOpportunityScanPage() {
             </h1>
 
             <p className="mb-8 max-w-2xl text-xl font-medium leading-9 text-slate-300">
-              Answer a few questions about your income, investments, business,
-              retirement plans, and upcoming decisions. The intake should take
-              about five minutes.
+              Start with a short qualification review. If your situation appears
+              to have meaningful planning potential, continue to the full Unity
+              Tax Opportunity Assessment™.
             </p>
 
             <div className="rounded-[2rem] border-2 border-blue-500 bg-slate-900 p-7 shadow-2xl shadow-blue-950/30">
@@ -319,10 +346,12 @@ export default function TaxOpportunityScanPage() {
                   </div>
 
                   <div>
-                    <p className="font-black text-white">Initial review</p>
+                    <p className="font-black text-white">
+                      Qualification review
+                    </p>
                     <p className="mt-1 leading-7 text-slate-300">
-                      Your answers are reviewed for planning opportunities and
-                      areas requiring more information.
+                      Answer five quick questions to estimate whether proactive
+                      planning may be worth exploring.
                     </p>
                   </div>
                 </div>
@@ -333,10 +362,12 @@ export default function TaxOpportunityScanPage() {
                   </div>
 
                   <div>
-                    <p className="font-black text-white">Fit conversation</p>
+                    <p className="font-black text-white">
+                      Planning opportunity rating
+                    </p>
                     <p className="mt-1 leading-7 text-slate-300">
-                      If the situation appears to be a fit, we discuss scope,
-                      timing, and pricing before beginning.
+                      Receive a preliminary rating and suggested areas that may
+                      deserve a deeper look.
                     </p>
                   </div>
                 </div>
@@ -347,12 +378,10 @@ export default function TaxOpportunityScanPage() {
                   </div>
 
                   <div>
-                    <p className="font-black text-white">
-                      Secure document review
-                    </p>
+                    <p className="font-black text-white">Full assessment</p>
                     <p className="mt-1 leading-7 text-slate-300">
-                      Relevant documents are requested through a secure process,
-                      not through this intake form.
+                      If appropriate, complete the full assessment so we can
+                      better understand your income, assets, goals, and timing.
                     </p>
                   </div>
                 </div>
@@ -363,10 +392,10 @@ export default function TaxOpportunityScanPage() {
                   </div>
 
                   <div>
-                    <p className="font-black text-white">Written plan</p>
+                    <p className="font-black text-white">Next-step review</p>
                     <p className="mt-1 leading-7 text-slate-300">
-                      The engagement may include a written planning summary,
-                      priorities, implementation steps, and coordination notes.
+                      If there is a fit, we discuss scope, timing, documents,
+                      and pricing before any paid engagement begins.
                     </p>
                   </div>
                 </div>
@@ -380,152 +409,73 @@ export default function TaxOpportunityScanPage() {
             </p>
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl shadow-black/30 sm:p-8 lg:p-10"
-          >
-            <div className="mb-10">
-              <p className="mb-3 text-sm font-black uppercase tracking-[0.22em] text-blue-600">
-                Step One
-              </p>
+          {!showAssessment ? (
+            <section className="rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl shadow-black/30 sm:p-8 lg:p-10">
+              <div className="mb-10">
+                <p className="mb-3 text-sm font-black uppercase tracking-[0.22em] text-blue-600">
+                  Step One
+                </p>
 
-              <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
-                Tell us about your situation.
-              </h2>
+                <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
+                  Could an assessment be worth your time?
+                </h2>
 
-              <p className="mt-4 text-lg font-medium leading-8 text-slate-600">
-                There are no perfect answers. Estimates and approximate ranges
-                are fine for this initial review.
-              </p>
-            </div>
-
-            <section className="mb-10 border-b-2 border-slate-200 pb-10">
-              <div className="mb-6 flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
-                  1
-                </div>
-
-                <div>
-                  <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
-                    About You
-                  </p>
-                  <h3 className="text-2xl font-black">Contact information</h3>
-                </div>
+                <p className="mt-4 text-lg font-medium leading-8 text-slate-600">
+                  Answer five quick questions first. This helps filter out
+                  situations where a full tax planning engagement may not be the
+                  best fit yet.
+                </p>
               </div>
 
-              <div className="grid gap-5 md:grid-cols-2">
+              <div className="space-y-6">
                 <div>
                   <label
-                    htmlFor="first_name"
+                    htmlFor="profile"
                     className="mb-2 block text-sm font-black"
                   >
-                    First name
-                  </label>
-
-                  <input
-                    id="first_name"
-                    name="first_name"
-                    type="text"
-                    required
-                    autoComplete="given-name"
-                    className={inputClasses}
-                    placeholder="First name"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="last_name"
-                    className="mb-2 block text-sm font-black"
-                  >
-                    Last name
-                  </label>
-
-                  <input
-                    id="last_name"
-                    name="last_name"
-                    type="text"
-                    required
-                    autoComplete="family-name"
-                    className={inputClasses}
-                    placeholder="Last name"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="mb-2 block text-sm font-black"
-                  >
-                    Email address
-                  </label>
-
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    className={inputClasses}
-                    placeholder="you@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="mb-2 block text-sm font-black"
-                  >
-                    Phone number
-                  </label>
-
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    autoComplete="tel"
-                    className={inputClasses}
-                    placeholder="(555) 555-5555"
-                  />
-                </div>
-              </div>
-            </section>
-
-            <section className="mb-10 border-b-2 border-slate-200 pb-10">
-              <div className="mb-6 flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
-                  2
-                </div>
-
-                <div>
-                  <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
-                    Financial Picture
-                  </p>
-                  <h3 className="text-2xl font-black">
-                    Approximate financial ranges
-                  </h3>
-                </div>
-              </div>
-
-              <div className="grid gap-5 md:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="household_income"
-                    className="mb-2 block text-sm font-black"
-                  >
-                    Annual household income
+                    Which best describes you?
                   </label>
 
                   <select
-                    id="household_income"
-                    name="household_income"
-                    required
-                    defaultValue=""
+                    id="profile"
+                    value={qualificationAnswers.profile}
+                    onChange={(event) =>
+                      setQualificationAnswers((current) => ({
+                        ...current,
+                        profile: event.target.value,
+                      }))
+                    }
                     className={inputClasses}
                   >
-                    <option value="" disabled>
-                      Select an income range
-                    </option>
+                    <option value="">Select one</option>
+                    <option>Business owner</option>
+                    <option>High-income W-2 professional</option>
+                    <option>Real estate investor</option>
+                    <option>Retired or approaching retirement</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="income"
+                    className="mb-2 block text-sm font-black"
+                  >
+                    Approximate household income
+                  </label>
+
+                  <select
+                    id="income"
+                    value={qualificationAnswers.income}
+                    onChange={(event) =>
+                      setQualificationAnswers((current) => ({
+                        ...current,
+                        income: event.target.value,
+                      }))
+                    }
+                    className={inputClasses}
+                  >
+                    <option value="">Select one</option>
                     <option>Under $150k</option>
                     <option>$150k - $250k</option>
                     <option>$250k - $500k</option>
@@ -536,22 +486,24 @@ export default function TaxOpportunityScanPage() {
 
                 <div>
                   <label
-                    htmlFor="investable_assets"
+                    htmlFor="assets"
                     className="mb-2 block text-sm font-black"
                   >
-                    Investable assets
+                    Approximate investable assets
                   </label>
 
                   <select
-                    id="investable_assets"
-                    name="investable_assets"
-                    required
-                    defaultValue=""
+                    id="assets"
+                    value={qualificationAnswers.assets}
+                    onChange={(event) =>
+                      setQualificationAnswers((current) => ({
+                        ...current,
+                        assets: event.target.value,
+                      }))
+                    }
                     className={inputClasses}
                   >
-                    <option value="" disabled>
-                      Select an asset range
-                    </option>
+                    <option value="">Select one</option>
                     <option>Under $250k</option>
                     <option>$250k - $500k</option>
                     <option>$500k - $1M</option>
@@ -562,448 +514,772 @@ export default function TaxOpportunityScanPage() {
 
                 <div>
                   <label
-                    htmlFor="retirement_assets"
+                    htmlFor="concern"
                     className="mb-2 block text-sm font-black"
                   >
-                    IRA and retirement-plan assets
+                    Biggest planning concern
                   </label>
 
                   <select
-                    id="retirement_assets"
-                    name="retirement_assets"
-                    defaultValue=""
+                    id="concern"
+                    value={qualificationAnswers.concern}
+                    onChange={(event) =>
+                      setQualificationAnswers((current) => ({
+                        ...current,
+                        concern: event.target.value,
+                      }))
+                    }
                     className={inputClasses}
                   >
-                    <option value="" disabled>
-                      Select a retirement-asset range
-                    </option>
-                    <option>Under $250k</option>
-                    <option>$250k - $500k</option>
-                    <option>$500k - $1M</option>
-                    <option>$1M - $3M</option>
-                    <option>$3M+</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="planning_goal"
-                    className="mb-2 block text-sm font-black"
-                  >
-                    Primary planning goal
-                  </label>
-
-                  <select
-                    id="planning_goal"
-                    name="planning_goal"
-                    required
-                    defaultValue=""
-                    className={inputClasses}
-                  >
-                    <option value="" disabled>
-                      Select your primary goal
-                    </option>
-                    <option>Reduce lifetime taxes</option>
-                    <option>Prepare for retirement</option>
-                    <option>Improve business tax planning</option>
-                    <option>Plan for a large sale or capital gain</option>
-                    <option>Improve investment tax efficiency</option>
-                    <option>Give to charity more efficiently</option>
-                    <option>
-                      Coordinate tax, estate, and financial planning
-                    </option>
-                    <option>I am not sure yet</option>
-                  </select>
-                </div>
-              </div>
-            </section>
-
-            <section className="mb-10 border-b-2 border-slate-200 pb-10">
-              <div className="mb-6 flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
-                  3
-                </div>
-
-                <div>
-                  <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
-                    Planning Topics
-                  </p>
-                  <h3 className="text-2xl font-black">
-                    Select everything that applies
-                  </h3>
-                </div>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className={checkboxClasses}>
-                  <input
-                    name="business_owner"
-                    type="checkbox"
-                    className="mt-1 h-5 w-5 accent-blue-600"
-                  />
-
-                  <span>
-                    <span className="block font-black">Business owner</span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-600">
-                      Business income, entity structure, retirement plans, or
-                      estimated taxes.
-                    </span>
-                  </span>
-                </label>
-
-                <label className={checkboxClasses}>
-                  <input
-                    name="retiring_soon"
-                    type="checkbox"
-                    className="mt-1 h-5 w-5 accent-blue-600"
-                  />
-
-                  <span>
-                    <span className="block font-black">
-                      Retiring within five years
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-600">
-                      Roth conversions, Medicare, Social Security, RMDs, or
-                      withdrawal planning.
-                    </span>
-                  </span>
-                </label>
-
-                <label className={checkboxClasses}>
-                  <input
-                    name="taxable_investments"
-                    type="checkbox"
-                    className="mt-1 h-5 w-5 accent-blue-600"
-                  />
-
-                  <span>
-                    <span className="block font-black">
-                      Taxable investments
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-600">
-                      Capital gains, tax-loss harvesting, concentrated stock, or
-                      asset location.
-                    </span>
-                  </span>
-                </label>
-
-                <label className={checkboxClasses}>
-                  <input
-                    name="large_retirement_accounts"
-                    type="checkbox"
-                    className="mt-1 h-5 w-5 accent-blue-600"
-                  />
-
-                  <span>
-                    <span className="block font-black">
-                      Large retirement accounts
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-600">
-                      Future RMD exposure, Roth conversions, beneficiaries, or
-                      tax-efficient withdrawals.
-                    </span>
-                  </span>
-                </label>
-
-                <label className={checkboxClasses}>
-                  <input
-                    name="charitable_giving"
-                    type="checkbox"
-                    className="mt-1 h-5 w-5 accent-blue-600"
-                  />
-
-                  <span>
-                    <span className="block font-black">
-                      Significant charitable giving
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-600">
-                      Donor-advised funds, appreciated assets, bunching, or
-                      qualified charitable distributions.
-                    </span>
-                  </span>
-                </label>
-
-                <label className={checkboxClasses}>
-                  <input
-                    name="upcoming_sale"
-                    type="checkbox"
-                    className="mt-1 h-5 w-5 accent-blue-600"
-                  />
-
-                  <span>
-                    <span className="block font-black">
-                      Upcoming sale or liquidity event
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-600">
-                      Business, real estate, company stock, or another highly
-                      appreciated asset.
-                    </span>
-                  </span>
-                </label>
-
-                <label className={checkboxClasses}>
-                  <input
-                    name="stock_compensation"
-                    type="checkbox"
-                    className="mt-1 h-5 w-5 accent-blue-600"
-                  />
-
-                  <span>
-                    <span className="block font-black">
-                      Stock options or equity compensation
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-600">
-                      RSUs, ISOs, NSOs, ESPP shares, or concentrated employer
-                      stock.
-                    </span>
-                  </span>
-                </label>
-
-                <label className={checkboxClasses}>
-                  <input
-                    name="estate_planning"
-                    type="checkbox"
-                    className="mt-1 h-5 w-5 accent-blue-600"
-                  />
-
-                  <span>
-                    <span className="block font-black">
-                      Estate and legacy planning
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-600">
-                      Trusts, beneficiaries, gifting, estate-tax exposure, or
-                      family coordination.
-                    </span>
-                  </span>
-                </label>
-              </div>
-            </section>
-
-            <section className="mb-10 border-b-2 border-slate-200 pb-10">
-              <div className="mb-6 flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
-                  4
-                </div>
-
-                <div>
-                  <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
-                    Current Team
-                  </p>
-                  <h3 className="text-2xl font-black">
-                    Professionals already involved
-                  </h3>
-                </div>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className={checkboxClasses}>
-                  <input
-                    name="current_advisor"
-                    type="checkbox"
-                    className="mt-1 h-5 w-5 accent-blue-600"
-                  />
-
-                  <span>
-                    <span className="block font-black">
-                      I currently work with a financial advisor
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-600">
-                      This does not prevent us from reviewing your planning
-                      situation.
-                    </span>
-                  </span>
-                </label>
-
-                <label className={checkboxClasses}>
-                  <input
-                    name="current_cpa"
-                    type="checkbox"
-                    className="mt-1 h-5 w-5 accent-blue-600"
-                  />
-
-                  <span>
-                    <span className="block font-black">
-                      I currently work with a CPA or tax preparer
-                    </span>
-                    <span className="mt-1 block text-sm leading-6 text-slate-600">
-                      Planning recommendations may be coordinated with your
-                      existing professional.
-                    </span>
-                  </span>
-                </label>
-              </div>
-            </section>
-
-            <section className="mb-10 border-b-2 border-slate-200 pb-10">
-              <div className="mb-6 flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
-                  5
-                </div>
-
-                <div>
-                  <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
-                    Timing and Scope
-                  </p>
-                  <h3 className="text-2xl font-black">
-                    What level of help are you seeking?
-                  </h3>
-                </div>
-              </div>
-
-              <div className="grid gap-5 md:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="desired_service"
-                    className="mb-2 block text-sm font-black"
-                  >
-                    Planning service of interest
-                  </label>
-
-                  <select
-                    id="desired_service"
-                    name="desired_service"
-                    required
-                    defaultValue=""
-                    className={inputClasses}
-                  >
-                    <option value="" disabled>
-                      Select an engagement
-                    </option>
-                    <option>Tax Blind Spot Review</option>
-                    <option>Comprehensive Tax Planning Review</option>
-                    <option>
-                      Advanced Planning or Family Office Coordination
-                    </option>
+                    <option value="">Select one</option>
+                    <option>Paying too much in taxes</option>
+                    <option>Business tax planning</option>
+                    <option>Selling a business or asset</option>
+                    <option>Retirement tax strategy</option>
+                    <option>Capital gains</option>
+                    <option>Estate or legacy planning</option>
                     <option>I am not sure yet</option>
                   </select>
                 </div>
 
                 <div>
                   <label
-                    htmlFor="urgency"
+                    htmlFor="team"
                     className="mb-2 block text-sm font-black"
                   >
-                    When would you like to begin?
+                    Do you currently work with a CPA or financial advisor?
                   </label>
 
                   <select
-                    id="urgency"
-                    name="urgency"
-                    required
-                    defaultValue=""
+                    id="team"
+                    value={qualificationAnswers.team}
+                    onChange={(event) =>
+                      setQualificationAnswers((current) => ({
+                        ...current,
+                        team: event.target.value,
+                      }))
+                    }
                     className={inputClasses}
                   >
-                    <option value="" disabled>
-                      Select a timeframe
-                    </option>
-                    <option>Within 30 days</option>
-                    <option>Within 3 months</option>
-                    <option>This year</option>
-                    <option>Just exploring for now</option>
-                  </select>
-                </div>
-
-                <div className="md:col-span-2">
-                  <label
-                    htmlFor="referral_source"
-                    className="mb-2 block text-sm font-black"
-                  >
-                    How did you hear about Unity Tax Planning?
-                  </label>
-
-                  <select
-                    id="referral_source"
-                    name="referral_source"
-                    defaultValue=""
-                    className={inputClasses}
-                  >
-                    <option value="" disabled>
-                      Select one
-                    </option>
-                    <option>Friend, family member, or client</option>
-                    <option>Financial advisor</option>
-                    <option>CPA or tax professional</option>
-                    <option>Attorney</option>
-                    <option>Google or another search engine</option>
-                    <option>LinkedIn or social media</option>
-                    <option>Unity Financial Planning Group</option>
-                    <option>Other</option>
+                    <option value="">Select one</option>
+                    <option>CPA and financial advisor</option>
+                    <option>CPA only</option>
+                    <option>Financial advisor only</option>
+                    <option>Neither</option>
                   </select>
                 </div>
               </div>
-            </section>
 
-            <section className="mb-10">
-              <div className="mb-6 flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
-                  6
-                </div>
-
-                <div>
-                  <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
-                    Main Concern
+              {qualificationComplete && (
+                <div className="mt-8 rounded-[2rem] border-2 border-blue-500 bg-slate-950 p-7 text-white shadow-xl shadow-blue-950/20">
+                  <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
+                    Preliminary Result
                   </p>
-                  <h3 className="text-2xl font-black">
-                    What would you most like help solving?
-                  </h3>
-                </div>
-              </div>
 
-              <label
-                htmlFor="biggest_tax_concern"
-                className="mb-2 block text-sm font-black"
+                  <h3 className="mt-3 text-3xl font-black">
+                    {getQualificationLabel()}
+                  </h3>
+
+                  <p className="mt-4 text-base font-medium leading-7 text-slate-300">
+                    Based on your answers, there may be several areas where
+                    proactive tax planning is worth reviewing.
+                  </p>
+
+                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                    {getSuggestedOpportunities().map((opportunity) => (
+                      <div
+                        key={opportunity}
+                        className="rounded-2xl border border-slate-700 bg-slate-900 p-4 text-sm font-black text-white"
+                      >
+                        <span className="mr-2 text-blue-300">✓</span>
+                        {opportunity}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="button"
+                disabled={!qualificationComplete}
+                onClick={() => setShowAssessment(true)}
+                className="mt-8 w-full rounded-2xl bg-blue-600 px-6 py-5 text-lg font-black text-white shadow-xl transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-400"
               >
-                Briefly describe your concern or upcoming decision
-              </label>
+                Continue to Full Assessment
+              </button>
 
-              <textarea
-                id="biggest_tax_concern"
-                name="biggest_tax_concern"
-                required
-                className={`${inputClasses} min-h-44 resize-y`}
-                placeholder="Example: I am five years from retirement and want to know whether I should begin Roth conversions. I also have a taxable investment account with a large unrealized gain."
-              />
-
-              <p className="mt-3 text-sm leading-6 text-slate-500">
-                Please provide general information only. Do not enter Social
-                Security numbers, account numbers, or other sensitive details.
+              <p className="mt-5 text-center text-sm font-medium leading-6 text-slate-500">
+                This preliminary rating is educational only and does not create
+                a client relationship or guarantee that planning opportunities
+                exist.
               </p>
             </section>
-
-            <div className="rounded-[2rem] border-2 border-slate-200 bg-slate-100 p-6 sm:p-7">
-              <p className="mb-3 text-lg font-black text-slate-950">
-                Before you submit
-              </p>
-
-              <p className="text-sm font-medium leading-7 text-slate-600">
-                Submitting this intake does not create a client relationship or
-                guarantee that an engagement will be offered. Scope, pricing,
-                responsibilities, and applicable disclosures will be provided
-                before any paid planning work begins.
-              </p>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="mt-6 w-full rounded-2xl bg-blue-600 px-6 py-5 text-lg font-black text-white shadow-xl transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-400"
+          ) : (
+            <form
+              onSubmit={handleSubmit}
+              className="rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl shadow-black/30 sm:p-8 lg:p-10"
             >
-              {isSubmitting
-                ? "Submitting Your Review..."
-                : "Submit My Tax Blind Spot Review"}
-            </button>
+              <div className="mb-10">
+                <button
+                  type="button"
+                  onClick={() => setShowAssessment(false)}
+                  className="mb-6 rounded-full border-2 border-slate-300 px-5 py-3 text-sm font-black text-slate-700 hover:border-blue-500 hover:text-blue-600"
+                >
+                  ← Back to qualification
+                </button>
 
-            {message && (
-              <p className="mt-5 rounded-2xl bg-red-100 p-5 text-sm font-black text-red-700">
-                {message}
+                <p className="mb-3 text-sm font-black uppercase tracking-[0.22em] text-blue-600">
+                  Full Assessment
+                </p>
+
+                <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
+                  Tell us about your situation.
+                </h2>
+
+                <p className="mt-4 text-lg font-medium leading-8 text-slate-600">
+                  There are no perfect answers. Estimates and approximate ranges
+                  are fine for this initial assessment.
+                </p>
+              </div>
+
+              <section className="mb-10 border-b-2 border-slate-200 pb-10">
+                <div className="mb-6 flex items-center gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                    1
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                      About You
+                    </p>
+                    <h3 className="text-2xl font-black">
+                      Contact information
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="grid gap-5 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="first_name"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      First name
+                    </label>
+
+                    <input
+                      id="first_name"
+                      name="first_name"
+                      type="text"
+                      required
+                      autoComplete="given-name"
+                      className={inputClasses}
+                      placeholder="First name"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="last_name"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      Last name
+                    </label>
+
+                    <input
+                      id="last_name"
+                      name="last_name"
+                      type="text"
+                      required
+                      autoComplete="family-name"
+                      className={inputClasses}
+                      placeholder="Last name"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      Email address
+                    </label>
+
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      autoComplete="email"
+                      className={inputClasses}
+                      placeholder="you@example.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="phone"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      Phone number
+                    </label>
+
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      autoComplete="tel"
+                      className={inputClasses}
+                      placeholder="(555) 555-5555"
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <section className="mb-10 border-b-2 border-slate-200 pb-10">
+                <div className="mb-6 flex items-center gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                    2
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                      Financial Picture
+                    </p>
+                    <h3 className="text-2xl font-black">
+                      Approximate financial ranges
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="grid gap-5 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="household_income"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      Annual household income
+                    </label>
+
+                    <select
+                      id="household_income"
+                      name="household_income"
+                      required
+                      defaultValue={qualificationAnswers.income}
+                      className={inputClasses}
+                    >
+                      <option value="" disabled>
+                        Select an income range
+                      </option>
+                      <option>Under $150k</option>
+                      <option>$150k - $250k</option>
+                      <option>$250k - $500k</option>
+                      <option>$500k - $1M</option>
+                      <option>$1M+</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="investable_assets"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      Investable assets
+                    </label>
+
+                    <select
+                      id="investable_assets"
+                      name="investable_assets"
+                      required
+                      defaultValue={qualificationAnswers.assets}
+                      className={inputClasses}
+                    >
+                      <option value="" disabled>
+                        Select an asset range
+                      </option>
+                      <option>Under $250k</option>
+                      <option>$250k - $500k</option>
+                      <option>$500k - $1M</option>
+                      <option>$1M - $5M</option>
+                      <option>$5M+</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="retirement_assets"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      IRA and retirement-plan assets
+                    </label>
+
+                    <select
+                      id="retirement_assets"
+                      name="retirement_assets"
+                      defaultValue=""
+                      className={inputClasses}
+                    >
+                      <option value="" disabled>
+                        Select a retirement-asset range
+                      </option>
+                      <option>Under $250k</option>
+                      <option>$250k - $500k</option>
+                      <option>$500k - $1M</option>
+                      <option>$1M - $3M</option>
+                      <option>$3M+</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="planning_goal"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      Primary planning goal
+                    </label>
+
+                    <select
+                      id="planning_goal"
+                      name="planning_goal"
+                      required
+                      defaultValue=""
+                      className={inputClasses}
+                    >
+                      <option value="" disabled>
+                        Select your primary goal
+                      </option>
+                      <option>Reduce lifetime taxes</option>
+                      <option>Prepare for retirement</option>
+                      <option>Improve business tax planning</option>
+                      <option>Plan for a large sale or capital gain</option>
+                      <option>Improve investment tax efficiency</option>
+                      <option>Give to charity more efficiently</option>
+                      <option>
+                        Coordinate tax, estate, and financial planning
+                      </option>
+                      <option>I am not sure yet</option>
+                    </select>
+                  </div>
+                </div>
+              </section>
+
+              <section className="mb-10 border-b-2 border-slate-200 pb-10">
+                <div className="mb-6 flex items-center gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                    3
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                      Planning Topics
+                    </p>
+                    <h3 className="text-2xl font-black">
+                      Select everything that applies
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <label className={checkboxClasses}>
+                    <input
+                      name="business_owner"
+                      type="checkbox"
+                      defaultChecked={
+                        qualificationAnswers.profile === "Business owner"
+                      }
+                      className="mt-1 h-5 w-5 accent-blue-600"
+                    />
+
+                    <span>
+                      <span className="block font-black">Business owner</span>
+                      <span className="mt-1 block text-sm leading-6 text-slate-600">
+                        Business income, entity structure, retirement plans, or
+                        estimated taxes.
+                      </span>
+                    </span>
+                  </label>
+
+                  <label className={checkboxClasses}>
+                    <input
+                      name="retiring_soon"
+                      type="checkbox"
+                      defaultChecked={
+                        qualificationAnswers.profile ===
+                          "Retired or approaching retirement" ||
+                        qualificationAnswers.concern ===
+                          "Retirement tax strategy"
+                      }
+                      className="mt-1 h-5 w-5 accent-blue-600"
+                    />
+
+                    <span>
+                      <span className="block font-black">
+                        Retiring within five years
+                      </span>
+                      <span className="mt-1 block text-sm leading-6 text-slate-600">
+                        Roth conversions, Medicare, Social Security, RMDs, or
+                        withdrawal planning.
+                      </span>
+                    </span>
+                  </label>
+
+                  <label className={checkboxClasses}>
+                    <input
+                      name="taxable_investments"
+                      type="checkbox"
+                      defaultChecked={
+                        qualificationAnswers.concern === "Capital gains"
+                      }
+                      className="mt-1 h-5 w-5 accent-blue-600"
+                    />
+
+                    <span>
+                      <span className="block font-black">
+                        Taxable investments
+                      </span>
+                      <span className="mt-1 block text-sm leading-6 text-slate-600">
+                        Capital gains, tax-loss harvesting, concentrated stock,
+                        or asset location.
+                      </span>
+                    </span>
+                  </label>
+
+                  <label className={checkboxClasses}>
+                    <input
+                      name="large_retirement_accounts"
+                      type="checkbox"
+                      className="mt-1 h-5 w-5 accent-blue-600"
+                    />
+
+                    <span>
+                      <span className="block font-black">
+                        Large retirement accounts
+                      </span>
+                      <span className="mt-1 block text-sm leading-6 text-slate-600">
+                        Future RMD exposure, Roth conversions, beneficiaries, or
+                        tax-efficient withdrawals.
+                      </span>
+                    </span>
+                  </label>
+
+                  <label className={checkboxClasses}>
+                    <input
+                      name="charitable_giving"
+                      type="checkbox"
+                      className="mt-1 h-5 w-5 accent-blue-600"
+                    />
+
+                    <span>
+                      <span className="block font-black">
+                        Significant charitable giving
+                      </span>
+                      <span className="mt-1 block text-sm leading-6 text-slate-600">
+                        Donor-advised funds, appreciated assets, bunching, or
+                        qualified charitable distributions.
+                      </span>
+                    </span>
+                  </label>
+
+                  <label className={checkboxClasses}>
+                    <input
+                      name="upcoming_sale"
+                      type="checkbox"
+                      defaultChecked={
+                        qualificationAnswers.concern ===
+                        "Selling a business or asset"
+                      }
+                      className="mt-1 h-5 w-5 accent-blue-600"
+                    />
+
+                    <span>
+                      <span className="block font-black">
+                        Upcoming sale or liquidity event
+                      </span>
+                      <span className="mt-1 block text-sm leading-6 text-slate-600">
+                        Business, real estate, company stock, or another highly
+                        appreciated asset.
+                      </span>
+                    </span>
+                  </label>
+
+                  <label className={checkboxClasses}>
+                    <input
+                      name="stock_compensation"
+                      type="checkbox"
+                      className="mt-1 h-5 w-5 accent-blue-600"
+                    />
+
+                    <span>
+                      <span className="block font-black">
+                        Stock options or equity compensation
+                      </span>
+                      <span className="mt-1 block text-sm leading-6 text-slate-600">
+                        RSUs, ISOs, NSOs, ESPP shares, or concentrated employer
+                        stock.
+                      </span>
+                    </span>
+                  </label>
+
+                  <label className={checkboxClasses}>
+                    <input
+                      name="estate_planning"
+                      type="checkbox"
+                      defaultChecked={
+                        qualificationAnswers.concern ===
+                        "Estate or legacy planning"
+                      }
+                      className="mt-1 h-5 w-5 accent-blue-600"
+                    />
+
+                    <span>
+                      <span className="block font-black">
+                        Estate and legacy planning
+                      </span>
+                      <span className="mt-1 block text-sm leading-6 text-slate-600">
+                        Trusts, beneficiaries, gifting, estate-tax exposure, or
+                        family coordination.
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </section>
+
+              <section className="mb-10 border-b-2 border-slate-200 pb-10">
+                <div className="mb-6 flex items-center gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                    4
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                      Current Team
+                    </p>
+                    <h3 className="text-2xl font-black">
+                      Professionals already involved
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <label className={checkboxClasses}>
+                    <input
+                      name="current_advisor"
+                      type="checkbox"
+                      defaultChecked={
+                        qualificationAnswers.team ===
+                          "CPA and financial advisor" ||
+                        qualificationAnswers.team === "Financial advisor only"
+                      }
+                      className="mt-1 h-5 w-5 accent-blue-600"
+                    />
+
+                    <span>
+                      <span className="block font-black">
+                        I currently work with a financial advisor
+                      </span>
+                      <span className="mt-1 block text-sm leading-6 text-slate-600">
+                        This does not prevent us from reviewing your planning
+                        situation.
+                      </span>
+                    </span>
+                  </label>
+
+                  <label className={checkboxClasses}>
+                    <input
+                      name="current_cpa"
+                      type="checkbox"
+                      defaultChecked={
+                        qualificationAnswers.team ===
+                          "CPA and financial advisor" ||
+                        qualificationAnswers.team === "CPA only"
+                      }
+                      className="mt-1 h-5 w-5 accent-blue-600"
+                    />
+
+                    <span>
+                      <span className="block font-black">
+                        I currently work with a CPA or tax preparer
+                      </span>
+                      <span className="mt-1 block text-sm leading-6 text-slate-600">
+                        Planning recommendations may be coordinated with your
+                        existing professional.
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </section>
+
+              <section className="mb-10 border-b-2 border-slate-200 pb-10">
+                <div className="mb-6 flex items-center gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                    5
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                      Timing and Scope
+                    </p>
+                    <h3 className="text-2xl font-black">
+                      What level of help are you seeking?
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="grid gap-5 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="desired_service"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      Planning service of interest
+                    </label>
+
+                    <select
+                      id="desired_service"
+                      name="desired_service"
+                      required
+                      defaultValue=""
+                      className={inputClasses}
+                    >
+                      <option value="" disabled>
+                        Select an engagement
+                      </option>
+                      <option>Unity Tax Opportunity Assessment™</option>
+                      <option>Comprehensive Tax Strategy Review</option>
+                      <option>
+                        Advanced Planning or Family Office Coordination
+                      </option>
+                      <option>I am not sure yet</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="urgency"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      When would you like to begin?
+                    </label>
+
+                    <select
+                      id="urgency"
+                      name="urgency"
+                      required
+                      defaultValue=""
+                      className={inputClasses}
+                    >
+                      <option value="" disabled>
+                        Select a timeframe
+                      </option>
+                      <option>Within 30 days</option>
+                      <option>Within 3 months</option>
+                      <option>This year</option>
+                      <option>Just exploring for now</option>
+                    </select>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label
+                      htmlFor="referral_source"
+                      className="mb-2 block text-sm font-black"
+                    >
+                      How did you hear about Unity Tax Planning?
+                    </label>
+
+                    <select
+                      id="referral_source"
+                      name="referral_source"
+                      defaultValue=""
+                      className={inputClasses}
+                    >
+                      <option value="" disabled>
+                        Select one
+                      </option>
+                      <option>Friend, family member, or client</option>
+                      <option>Financial advisor</option>
+                      <option>CPA or tax professional</option>
+                      <option>Attorney</option>
+                      <option>Google or another search engine</option>
+                      <option>LinkedIn or social media</option>
+                      <option>Unity Financial Planning Group</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                </div>
+              </section>
+
+              <section className="mb-10">
+                <div className="mb-6 flex items-center gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                    6
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                      Main Concern
+                    </p>
+                    <h3 className="text-2xl font-black">
+                      What would you most like help solving?
+                    </h3>
+                  </div>
+                </div>
+
+                <label
+                  htmlFor="biggest_tax_concern"
+                  className="mb-2 block text-sm font-black"
+                >
+                  Briefly describe your concern or upcoming decision
+                </label>
+
+                <textarea
+                  id="biggest_tax_concern"
+                  name="biggest_tax_concern"
+                  required
+                  className={`${inputClasses} min-h-44 resize-y`}
+                  placeholder="Example: I am five years from retirement and want to know whether I should begin Roth conversions. I also have a taxable investment account with a large unrealized gain."
+                />
+
+                <p className="mt-3 text-sm leading-6 text-slate-500">
+                  Please provide general information only. Do not enter Social
+                  Security numbers, account numbers, or other sensitive details.
+                </p>
+              </section>
+
+              <div className="rounded-[2rem] border-2 border-slate-200 bg-slate-100 p-6 sm:p-7">
+                <p className="mb-3 text-lg font-black text-slate-950">
+                  Before you submit
+                </p>
+
+                <p className="text-sm font-medium leading-7 text-slate-600">
+                  Submitting this assessment does not create a client
+                  relationship or guarantee that an engagement will be offered.
+                  Scope, pricing, responsibilities, and applicable disclosures
+                  will be provided before any paid planning work begins.
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="mt-6 w-full rounded-2xl bg-blue-600 px-6 py-5 text-lg font-black text-white shadow-xl transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-400"
+              >
+                {isSubmitting
+                  ? "Submitting Your Assessment..."
+                  : "Submit My Assessment"}
+              </button>
+
+              {message && (
+                <p className="mt-5 rounded-2xl bg-red-100 p-5 text-sm font-black text-red-700">
+                  {message}
+                </p>
+              )}
+
+              <p className="mt-5 text-center text-sm font-medium leading-6 text-slate-500">
+                Your information will be used to evaluate your planning request
+                and contact you regarding potential next steps.
               </p>
-            )}
-
-            <p className="mt-5 text-center text-sm font-medium leading-6 text-slate-500">
-              Your information will be used to evaluate your planning request
-              and contact you regarding potential next steps.
-            </p>
-          </form>
+            </form>
+          )}
         </div>
       </section>
 

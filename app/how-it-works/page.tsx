@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 import DisclosureFooter from "@/components/DisclosureFooter";
 
 type ProcessStep = {
@@ -107,94 +108,7 @@ export default function HowItWorksPage() {
 
   return (
     <main className="min-h-screen bg-white text-slate-950">
-      <section className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 px-4 py-4 text-white backdrop-blur sm:px-6">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-blue-700 shadow-lg shadow-blue-900/30">
-              <span className="text-xl font-black tracking-tight text-white">
-                U
-              </span>
-            </div>
-
-            <div className="leading-tight">
-              <p className="text-xl font-black tracking-tight sm:text-2xl">
-                UNITY
-              </p>
-
-              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-300">
-                Tax Planning
-              </p>
-            </div>
-          </Link>
-
-          <nav className="hidden items-center gap-8 text-base font-semibold text-slate-300 lg:flex">
-            <Link href="/#situations" className="hover:text-white">
-              Situations
-            </Link>
-
-            <Link href="/how-it-works" className="text-white">
-              How It Works
-            </Link>
-
-            <Link href="/#samples" className="hover:text-white">
-              Samples
-            </Link>
-
-            <Link href="/pricing" className="hover:text-white">
-              Pricing
-            </Link>
-
-            <Link href="/faq" className="hover:text-white">
-              FAQ
-            </Link>
-          </nav>
-
-          <Link
-            href="/tax-opportunity-scan"
-            className="rounded-full bg-white px-5 py-3 text-sm font-black text-slate-950 shadow-lg hover:bg-blue-50 sm:px-8 sm:text-base"
-          >
-            <span className="sm:hidden">Start</span>
-            <span className="hidden sm:inline">Start Review</span>
-          </Link>
-        </div>
-
-        <div className="mx-auto mt-4 flex max-w-7xl gap-2 overflow-x-auto pb-1 lg:hidden">
-          <Link
-            href="/#situations"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            Situations
-          </Link>
-
-          <Link
-            href="/how-it-works"
-            className="shrink-0 rounded-full border border-blue-500 bg-blue-500 px-4 py-2 text-sm font-bold text-white"
-          >
-            How It Works
-          </Link>
-
-          <Link
-            href="/#samples"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            Samples
-          </Link>
-
-          <Link
-            href="/pricing"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            Pricing
-          </Link>
-
-          <Link
-            href="/faq"
-            className="shrink-0 rounded-full border border-slate-700 px-4 py-2 text-sm font-bold text-slate-200"
-          >
-            FAQ
-          </Link>
-        </div>
-      </section>
+      <Navbar />
 
       <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
