@@ -22,6 +22,7 @@ export default function CampaignsPage() {
     useState<GeneratedCampaign | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [message, setMessage] = useState("");
 
   async function loadCampaigns() {
@@ -75,10 +76,85 @@ export default function CampaignsPage() {
       return;
     }
 
-    setMessage("Campaign saved.");
+    setMessage("Campaign draft saved.");
     setGeneratedCampaign(null);
     await loadCampaigns();
     setIsSaving(false);
+  }
+
+  async function publishCampaign() {
+    if (!generatedCampaign) return;
+
+    setMessage("");
+    setIsPublishing(true);
+
+    const campaign = normalizeGeneratedCampaign(generatedCampaign);
+    const landingPage = campaign.landing_page;
+
+    const { error: campaignError } = await supabase
+      .from("marketing_campaigns")
+      .upsert(
+        [
+          {
+            name: campaign.name,
+            slug: campaign.slug,
+            audience: campaign.audience,
+            location: campaign.location,
+            status: "published",
+            landing_page_json: landingPage,
+            google_ads_json: campaign.google_ads,
+            seo_json: campaign.seo,
+            keywords_json: campaign.keywords,
+            blog_json: campaign.blog,
+            email_json: campaign.email_sequence,
+            facebook_json: campaign.facebook_ad,
+            linkedin_json: campaign.linkedin_post,
+            notes: `Published campaign for ${campaign.audience}.`,
+          },
+        ],
+        { onConflict: "slug" },
+      );
+
+    if (campaignError) {
+      console.error(campaignError);
+      setMessage("Campaign could not be published.");
+      setIsPublishing(false);
+      return;
+    }
+
+    const { error: landingPageError } = await supabase
+      .from("marketing_landing_pages")
+      .upsert(
+        [
+          {
+            slug: landingPage.slug,
+            eyebrow: landingPage.eyebrow,
+            headline: landingPage.headline,
+            subheadline: landingPage.subheadline,
+            primary_cta: landingPage.primary_cta,
+            audience: landingPage.audience,
+            pain_points: landingPage.pain_points,
+            opportunities: landingPage.opportunities,
+            proof_points: landingPage.proof_points,
+            is_active: true,
+          },
+        ],
+        { onConflict: "slug" },
+      );
+
+    if (landingPageError) {
+      console.error(landingPageError);
+      setMessage(
+        "Campaign saved, but landing page could not be published. Check landing page permissions.",
+      );
+      setIsPublishing(false);
+      return;
+    }
+
+    setMessage(`Campaign published. Live page: /landing/${landingPage.slug}`);
+    setGeneratedCampaign(null);
+    await loadCampaigns();
+    setIsPublishing(false);
   }
 
   return (
@@ -109,7 +185,9 @@ export default function CampaignsPage() {
           <CampaignDetails
             generatedCampaign={generatedCampaign}
             saveCampaign={saveCampaign}
+            publishCampaign={publishCampaign}
             isSaving={isSaving}
+            isPublishing={isPublishing}
           />
 
           <CampaignLibrary

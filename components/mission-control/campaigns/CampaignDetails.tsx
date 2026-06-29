@@ -1,17 +1,22 @@
 "use client";
 
+import Link from "next/link";
 import type { GeneratedCampaign } from "@/components/mission-control/campaigns/types";
 
 type CampaignDetailsProps = {
   generatedCampaign: GeneratedCampaign | null;
   saveCampaign: () => Promise<void>;
+  publishCampaign: () => Promise<void>;
   isSaving: boolean;
+  isPublishing: boolean;
 };
 
 export default function CampaignDetails({
   generatedCampaign,
   saveCampaign,
+  publishCampaign,
   isSaving,
+  isPublishing,
 }: CampaignDetailsProps) {
   if (!generatedCampaign) {
     return (
@@ -33,6 +38,8 @@ export default function CampaignDetails({
     );
   }
 
+  const publicUrl = `/landing/${generatedCampaign.landing_page.slug}`;
+
   return (
     <section className="space-y-6">
       <div className="rounded-[2rem] border border-blue-500/30 bg-blue-500/10 p-7 shadow-2xl shadow-blue-950/20">
@@ -46,19 +53,33 @@ export default function CampaignDetails({
               {generatedCampaign.name}
             </h2>
 
-            <p className="mt-3 text-sm font-bold text-blue-200">
-              /landing/{generatedCampaign.landing_page.slug}
-            </p>
+            <Link
+              href={publicUrl}
+              className="mt-3 inline-block text-sm font-bold text-blue-200 hover:text-white"
+            >
+              {publicUrl}
+            </Link>
           </div>
 
-          <button
-            type="button"
-            onClick={saveCampaign}
-            disabled={isSaving}
-            className="rounded-2xl bg-blue-600 px-6 py-4 text-sm font-black text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-700"
-          >
-            {isSaving ? "Saving Campaign..." : "Save Campaign"}
-          </button>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={saveCampaign}
+              disabled={isSaving || isPublishing}
+              className="rounded-2xl border border-slate-700 px-6 py-4 text-sm font-black text-slate-300 transition hover:border-blue-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isSaving ? "Saving Draft..." : "Save Draft"}
+            </button>
+
+            <button
+              type="button"
+              onClick={publishCampaign}
+              disabled={isSaving || isPublishing}
+              className="rounded-2xl bg-blue-600 px-6 py-4 text-sm font-black text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-700"
+            >
+              {isPublishing ? "Publishing..." : "Publish Campaign"}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -186,7 +207,9 @@ export default function CampaignDetails({
 
         <div className="mt-5 grid gap-5 lg:grid-cols-2">
           <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-            <h4 className="font-black text-white">{generatedCampaign.blog.title}</h4>
+            <h4 className="font-black text-white">
+              {generatedCampaign.blog.title}
+            </h4>
 
             <div className="mt-4 space-y-2">
               {generatedCampaign.blog.outline.map((item) => (
