@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import Header from "@/components/mission-control/Header";
+import AdvisorNotes from "@/components/mission-control/AdvisorNotes";
 import { supabase } from "@/lib/supabase";
 
 type Lead = {
@@ -54,10 +55,13 @@ function getOpportunityLabel(score: number | null) {
 function getOpportunityTone(score: number | null) {
   const value = score ?? 0;
 
-  if (value >= 130) return "border-violet-500/40 bg-violet-500/10 text-violet-300";
-  if (value >= 100) return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+  if (value >= 130)
+    return "border-violet-500/40 bg-violet-500/10 text-violet-300";
+  if (value >= 100)
+    return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
   if (value >= 70) return "border-blue-500/40 bg-blue-500/10 text-blue-300";
-  if (value >= 40) return "border-orange-500/40 bg-orange-500/10 text-orange-300";
+  if (value >= 40)
+    return "border-orange-500/40 bg-orange-500/10 text-orange-300";
   return "border-slate-700 bg-slate-900 text-slate-300";
 }
 
@@ -234,7 +238,7 @@ export default function AssessmentDetailPage() {
     <div className="min-h-screen">
       <Header
         title={getFullName(lead)}
-        subtitle="Assessment profile, planning signals, and next actions."
+        subtitle="Assessment profile, planning signals, advisor notes, and next actions."
       />
 
       <div className="px-6 py-8 lg:px-10">
@@ -354,7 +358,7 @@ export default function AssessmentDetailPage() {
           <section className="space-y-6">
             <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
               <p className="text-sm font-black uppercase tracking-[0.22em] text-violet-300">
-                AI Executive Summary
+                AI Tax Strategy Brief
               </p>
 
               <h2 className="mt-3 text-2xl font-black text-white">
@@ -384,6 +388,8 @@ export default function AssessmentDetailPage() {
                 ))}
               </div>
             </article>
+
+            <AdvisorNotes leadId={lead.id} />
 
             <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
               <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">

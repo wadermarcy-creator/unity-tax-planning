@@ -27,6 +27,16 @@ const navItems = [
     icon: FileText,
   },
   {
+    label: "Campaigns",
+    href: "/mission-control/marketing/campaigns",
+    icon: Megaphone,
+  },
+  {
+    label: "Landing Pages",
+    href: "/mission-control/marketing/landing-pages",
+    icon: ScrollText,
+  },
+  {
     label: "Opportunity Engine",
     href: "/mission-control/opportunity-engine",
     icon: Brain,
@@ -45,11 +55,6 @@ const navItems = [
     label: "Tasks",
     href: "/mission-control/tasks",
     icon: CheckSquare,
-  },
-  {
-    label: "Marketing",
-    href: "/mission-control/marketing",
-    icon: Megaphone,
   },
   {
     label: "AI",
