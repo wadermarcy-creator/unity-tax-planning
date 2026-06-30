@@ -1,5 +1,6 @@
 "use client";
 
+import LandingPageTab from "./components/LandingPageTab";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -562,218 +563,17 @@ export default function CampaignWorkspacePage() {
           </div>
         </section>
 
-        {activeTab === "Overview" && (
-          <div className="grid gap-6 xl:grid-cols-[1fr_0.95fr_0.95fr]">
-            <PanelCard title="Campaign Overview">
-              <p className="text-sm leading-7 text-slate-400">
-                Your campaign is live and organized. Continue optimizing assets,
-                tracking assessments, and expanding related campaigns.
-              </p>
-
-              <div className="mt-6 space-y-1">
-                <MiniRow
-                  icon={<Target className="h-5 w-5" />}
-                  title="Target Audience"
-                  detail={campaign.audience || "Not specified"}
-                />
-                <MiniRow
-                  icon={<Target className="h-5 w-5" />}
-                  title="Primary Offer"
-                  detail={
-                    campaign.landing_page_json?.primary_cta ||
-                    "Tax Opportunity Assessment"
-                  }
-                />
-                <MiniRow
-                  icon={<Globe className="h-5 w-5" />}
-                  title="Geography"
-                  detail={campaign.location || "United States"}
-                />
-                <MiniRow
-                  icon={<TrendingUp className="h-5 w-5" />}
-                  title="Campaign Goal"
-                  detail="Generate qualified tax planning assessments"
-                />
-              </div>
-            </PanelCard>
-
-            <PanelCard title="AI Recommendations">
-              <div className="space-y-4">
-                <MiniRow
-                  icon={<Sparkles className="h-5 w-5" />}
-                  title="Publish related campaigns"
-                  detail="Build adjacent niche campaigns from the same market pack."
-                  value="High"
-                />
-                <MiniRow
-                  icon={<Target className="h-5 w-5" />}
-                  title="Add campaign attribution"
-                  detail="Track which landing page generated each assessment."
-                  value="Next"
-                />
-                <MiniRow
-                  icon={<Search className="h-5 w-5" />}
-                  title="Connect GA4"
-                  detail="Measure traffic and conversion before ad spend."
-                  value="Launch"
-                />
-              </div>
-            </PanelCard>
-
-            <PanelCard title="Market Opportunity">
-              <div className="flex items-center justify-center">
-                <div className="flex h-36 w-36 items-center justify-center rounded-full border-[10px] border-emerald-500 bg-slate-900">
-                  <div className="text-center">
-                    <p className="text-4xl font-black text-white">92</p>
-                    <p className="text-sm text-slate-400">/100</p>
-                  </div>
-                </div>
-              </div>
-
-              <p className="mt-5 text-center font-black text-emerald-300">
-                High Opportunity
-              </p>
-            </PanelCard>
-          </div>
-        )}
-
         {activeTab === "Landing Page" && (
-          <PanelCard title="Landing Page Editor">
-            <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
-              <div className="space-y-5">
-                <Field
-                  label="Eyebrow"
-                  value={landingForm.eyebrow}
-                  onChange={(value) =>
-                    setLandingForm((current) => ({ ...current, eyebrow: value }))
-                  }
-                />
-
-                <Field
-                  label="Headline"
-                  value={landingForm.headline}
-                  onChange={(value) =>
-                    setLandingForm((current) => ({ ...current, headline: value }))
-                  }
-                />
-
-                <Field
-                  label="Subheadline"
-                  value={landingForm.subheadline}
-                  onChange={(value) =>
-                    setLandingForm((current) => ({
-                      ...current,
-                      subheadline: value,
-                    }))
-                  }
-                  textarea
-                />
-
-                <Field
-                  label="Primary CTA"
-                  value={landingForm.primary_cta}
-                  onChange={(value) =>
-                    setLandingForm((current) => ({
-                      ...current,
-                      primary_cta: value,
-                    }))
-                  }
-                />
-
-                <Field
-                  label="Audience"
-                  value={landingForm.audience}
-                  onChange={(value) =>
-                    setLandingForm((current) => ({ ...current, audience: value }))
-                  }
-                />
-
-                <Field
-                  label="Pain Points - one per line"
-                  value={landingForm.pain_points}
-                  onChange={(value) =>
-                    setLandingForm((current) => ({
-                      ...current,
-                      pain_points: value,
-                    }))
-                  }
-                  textarea
-                />
-
-                <Field
-                  label="Opportunities - one per line"
-                  value={landingForm.opportunities}
-                  onChange={(value) =>
-                    setLandingForm((current) => ({
-                      ...current,
-                      opportunities: value,
-                    }))
-                  }
-                  textarea
-                />
-
-                <Field
-                  label="Proof Points - one per line"
-                  value={landingForm.proof_points}
-                  onChange={(value) =>
-                    setLandingForm((current) => ({
-                      ...current,
-                      proof_points: value,
-                    }))
-                  }
-                  textarea
-                />
-
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <button
-                    type="button"
-                    onClick={saveLandingPage}
-                    disabled={isSavingLandingPage}
-                    className="rounded-2xl bg-blue-600 px-6 py-4 text-sm font-black text-white shadow-lg shadow-blue-950/30 hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-700"
-                  >
-                    {isSavingLandingPage ? "Saving..." : "Save & Republish"}
-                  </button>
-
-                  <Link
-                    href={landingPath}
-                    target="_blank"
-                    className="rounded-2xl border border-slate-700 px-6 py-4 text-center text-sm font-black text-slate-300 hover:border-blue-500 hover:text-white"
-                  >
-                    Preview Page
-                  </Link>
-                </div>
-
-                {saveMessage && (
-                  <p className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold text-slate-300">
-                    {saveMessage}
-                  </p>
-                )}
-              </div>
-
-              <div className="rounded-[2rem] border border-slate-800 bg-slate-900 p-6">
-                <p className="text-sm font-black uppercase tracking-[0.22em] text-emerald-300">
-                  Live Preview
-                </p>
-
-                <p className="mt-6 text-sm font-black uppercase tracking-[0.2em] text-blue-300">
-                  {landingForm.eyebrow}
-                </p>
-
-                <h2 className="mt-4 text-4xl font-black leading-tight text-white">
-                  {landingForm.headline}
-                </h2>
-
-                <p className="mt-5 text-lg leading-8 text-slate-300">
-                  {landingForm.subheadline}
-                </p>
-
-                <div className="mt-8 rounded-2xl bg-blue-600 px-5 py-4 text-center font-black text-white">
-                  {landingForm.primary_cta}
-                </div>
-              </div>
-            </div>
-          </PanelCard>
-        )}
+  <LandingPageTab
+    campaign={campaign}
+    landingForm={landingForm}
+    setLandingForm={setLandingForm}
+    landingPath={landingPath}
+    isSavingLandingPage={isSavingLandingPage}
+    saveMessage={saveMessage}
+    onSave={saveLandingPage}
+  />
+)}
 
         {activeTab === "Google Ads" && (
           <PanelCard title="Google Ads">
