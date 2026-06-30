@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
-  BarChart3,
   Bolt,
   CheckCircle2,
   Circle,
@@ -19,7 +18,10 @@ import {
   TrendingUp,
 } from "lucide-react";
 import Header from "@/components/mission-control/Header";
-import type { MarketingCampaign } from "@/components/mission-control/campaigns/types";
+import type {
+  CampaignLandingPage,
+  MarketingCampaign,
+} from "@/components/mission-control/campaigns/types";
 import { getPublicLandingPagePath } from "@/components/mission-control/campaigns/helpers";
 import { supabase } from "@/lib/supabase";
 
@@ -28,6 +30,17 @@ function hasAsset(value: unknown) {
   if (Array.isArray(value)) return value.length > 0;
   if (typeof value === "object") return Object.keys(value).length > 0;
   return true;
+}
+
+function textToList(value: string) {
+  return value
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function listToText(value: string[] | undefined) {
+  return (value || []).join("\n");
 }
 
 function getAssetScore(campaign: MarketingCampaign) {
@@ -69,6 +82,58 @@ function StatusBadge({ status }: { status: string | null }) {
     >
       {status || "draft"}
     </span>
+  );
+}
+
+function PanelCard({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6">
+      <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
+        {title}
+      </p>
+      <div className="mt-6">{children}</div>
+    </section>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  textarea = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  textarea?: boolean;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+        {label}
+      </span>
+
+      {textarea ? (
+        <textarea
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          rows={6}
+          className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 font-bold text-white outline-none focus:border-blue-500"
+        />
+      ) : (
+        <input
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 font-bold text-white outline-none focus:border-blue-500"
+        />
+      )}
+    </label>
   );
 }
 
@@ -123,31 +188,6 @@ function MetricCard({
   );
 }
 
-function RecommendationCard({
-  title,
-  detail,
-  badge,
-}: {
-  title: string;
-  detail: string;
-  badge: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-950 p-5">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="font-black text-white">{title}</p>
-          <p className="mt-2 text-sm leading-6 text-slate-400">{detail}</p>
-        </div>
-
-        <span className="shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-black text-emerald-300">
-          {badge}
-        </span>
-      </div>
-    </div>
-  );
-}
-
 function MiniRow({
   icon,
   title,
@@ -177,23 +217,6 @@ function MiniRow({
   );
 }
 
-function PanelCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6">
-      <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
-        {title}
-      </p>
-      <div className="mt-6">{children}</div>
-    </section>
-  );
-}
-
 export default function CampaignWorkspacePage() {
   const params = useParams();
   const router = useRouter();
@@ -202,6 +225,20 @@ export default function CampaignWorkspacePage() {
   const [campaign, setCampaign] = useState<MarketingCampaign | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Overview");
+
+  const [landingForm, setLandingForm] = useState({
+    eyebrow: "",
+    headline: "",
+    subheadline: "",
+    primary_cta: "",
+    audience: "",
+    pain_points: "",
+    opportunities: "",
+    proof_points: "",
+  });
+
+  const [isSavingLandingPage, setIsSavingLandingPage] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
 
   async function loadCampaign() {
     const { data, error } = await supabase
@@ -215,8 +252,93 @@ export default function CampaignWorkspacePage() {
       return;
     }
 
-    setCampaign(data as MarketingCampaign);
+    const loadedCampaign = data as MarketingCampaign;
+    setCampaign(loadedCampaign);
+
+    const landingPage = loadedCampaign.landing_page_json;
+
+    if (landingPage) {
+      setLandingForm({
+        eyebrow: landingPage.eyebrow || "",
+        headline: landingPage.headline || "",
+        subheadline: landingPage.subheadline || "",
+        primary_cta: landingPage.primary_cta || "",
+        audience: landingPage.audience || loadedCampaign.audience || "",
+        pain_points: listToText(landingPage.pain_points),
+        opportunities: listToText(landingPage.opportunities),
+        proof_points: listToText(landingPage.proof_points),
+      });
+    }
+
     setIsLoading(false);
+  }
+
+  async function saveLandingPage() {
+    if (!campaign || !campaign.landing_page_json) return;
+
+    setSaveMessage("");
+    setIsSavingLandingPage(true);
+
+    const updatedLandingPage: CampaignLandingPage = {
+      ...campaign.landing_page_json,
+      eyebrow: landingForm.eyebrow,
+      headline: landingForm.headline,
+      subheadline: landingForm.subheadline,
+      primary_cta: landingForm.primary_cta,
+      audience: landingForm.audience,
+      pain_points: textToList(landingForm.pain_points),
+      opportunities: textToList(landingForm.opportunities),
+      proof_points: textToList(landingForm.proof_points),
+    };
+
+    const { error: campaignError } = await supabase
+      .from("marketing_campaigns")
+      .update({
+        landing_page_json: updatedLandingPage,
+      })
+      .eq("id", campaign.id);
+
+    if (campaignError) {
+      console.error(campaignError);
+      setSaveMessage("Landing page could not be saved.");
+      setIsSavingLandingPage(false);
+      return;
+    }
+
+    const { error: landingPageError } = await supabase
+      .from("marketing_landing_pages")
+      .upsert(
+        [
+          {
+            slug: updatedLandingPage.slug,
+            eyebrow: updatedLandingPage.eyebrow,
+            headline: updatedLandingPage.headline,
+            subheadline: updatedLandingPage.subheadline,
+            primary_cta: updatedLandingPage.primary_cta,
+            audience: updatedLandingPage.audience,
+            pain_points: updatedLandingPage.pain_points,
+            opportunities: updatedLandingPage.opportunities,
+            proof_points: updatedLandingPage.proof_points,
+            is_active: true,
+          },
+        ],
+        { onConflict: "slug" },
+      );
+
+    if (landingPageError) {
+      console.error(landingPageError);
+      setSaveMessage("Saved to campaign, but public landing page was not updated.");
+      setIsSavingLandingPage(false);
+      return;
+    }
+
+    setCampaign({
+      ...campaign,
+      landing_page_json: updatedLandingPage,
+    });
+
+    setSaveMessage("Landing page saved and republished.");
+    setIsSavingLandingPage(false);
   }
 
   useEffect(() => {
@@ -441,192 +563,214 @@ export default function CampaignWorkspacePage() {
         </section>
 
         {activeTab === "Overview" && (
-          <>
-            <div className="grid gap-6 xl:grid-cols-[1fr_0.95fr_0.95fr]">
-              <PanelCard title="Campaign Overview">
-                <p className="text-sm leading-7 text-slate-400">
-                  Your campaign is live and organized. Continue optimizing
-                  assets, tracking assessments, and expanding related campaigns.
-                </p>
+          <div className="grid gap-6 xl:grid-cols-[1fr_0.95fr_0.95fr]">
+            <PanelCard title="Campaign Overview">
+              <p className="text-sm leading-7 text-slate-400">
+                Your campaign is live and organized. Continue optimizing assets,
+                tracking assessments, and expanding related campaigns.
+              </p>
 
-                <div className="mt-6 space-y-1">
-                  <MiniRow
-                    icon={<Target className="h-5 w-5" />}
-                    title="Target Audience"
-                    detail={campaign.audience || "Not specified"}
-                  />
-                  <MiniRow
-                    icon={<Target className="h-5 w-5" />}
-                    title="Primary Offer"
-                    detail={
-                      campaign.landing_page_json?.primary_cta ||
-                      "Tax Opportunity Assessment"
-                    }
-                  />
-                  <MiniRow
-                    icon={<Globe className="h-5 w-5" />}
-                    title="Geography"
-                    detail={campaign.location || "United States"}
-                  />
-                  <MiniRow
-                    icon={<TrendingUp className="h-5 w-5" />}
-                    title="Campaign Goal"
-                    detail="Generate qualified tax planning assessments"
-                  />
-                </div>
-              </PanelCard>
+              <div className="mt-6 space-y-1">
+                <MiniRow
+                  icon={<Target className="h-5 w-5" />}
+                  title="Target Audience"
+                  detail={campaign.audience || "Not specified"}
+                />
+                <MiniRow
+                  icon={<Target className="h-5 w-5" />}
+                  title="Primary Offer"
+                  detail={
+                    campaign.landing_page_json?.primary_cta ||
+                    "Tax Opportunity Assessment"
+                  }
+                />
+                <MiniRow
+                  icon={<Globe className="h-5 w-5" />}
+                  title="Geography"
+                  detail={campaign.location || "United States"}
+                />
+                <MiniRow
+                  icon={<TrendingUp className="h-5 w-5" />}
+                  title="Campaign Goal"
+                  detail="Generate qualified tax planning assessments"
+                />
+              </div>
+            </PanelCard>
 
-              <PanelCard title="AI Recommendations">
-                <div className="space-y-4">
-                  <RecommendationCard
-                    title="Publish related campaigns"
-                    detail="Build adjacent niche campaigns from the same market pack."
-                    badge="High Impact"
-                  />
-                  <RecommendationCard
-                    title="Add campaign attribution"
-                    detail="Track which landing page generated each assessment."
-                    badge="Tracking"
-                  />
-                  <RecommendationCard
-                    title="Connect GA4"
-                    detail="Measure traffic and conversion rate before ad spend."
-                    badge="Launch"
-                  />
-                </div>
-              </PanelCard>
+            <PanelCard title="AI Recommendations">
+              <div className="space-y-4">
+                <MiniRow
+                  icon={<Sparkles className="h-5 w-5" />}
+                  title="Publish related campaigns"
+                  detail="Build adjacent niche campaigns from the same market pack."
+                  value="High"
+                />
+                <MiniRow
+                  icon={<Target className="h-5 w-5" />}
+                  title="Add campaign attribution"
+                  detail="Track which landing page generated each assessment."
+                  value="Next"
+                />
+                <MiniRow
+                  icon={<Search className="h-5 w-5" />}
+                  title="Connect GA4"
+                  detail="Measure traffic and conversion before ad spend."
+                  value="Launch"
+                />
+              </div>
+            </PanelCard>
 
-              <PanelCard title="Market Opportunity">
-                <div className="flex items-center justify-center">
-                  <div className="flex h-36 w-36 items-center justify-center rounded-full border-[10px] border-emerald-500 bg-slate-900">
-                    <div className="text-center">
-                      <p className="text-4xl font-black text-white">92</p>
-                      <p className="text-sm text-slate-400">/100</p>
-                    </div>
+            <PanelCard title="Market Opportunity">
+              <div className="flex items-center justify-center">
+                <div className="flex h-36 w-36 items-center justify-center rounded-full border-[10px] border-emerald-500 bg-slate-900">
+                  <div className="text-center">
+                    <p className="text-4xl font-black text-white">92</p>
+                    <p className="text-sm text-slate-400">/100</p>
                   </div>
                 </div>
+              </div>
 
-                <p className="mt-5 text-center font-black text-emerald-300">
-                  High Opportunity
-                </p>
-
-                <div className="mt-6 space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Monthly Searches</span>
-                    <span className="font-black text-white">TBD</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Competition</span>
-                    <span className="font-black text-white">Medium</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Recommended Budget</span>
-                    <span className="font-black text-white">$40/day</span>
-                  </div>
-                </div>
-              </PanelCard>
-            </div>
-
-            <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_1.2fr_0.9fr]">
-              <PanelCard title="Recent Activity">
-                <div className="space-y-1">
-                  <MiniRow
-                    icon={<CheckCircle2 className="h-5 w-5" />}
-                    title="Campaign workspace created"
-                    detail="Workspace foundation added"
-                    value="Today"
-                  />
-                  <MiniRow
-                    icon={<Globe className="h-5 w-5" />}
-                    title="Landing page published"
-                    detail={landingPath}
-                    value="Ready"
-                  />
-                  <MiniRow
-                    icon={<Sparkles className="h-5 w-5" />}
-                    title="AI assets generated"
-                    detail={`${score.completed} assets available`}
-                    value={`${score.percent}%`}
-                  />
-                </div>
-              </PanelCard>
-
-              <PanelCard title="Top Opportunities">
-                <div className="space-y-1">
-                  <MiniRow
-                    icon={<Search className="h-5 w-5" />}
-                    title="Add 15 long-tail keywords"
-                    detail="Expand to related search opportunities"
-                    value="+ traffic"
-                  />
-                  <MiniRow
-                    icon={<FileText className="h-5 w-5" />}
-                    title="Create 2 related blog posts"
-                    detail="Increase topical authority"
-                    value="+ SEO"
-                  />
-                  <MiniRow
-                    icon={<Megaphone className="h-5 w-5" />}
-                    title="Test sharper ad headline"
-                    detail="Improve click-through rate"
-                    value="+ CTR"
-                  />
-                </div>
-              </PanelCard>
-
-              <PanelCard title="Campaign Timeline">
-                <div className="space-y-5">
-                  {[
-                    ["Today", "Workspace opened", "Campaign management center active"],
-                    ["Today", "Campaign published", "Landing page accepting traffic"],
-                    ["Earlier", "AI assets generated", "Ads, SEO, email, and blog created"],
-                    ["Start", "Campaign created", "Initial campaign setup"],
-                  ].map(([date, title, detail]) => (
-                    <div key={`${date}-${title}`} className="flex gap-4">
-                      <div className="mt-1 h-3 w-3 rounded-full bg-blue-500" />
-                      <div>
-                        <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                          {date}
-                        </p>
-                        <p className="mt-1 font-black text-white">{title}</p>
-                        <p className="text-sm text-slate-500">{detail}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </PanelCard>
-            </div>
-          </>
+              <p className="mt-5 text-center font-black text-emerald-300">
+                High Opportunity
+              </p>
+            </PanelCard>
+          </div>
         )}
 
         {activeTab === "Landing Page" && (
-          <PanelCard title="Landing Page">
-            <div className="grid gap-5">
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                  Headline
-                </p>
-                <p className="mt-2 text-xl font-black text-white">
-                  {campaign.landing_page_json?.headline || "Not set"}
-                </p>
+          <PanelCard title="Landing Page Editor">
+            <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
+              <div className="space-y-5">
+                <Field
+                  label="Eyebrow"
+                  value={landingForm.eyebrow}
+                  onChange={(value) =>
+                    setLandingForm((current) => ({ ...current, eyebrow: value }))
+                  }
+                />
+
+                <Field
+                  label="Headline"
+                  value={landingForm.headline}
+                  onChange={(value) =>
+                    setLandingForm((current) => ({ ...current, headline: value }))
+                  }
+                />
+
+                <Field
+                  label="Subheadline"
+                  value={landingForm.subheadline}
+                  onChange={(value) =>
+                    setLandingForm((current) => ({
+                      ...current,
+                      subheadline: value,
+                    }))
+                  }
+                  textarea
+                />
+
+                <Field
+                  label="Primary CTA"
+                  value={landingForm.primary_cta}
+                  onChange={(value) =>
+                    setLandingForm((current) => ({
+                      ...current,
+                      primary_cta: value,
+                    }))
+                  }
+                />
+
+                <Field
+                  label="Audience"
+                  value={landingForm.audience}
+                  onChange={(value) =>
+                    setLandingForm((current) => ({ ...current, audience: value }))
+                  }
+                />
+
+                <Field
+                  label="Pain Points - one per line"
+                  value={landingForm.pain_points}
+                  onChange={(value) =>
+                    setLandingForm((current) => ({
+                      ...current,
+                      pain_points: value,
+                    }))
+                  }
+                  textarea
+                />
+
+                <Field
+                  label="Opportunities - one per line"
+                  value={landingForm.opportunities}
+                  onChange={(value) =>
+                    setLandingForm((current) => ({
+                      ...current,
+                      opportunities: value,
+                    }))
+                  }
+                  textarea
+                />
+
+                <Field
+                  label="Proof Points - one per line"
+                  value={landingForm.proof_points}
+                  onChange={(value) =>
+                    setLandingForm((current) => ({
+                      ...current,
+                      proof_points: value,
+                    }))
+                  }
+                  textarea
+                />
+
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <button
+                    type="button"
+                    onClick={saveLandingPage}
+                    disabled={isSavingLandingPage}
+                    className="rounded-2xl bg-blue-600 px-6 py-4 text-sm font-black text-white shadow-lg shadow-blue-950/30 hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-700"
+                  >
+                    {isSavingLandingPage ? "Saving..." : "Save & Republish"}
+                  </button>
+
+                  <Link
+                    href={landingPath}
+                    target="_blank"
+                    className="rounded-2xl border border-slate-700 px-6 py-4 text-center text-sm font-black text-slate-300 hover:border-blue-500 hover:text-white"
+                  >
+                    Preview Page
+                  </Link>
+                </div>
+
+                {saveMessage && (
+                  <p className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold text-slate-300">
+                    {saveMessage}
+                  </p>
+                )}
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                  Subheadline
+              <div className="rounded-[2rem] border border-slate-800 bg-slate-900 p-6">
+                <p className="text-sm font-black uppercase tracking-[0.22em] text-emerald-300">
+                  Live Preview
                 </p>
-                <p className="mt-2 text-slate-300">
-                  {campaign.landing_page_json?.subheadline || "Not set"}
-                </p>
-              </div>
 
-              <Link
-                href={landingPath}
-                target="_blank"
-                className="w-fit rounded-2xl bg-blue-600 px-5 py-3 font-black text-white"
-              >
-                Preview Public Page
-              </Link>
+                <p className="mt-6 text-sm font-black uppercase tracking-[0.2em] text-blue-300">
+                  {landingForm.eyebrow}
+                </p>
+
+                <h2 className="mt-4 text-4xl font-black leading-tight text-white">
+                  {landingForm.headline}
+                </h2>
+
+                <p className="mt-5 text-lg leading-8 text-slate-300">
+                  {landingForm.subheadline}
+                </p>
+
+                <div className="mt-8 rounded-2xl bg-blue-600 px-5 py-4 text-center font-black text-white">
+                  {landingForm.primary_cta}
+                </div>
+              </div>
             </div>
           </PanelCard>
         )}
@@ -692,7 +836,10 @@ export default function CampaignWorkspacePage() {
                 <p className="font-black text-white">Primary</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {(campaign.keywords_json?.primary_keywords || []).map((keyword) => (
-                    <span key={keyword} className="rounded-full bg-blue-500/10 px-3 py-1 text-sm font-bold text-blue-300">
+                    <span
+                      key={keyword}
+                      className="rounded-full bg-blue-500/10 px-3 py-1 text-sm font-bold text-blue-300"
+                    >
                       {keyword}
                     </span>
                   ))}
@@ -703,7 +850,10 @@ export default function CampaignWorkspacePage() {
                 <p className="font-black text-white">Secondary</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {(campaign.keywords_json?.secondary_keywords || []).map((keyword) => (
-                    <span key={keyword} className="rounded-full bg-slate-950 px-3 py-1 text-sm font-bold text-slate-300">
+                    <span
+                      key={keyword}
+                      className="rounded-full bg-slate-950 px-3 py-1 text-sm font-bold text-slate-300"
+                    >
                       {keyword}
                     </span>
                   ))}
@@ -714,7 +864,10 @@ export default function CampaignWorkspacePage() {
                 <p className="font-black text-white">Negative</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {(campaign.keywords_json?.negative_keywords || []).map((keyword) => (
-                    <span key={keyword} className="rounded-full bg-red-500/10 px-3 py-1 text-sm font-bold text-red-300">
+                    <span
+                      key={keyword}
+                      className="rounded-full bg-red-500/10 px-3 py-1 text-sm font-bold text-red-300"
+                    >
                       {keyword}
                     </span>
                   ))}
@@ -728,7 +881,10 @@ export default function CampaignWorkspacePage() {
           <PanelCard title="Email Sequence">
             <div className="space-y-4">
               {(campaign.email_json || []).map((email, index) => (
-                <div key={`${email.subject}-${index}`} className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <div
+                  key={`${email.subject}-${index}`}
+                  className="rounded-2xl border border-slate-800 bg-slate-900 p-5"
+                >
                   <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                     Email {index + 1}
                   </p>
@@ -750,7 +906,10 @@ export default function CampaignWorkspacePage() {
 
             <div className="mt-5 space-y-3">
               {(campaign.blog_json?.outline || []).map((item) => (
-                <p key={item} className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-slate-300">
+                <p
+                  key={item}
+                  className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-slate-300"
+                >
                   {item}
                 </p>
               ))}
@@ -789,20 +948,23 @@ export default function CampaignWorkspacePage() {
         {activeTab === "AI Insights" && (
           <PanelCard title="AI Insights">
             <div className="space-y-4">
-              <RecommendationCard
+              <MiniRow
+                icon={<Sparkles className="h-5 w-5" />}
                 title="Improve campaign specificity"
                 detail="Add more profession-specific language to the hero section and FAQ."
-                badge="Conversion"
+                value="Conversion"
               />
-              <RecommendationCard
+              <MiniRow
+                icon={<Search className="h-5 w-5" />}
                 title="Generate related campaign cluster"
                 detail="Build adjacent campaigns from the same profession family."
-                badge="SEO"
+                value="SEO"
               />
-              <RecommendationCard
+              <MiniRow
+                icon={<Target className="h-5 w-5" />}
                 title="Add tracking before ads"
                 detail="Do not scale paid spend until attribution and conversion tracking are active."
-                badge="Critical"
+                value="Critical"
               />
             </div>
           </PanelCard>
