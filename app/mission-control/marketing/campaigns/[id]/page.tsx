@@ -1,6 +1,5 @@
 "use client";
 
-import LandingPageTab from "./components/LandingPageTab";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -25,6 +24,8 @@ import type {
 } from "@/components/mission-control/campaigns/types";
 import { getPublicLandingPagePath } from "@/components/mission-control/campaigns/helpers";
 import { supabase } from "@/lib/supabase";
+import LandingPageTab from "./components/LandingPageTab";
+import SeoTab from "./components/SeoTab";
 
 function hasAsset(value: unknown) {
   if (!value) return false;
@@ -100,41 +101,6 @@ function PanelCard({
       </p>
       <div className="mt-6">{children}</div>
     </section>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-  textarea = false,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  textarea?: boolean;
-}) {
-  return (
-    <label className="block">
-      <span className="mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-        {label}
-      </span>
-
-      {textarea ? (
-        <textarea
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          rows={6}
-          className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 font-bold text-white outline-none focus:border-blue-500"
-        />
-      ) : (
-        <input
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 font-bold text-white outline-none focus:border-blue-500"
-        />
-      )}
-    </label>
   );
 }
 
@@ -238,8 +204,15 @@ export default function CampaignWorkspacePage() {
     proof_points: "",
   });
 
+  const [seoForm, setSeoForm] = useState({
+    title: "",
+    meta_description: "",
+  });
+
   const [isSavingLandingPage, setIsSavingLandingPage] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+  const [isSavingSeo, setIsSavingSeo] = useState(false);
+  const [seoMessage, setSeoMessage] = useState("");
 
   async function loadCampaign() {
     const { data, error } = await supabase
@@ -268,6 +241,13 @@ export default function CampaignWorkspacePage() {
         pain_points: listToText(landingPage.pain_points),
         opportunities: listToText(landingPage.opportunities),
         proof_points: listToText(landingPage.proof_points),
+      });
+    }
+
+    if (loadedCampaign.seo_json) {
+      setSeoForm({
+        title: loadedCampaign.seo_json.title || "",
+        meta_description: loadedCampaign.seo_json.meta_description || "",
       });
     }
 
@@ -340,6 +320,40 @@ export default function CampaignWorkspacePage() {
 
     setSaveMessage("Landing page saved and republished.");
     setIsSavingLandingPage(false);
+  }
+
+  async function saveSeo() {
+    if (!campaign) return;
+
+    setSeoMessage("");
+    setIsSavingSeo(true);
+
+    const updatedSeo = {
+      title: seoForm.title,
+      meta_description: seoForm.meta_description,
+    };
+
+    const { error } = await supabase
+      .from("marketing_campaigns")
+      .update({
+        seo_json: updatedSeo,
+      })
+      .eq("id", campaign.id);
+
+    if (error) {
+      console.error(error);
+      setSeoMessage("SEO could not be saved.");
+      setIsSavingSeo(false);
+      return;
+    }
+
+    setCampaign({
+      ...campaign,
+      seo_json: updatedSeo,
+    });
+
+    setSeoMessage("SEO saved.");
+    setIsSavingSeo(false);
   }
 
   useEffect(() => {
@@ -563,17 +577,92 @@ export default function CampaignWorkspacePage() {
           </div>
         </section>
 
+        {activeTab === "Overview" && (
+          <div className="grid gap-6 xl:grid-cols-[1fr_0.95fr_0.95fr]">
+            <PanelCard title="Campaign Overview">
+              <p className="text-sm leading-7 text-slate-400">
+                Your campaign is live and organized. Continue optimizing assets,
+                tracking assessments, and expanding related campaigns.
+              </p>
+
+              <div className="mt-6 space-y-1">
+                <MiniRow
+                  icon={<Target className="h-5 w-5" />}
+                  title="Target Audience"
+                  detail={campaign.audience || "Not specified"}
+                />
+                <MiniRow
+                  icon={<Target className="h-5 w-5" />}
+                  title="Primary Offer"
+                  detail={
+                    campaign.landing_page_json?.primary_cta ||
+                    "Tax Opportunity Assessment"
+                  }
+                />
+                <MiniRow
+                  icon={<Globe className="h-5 w-5" />}
+                  title="Geography"
+                  detail={campaign.location || "United States"}
+                />
+                <MiniRow
+                  icon={<TrendingUp className="h-5 w-5" />}
+                  title="Campaign Goal"
+                  detail="Generate qualified tax planning assessments"
+                />
+              </div>
+            </PanelCard>
+
+            <PanelCard title="AI Recommendations">
+              <div className="space-y-4">
+                <MiniRow
+                  icon={<Sparkles className="h-5 w-5" />}
+                  title="Publish related campaigns"
+                  detail="Build adjacent niche campaigns from the same market pack."
+                  value="High"
+                />
+                <MiniRow
+                  icon={<Target className="h-5 w-5" />}
+                  title="Add campaign attribution"
+                  detail="Track which landing page generated each assessment."
+                  value="Next"
+                />
+                <MiniRow
+                  icon={<Search className="h-5 w-5" />}
+                  title="Connect GA4"
+                  detail="Measure traffic and conversion before ad spend."
+                  value="Launch"
+                />
+              </div>
+            </PanelCard>
+
+            <PanelCard title="Market Opportunity">
+              <div className="flex items-center justify-center">
+                <div className="flex h-36 w-36 items-center justify-center rounded-full border-[10px] border-emerald-500 bg-slate-900">
+                  <div className="text-center">
+                    <p className="text-4xl font-black text-white">92</p>
+                    <p className="text-sm text-slate-400">/100</p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-5 text-center font-black text-emerald-300">
+                High Opportunity
+              </p>
+            </PanelCard>
+          </div>
+        )}
+
         {activeTab === "Landing Page" && (
-  <LandingPageTab
-    campaign={campaign}
-    landingForm={landingForm}
-    setLandingForm={setLandingForm}
-    landingPath={landingPath}
-    isSavingLandingPage={isSavingLandingPage}
-    saveMessage={saveMessage}
-    onSave={saveLandingPage}
-  />
-)}
+          <LandingPageTab
+            campaign={campaign}
+            landingForm={landingForm}
+            setLandingForm={setLandingForm}
+            landingPath={landingPath}
+            isSavingLandingPage={isSavingLandingPage}
+            saveMessage={saveMessage}
+            onSave={saveLandingPage}
+          />
+        )}
 
         {activeTab === "Google Ads" && (
           <PanelCard title="Google Ads">
@@ -608,25 +697,14 @@ export default function CampaignWorkspacePage() {
         )}
 
         {activeTab === "SEO" && (
-          <PanelCard title="SEO">
-            <div className="grid gap-5">
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                  SEO Title
-                </p>
-                <p className="mt-2 text-white">{campaign.seo_json?.title || "Not set"}</p>
-              </div>
-
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                  Meta Description
-                </p>
-                <p className="mt-2 text-slate-300">
-                  {campaign.seo_json?.meta_description || "Not set"}
-                </p>
-              </div>
-            </div>
-          </PanelCard>
+          <SeoTab
+            campaign={campaign}
+            seoForm={seoForm}
+            setSeoForm={setSeoForm}
+            isSavingSeo={isSavingSeo}
+            seoMessage={seoMessage}
+            onSave={saveSeo}
+          />
         )}
 
         {activeTab === "Keywords" && (
