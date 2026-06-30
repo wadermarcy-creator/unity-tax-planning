@@ -7,6 +7,36 @@ import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
 import DisclosureFooter from "@/components/DisclosureFooter";
 
+function getAttributionData() {
+  if (typeof window === "undefined") {
+    return {
+      campaign_slug: null,
+      campaign_name: null,
+      source: null,
+      medium: null,
+      campaign: null,
+      referrer: null,
+      landing_page: null,
+    };
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const pathname = window.location.pathname;
+
+  const isLandingPage = pathname.startsWith("/landing/");
+  const campaignSlug = isLandingPage ? pathname.replace("/landing/", "") : null;
+
+  return {
+    campaign_slug: campaignSlug,
+    campaign_name: campaignSlug,
+    source: params.get("utm_source"),
+    medium: params.get("utm_medium"),
+    campaign: params.get("utm_campaign"),
+    referrer: document.referrer || null,
+    landing_page: pathname,
+  };
+}
+
 type QualificationAnswers = {
   profile: string;
   income: string;
@@ -289,6 +319,7 @@ export default function TaxOpportunityScanPage() {
 
       lead_score: leadScore,
       lead_grade: leadGrade,
+      ...getAttributionData(),
       status: "new",
     };
 

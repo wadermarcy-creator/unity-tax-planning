@@ -65,6 +65,11 @@ export default function CampaignsPage() {
         email_json: campaign.email_sequence,
         facebook_json: campaign.facebook_ad,
         linkedin_json: campaign.linkedin_post,
+        case_study_json: campaign.case_study,
+        faq_json: campaign.faq,
+        youtube_json: campaign.youtube_video,
+        lead_magnet_json: campaign.lead_magnet,
+        tracking_json: campaign.tracking,
         notes: `Generated campaign for ${campaign.audience}.`,
       },
     ]);
@@ -109,6 +114,11 @@ export default function CampaignsPage() {
             email_json: campaign.email_sequence,
             facebook_json: campaign.facebook_ad,
             linkedin_json: campaign.linkedin_post,
+            case_study_json: campaign.case_study,
+            faq_json: campaign.faq,
+            youtube_json: campaign.youtube_video,
+            lead_magnet_json: campaign.lead_magnet,
+            tracking_json: campaign.tracking,
             notes: `Published campaign for ${campaign.audience}.`,
           },
         ],
@@ -181,7 +191,7 @@ export default function CampaignsPage() {
           </p>
         )}
 
-        <div className="grid gap-6 xl:grid-cols-[1fr_0.9fr]">
+        <div className="grid gap-6">
           <CampaignDetails
             generatedCampaign={generatedCampaign}
             saveCampaign={saveCampaign}

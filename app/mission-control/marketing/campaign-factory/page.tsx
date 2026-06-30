@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Header from "@/components/mission-control/Header";
+import { MARKET_PACKS } from "@/lib/campaignFactory/marketPacks";
 
 type CampaignIdea = {
   audience: string;
@@ -21,25 +22,43 @@ type FactoryResponse = {
 };
 
 export default function CampaignFactoryPage() {
-  const [category, setCategory] = useState("Medical Professionals");
+  const [category, setCategory] = useState("Healthcare");
   const [location, setLocation] = useState("United States");
   const [count, setCount] = useState(12);
+  const [selectedPackId, setSelectedPackId] = useState("healthcare");
   const [data, setData] = useState<FactoryResponse | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [message, setMessage] = useState("");
+
+  const selectedPack = MARKET_PACKS.find((pack) => pack.id === selectedPackId);
+
+  function selectMarketPack(packId: string) {
+    const pack = MARKET_PACKS.find((item) => item.id === packId);
+
+    if (!pack) return;
+
+    setSelectedPackId(pack.id);
+    setCategory(pack.name);
+    setCount(Math.min(pack.industries.length, 30));
+    setData(null);
+    setMessage(`${pack.name} market pack selected.`);
+  }
 
   async function generateIdeas() {
     setMessage("");
     setIsGenerating(true);
 
     try {
-      const response = await fetch("/api/mission-control/generate-campaign-factory", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "/api/mission-control/generate-campaign-factory",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ category, location, count }),
         },
-        body: JSON.stringify({ category, location, count }),
-      });
+      );
 
       const result = await response.json();
 
@@ -63,7 +82,7 @@ export default function CampaignFactoryPage() {
     <div className="min-h-screen">
       <Header
         title="Campaign Factory"
-        subtitle="Generate dozens of high-value campaign ideas from one market."
+        subtitle="Generate high-value campaign ideas from proven market packs."
       />
 
       <div className="px-6 py-8 lg:px-10">
@@ -73,14 +92,91 @@ export default function CampaignFactoryPage() {
           </p>
 
           <h1 className="mt-4 text-4xl font-black tracking-tight text-white md:text-5xl">
-            Turn one category into a campaign pipeline.
+            Turn high-income markets into campaign pipelines.
           </h1>
 
           <p className="mt-4 max-w-4xl text-lg font-medium leading-8 text-slate-300">
-            Enter a broad market like medical professionals, aviation, legal,
-            business owners, or real estate investors. Mission Control will
-            identify specific campaign ideas worth building.
+            Choose a market pack based on high-income professions, then let
+            Mission Control identify specific campaign ideas worth building,
+            testing, and publishing.
           </p>
+        </section>
+
+        <section className="mb-8 rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+          <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
+                Market Packs
+              </p>
+
+              <h2 className="mt-3 text-2xl font-black text-white">
+                Start with a proven high-value market.
+              </h2>
+            </div>
+
+            <p className="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-black text-slate-300">
+              {MARKET_PACKS.length} packs
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {MARKET_PACKS.map((pack) => {
+              const isSelected = selectedPackId === pack.id;
+
+              return (
+                <button
+                  key={pack.id}
+                  type="button"
+                  onClick={() => selectMarketPack(pack.id)}
+                  className={`rounded-[1.5rem] border p-5 text-left transition ${
+                    isSelected
+                      ? "border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-950/20"
+                      : "border-slate-800 bg-slate-900 hover:border-blue-500/50"
+                  }`}
+                >
+                  <div className="text-3xl">{pack.icon}</div>
+
+                  <h3 className="mt-4 text-xl font-black text-white">
+                    {pack.name}
+                  </h3>
+
+                  <p className="mt-2 text-sm font-medium leading-6 text-slate-400">
+                    {pack.industries.length} campaign opportunities
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+
+          {selectedPack && (
+            <div className="mt-6 rounded-[1.5rem] border border-slate-800 bg-slate-900 p-5">
+              <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
+                    Selected Pack
+                  </p>
+                  <h3 className="mt-2 text-xl font-black text-white">
+                    {selectedPack.icon} {selectedPack.name}
+                  </h3>
+                </div>
+
+                <p className="text-sm font-bold text-slate-400">
+                  {selectedPack.industries.length} audiences available
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {selectedPack.industries.map((industry) => (
+                  <span
+                    key={industry}
+                    className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-slate-300"
+                  >
+                    {industry}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="mb-8 rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
@@ -94,7 +190,7 @@ export default function CampaignFactoryPage() {
                 value={category}
                 onChange={(event) => setCategory(event.target.value)}
                 className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 font-bold text-white outline-none placeholder:text-slate-600 focus:border-violet-500"
-                placeholder="Medical Professionals"
+                placeholder="Healthcare"
               />
             </div>
 
@@ -154,9 +250,9 @@ export default function CampaignFactoryPage() {
             </h2>
 
             <p className="mt-4 text-sm font-medium leading-7 text-slate-400">
-              Start with a broad market. Once ideas are generated, you can open
-              the Campaign Generator and build a full campaign for any specific
-              audience.
+              Start with a market pack or enter a custom category. Once ideas
+              are generated, you can open the Campaign Generator and build a
+              full campaign for any specific audience.
             </p>
           </section>
         ) : (
