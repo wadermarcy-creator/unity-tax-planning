@@ -231,10 +231,10 @@ export default function CampaignLibrary({
                     </Link>
 
                     <Link
-                      href="/mission-control/marketing/campaigns"
+                      href={`/mission-control/marketing/campaigns/${campaign.id}`}
                       className="rounded-2xl border border-slate-700 px-5 py-3 text-center text-sm font-black text-slate-300 hover:border-blue-500 hover:text-white"
                     >
-                      Open Campaigns
+                      Open Workspace
                     </Link>
 
                     <button
