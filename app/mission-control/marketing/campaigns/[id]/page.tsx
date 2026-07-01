@@ -177,6 +177,14 @@ export default function CampaignWorkspacePage() {
   const [isSavingLandingPage, setIsSavingLandingPage] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
 
+  const [seoForm, setSeoForm] = useState({
+    title: "",
+    meta_description: "",
+  });
+
+  const [isSavingSeo, setIsSavingSeo] = useState(false);
+  const [seoMessage, setSeoMessage] = useState("");
+
   async function loadCampaign() {
     const { data, error } = await supabase
       .from("marketing_campaigns")
@@ -206,6 +214,11 @@ export default function CampaignWorkspacePage() {
         proof_points: listToText(landingPage.proof_points),
       });
     }
+
+    setSeoForm({
+      title: loadedCampaign.seo_json?.title || "",
+      meta_description: loadedCampaign.seo_json?.meta_description || "",
+    });
 
     setIsLoading(false);
   }
@@ -264,7 +277,9 @@ export default function CampaignWorkspacePage() {
 
     if (landingPageError) {
       console.error(landingPageError);
-      setSaveMessage("Saved to campaign, but public landing page was not updated.");
+      setSaveMessage(
+        "Saved to campaign, but public landing page was not updated.",
+      );
       setIsSavingLandingPage(false);
       return;
     }
@@ -276,6 +291,40 @@ export default function CampaignWorkspacePage() {
 
     setSaveMessage("Landing page saved and republished.");
     setIsSavingLandingPage(false);
+  }
+
+  async function saveSeo() {
+    if (!campaign) return;
+
+    setSeoMessage("");
+    setIsSavingSeo(true);
+
+    const updatedSeo = {
+      title: seoForm.title,
+      meta_description: seoForm.meta_description,
+    };
+
+    const { error } = await supabase
+      .from("marketing_campaigns")
+      .update({
+        seo_json: updatedSeo,
+      })
+      .eq("id", campaign.id);
+
+    if (error) {
+      console.error(error);
+      setSeoMessage("SEO could not be saved.");
+      setIsSavingSeo(false);
+      return;
+    }
+
+    setCampaign({
+      ...campaign,
+      seo_json: updatedSeo,
+    });
+
+    setSeoMessage("SEO saved.");
+    setIsSavingSeo(false);
   }
 
   useEffect(() => {
@@ -299,7 +348,10 @@ export default function CampaignWorkspacePage() {
   if (!campaign) {
     return (
       <div className="min-h-screen">
-        <Header title="Campaign Not Found" subtitle="This campaign does not exist." />
+        <Header
+          title="Campaign Not Found"
+          subtitle="This campaign does not exist."
+        />
 
         <div className="p-10">
           <button
@@ -389,7 +441,9 @@ export default function CampaignWorkspacePage() {
 
               <div className="flex h-44 w-44 items-center justify-center rounded-full border-[14px] border-emerald-500 bg-slate-900 shadow-xl shadow-emerald-950/20">
                 <div className="text-center">
-                  <p className="text-5xl font-black text-white">{score.percent}</p>
+                  <p className="text-5xl font-black text-white">
+                    {score.percent}
+                  </p>
                   <p className="text-sm font-bold text-slate-400">/100</p>
                 </div>
               </div>
@@ -429,7 +483,9 @@ export default function CampaignWorkspacePage() {
                 <SetupItem
                   icon={<Globe className="h-5 w-5" />}
                   label="Landing Page"
-                  detail={campaign.status === "published" ? "Published" : "Draft"}
+                  detail={
+                    campaign.status === "published" ? "Published" : "Draft"
+                  }
                   active={hasAsset(campaign.landing_page_json)}
                 />
                 <SetupItem
@@ -471,10 +527,26 @@ export default function CampaignWorkspacePage() {
               </p>
 
               <div className="grid gap-3 sm:grid-cols-2">
-                <MetricCard label="Visitors" value="—" trend="Waiting for GA4" />
-                <MetricCard label="Assessments" value="—" trend="Connect attribution" />
-                <MetricCard label="Consultations" value="—" trend="Calendly later" />
-                <MetricCard label="Conversion Rate" value="—" trend="Pending traffic" />
+                <MetricCard
+                  label="Visitors"
+                  value="—"
+                  trend="Waiting for GA4"
+                />
+                <MetricCard
+                  label="Assessments"
+                  value="—"
+                  trend="Connect attribution"
+                />
+                <MetricCard
+                  label="Consultations"
+                  value="—"
+                  trend="Calendly later"
+                />
+                <MetricCard
+                  label="Conversion Rate"
+                  value="—"
+                  trend="Pending traffic"
+                />
               </div>
             </div>
           </div>
@@ -500,7 +572,11 @@ export default function CampaignWorkspacePage() {
         </section>
 
         {activeTab === "Overview" && (
-          <OverviewTab campaign={campaign} landingPath={landingPath} score={score} />
+          <OverviewTab
+            campaign={campaign}
+            landingPath={landingPath}
+            score={score}
+          />
         )}
 
         {activeTab === "Landing Page" && (
@@ -515,41 +591,32 @@ export default function CampaignWorkspacePage() {
           />
         )}
 
-        {activeTab === "Google Ads" && (
-          <GoogleAdsTab campaign={campaign} />
-        )}
+        {activeTab === "Google Ads" && <GoogleAdsTab campaign={campaign} />}
 
         {activeTab === "SEO" && (
-          <SeoTab campaign={campaign} />
+          <SeoTab
+            campaign={campaign}
+            seoForm={seoForm}
+            setSeoForm={setSeoForm}
+            isSavingSeo={isSavingSeo}
+            seoMessage={seoMessage}
+            onSave={saveSeo}
+          />
         )}
 
-        {activeTab === "Keywords" && (
-          <KeywordsTab campaign={campaign} />
-        )}
+        {activeTab === "Keywords" && <KeywordsTab campaign={campaign} />}
 
-        {activeTab === "Email" && (
-          <EmailTab campaign={campaign} />
-        )}
+        {activeTab === "Email" && <EmailTab campaign={campaign} />}
 
-        {activeTab === "Blog" && (
-          <BlogTab campaign={campaign} />
-        )}
+        {activeTab === "Blog" && <BlogTab campaign={campaign} />}
 
-        {activeTab === "Social" && (
-          <SocialTab campaign={campaign} />
-        )}
+        {activeTab === "Social" && <SocialTab campaign={campaign} />}
 
-        {activeTab === "Analytics" && (
-          <AnalyticsTab campaign={campaign} />
-        )}
+        {activeTab === "Analytics" && <AnalyticsTab campaign={campaign} />}
 
-        {activeTab === "AI Insights" && (
-          <AiInsightsTab campaign={campaign} />
-        )}
+        {activeTab === "AI Insights" && <AiInsightsTab campaign={campaign} />}
 
-        {activeTab === "Settings" && (
-          <SettingsTab campaign={campaign} />
-        )}
+        {activeTab === "Settings" && <SettingsTab campaign={campaign} />}
       </div>
     </div>
   );
