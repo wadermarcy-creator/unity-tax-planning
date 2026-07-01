@@ -15,7 +15,6 @@ import {
   Search,
   Sparkles,
   Target,
-  TrendingUp,
 } from "lucide-react";
 import Header from "@/components/mission-control/Header";
 import type {
@@ -25,51 +24,22 @@ import type {
 import { getPublicLandingPagePath } from "@/components/mission-control/campaigns/helpers";
 import { supabase } from "@/lib/supabase";
 import LandingPageTab from "./components/LandingPageTab";
+import OverviewTab from "./components/OverviewTab";
+import GoogleAdsTab from "./components/GoogleAdsTab";
+import KeywordsTab from "./components/KeywordsTab";
 import SeoTab from "./components/SeoTab";
-
-function hasAsset(value: unknown) {
-  if (!value) return false;
-  if (Array.isArray(value)) return value.length > 0;
-  if (typeof value === "object") return Object.keys(value).length > 0;
-  return true;
-}
-
-function textToList(value: string) {
-  return value
-    .split("\n")
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
-function listToText(value: string[] | undefined) {
-  return (value || []).join("\n");
-}
-
-function getAssetScore(campaign: MarketingCampaign) {
-  const assets = [
-    campaign.landing_page_json,
-    campaign.google_ads_json,
-    campaign.seo_json,
-    campaign.keywords_json,
-    campaign.blog_json,
-    campaign.email_json,
-    campaign.facebook_json,
-    campaign.linkedin_json,
-    campaign.case_study_json,
-    campaign.faq_json,
-    campaign.youtube_json,
-    campaign.lead_magnet_json,
-    campaign.tracking_json,
-  ];
-
-  const completed = assets.filter(hasAsset).length;
-
-  return {
-    completed,
-    total: assets.length,
-    percent: Math.round((completed / assets.length) * 100),
-  };
-}
+import AiInsightsTab from "./components/AiInsightsTab";
+import SettingsTab from "./components/SettingsTab";
+import EmailTab from "./components/EmailTab";
+import BlogTab from "./components/BlogTab";
+import SocialTab from "./components/SocialTab";
+import AnalyticsTab from "./components/AnalyticsTab";
+import {
+  getAssetScore,
+  hasAsset,
+  listToText,
+  textToList,
+} from "./lib/campaignHelpers";
 
 function StatusBadge({ status }: { status: string | null }) {
   const published = status === "published";
@@ -84,23 +54,6 @@ function StatusBadge({ status }: { status: string | null }) {
     >
       {status || "draft"}
     </span>
-  );
-}
-
-function PanelCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6">
-      <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
-        {title}
-      </p>
-      <div className="mt-6">{children}</div>
-    </section>
   );
 }
 
@@ -155,6 +108,23 @@ function MetricCard({
   );
 }
 
+function PanelCard({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6">
+      <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
+        {title}
+      </p>
+      <div className="mt-6">{children}</div>
+    </section>
+  );
+}
+
 function MiniRow({
   icon,
   title,
@@ -204,15 +174,8 @@ export default function CampaignWorkspacePage() {
     proof_points: "",
   });
 
-  const [seoForm, setSeoForm] = useState({
-    title: "",
-    meta_description: "",
-  });
-
   const [isSavingLandingPage, setIsSavingLandingPage] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
-  const [isSavingSeo, setIsSavingSeo] = useState(false);
-  const [seoMessage, setSeoMessage] = useState("");
 
   async function loadCampaign() {
     const { data, error } = await supabase
@@ -241,13 +204,6 @@ export default function CampaignWorkspacePage() {
         pain_points: listToText(landingPage.pain_points),
         opportunities: listToText(landingPage.opportunities),
         proof_points: listToText(landingPage.proof_points),
-      });
-    }
-
-    if (loadedCampaign.seo_json) {
-      setSeoForm({
-        title: loadedCampaign.seo_json.title || "",
-        meta_description: loadedCampaign.seo_json.meta_description || "",
       });
     }
 
@@ -320,40 +276,6 @@ export default function CampaignWorkspacePage() {
 
     setSaveMessage("Landing page saved and republished.");
     setIsSavingLandingPage(false);
-  }
-
-  async function saveSeo() {
-    if (!campaign) return;
-
-    setSeoMessage("");
-    setIsSavingSeo(true);
-
-    const updatedSeo = {
-      title: seoForm.title,
-      meta_description: seoForm.meta_description,
-    };
-
-    const { error } = await supabase
-      .from("marketing_campaigns")
-      .update({
-        seo_json: updatedSeo,
-      })
-      .eq("id", campaign.id);
-
-    if (error) {
-      console.error(error);
-      setSeoMessage("SEO could not be saved.");
-      setIsSavingSeo(false);
-      return;
-    }
-
-    setCampaign({
-      ...campaign,
-      seo_json: updatedSeo,
-    });
-
-    setSeoMessage("SEO saved.");
-    setIsSavingSeo(false);
   }
 
   useEffect(() => {
@@ -578,78 +500,7 @@ export default function CampaignWorkspacePage() {
         </section>
 
         {activeTab === "Overview" && (
-          <div className="grid gap-6 xl:grid-cols-[1fr_0.95fr_0.95fr]">
-            <PanelCard title="Campaign Overview">
-              <p className="text-sm leading-7 text-slate-400">
-                Your campaign is live and organized. Continue optimizing assets,
-                tracking assessments, and expanding related campaigns.
-              </p>
-
-              <div className="mt-6 space-y-1">
-                <MiniRow
-                  icon={<Target className="h-5 w-5" />}
-                  title="Target Audience"
-                  detail={campaign.audience || "Not specified"}
-                />
-                <MiniRow
-                  icon={<Target className="h-5 w-5" />}
-                  title="Primary Offer"
-                  detail={
-                    campaign.landing_page_json?.primary_cta ||
-                    "Tax Opportunity Assessment"
-                  }
-                />
-                <MiniRow
-                  icon={<Globe className="h-5 w-5" />}
-                  title="Geography"
-                  detail={campaign.location || "United States"}
-                />
-                <MiniRow
-                  icon={<TrendingUp className="h-5 w-5" />}
-                  title="Campaign Goal"
-                  detail="Generate qualified tax planning assessments"
-                />
-              </div>
-            </PanelCard>
-
-            <PanelCard title="AI Recommendations">
-              <div className="space-y-4">
-                <MiniRow
-                  icon={<Sparkles className="h-5 w-5" />}
-                  title="Publish related campaigns"
-                  detail="Build adjacent niche campaigns from the same market pack."
-                  value="High"
-                />
-                <MiniRow
-                  icon={<Target className="h-5 w-5" />}
-                  title="Add campaign attribution"
-                  detail="Track which landing page generated each assessment."
-                  value="Next"
-                />
-                <MiniRow
-                  icon={<Search className="h-5 w-5" />}
-                  title="Connect GA4"
-                  detail="Measure traffic and conversion before ad spend."
-                  value="Launch"
-                />
-              </div>
-            </PanelCard>
-
-            <PanelCard title="Market Opportunity">
-              <div className="flex items-center justify-center">
-                <div className="flex h-36 w-36 items-center justify-center rounded-full border-[10px] border-emerald-500 bg-slate-900">
-                  <div className="text-center">
-                    <p className="text-4xl font-black text-white">92</p>
-                    <p className="text-sm text-slate-400">/100</p>
-                  </div>
-                </div>
-              </div>
-
-              <p className="mt-5 text-center font-black text-emerald-300">
-                High Opportunity
-              </p>
-            </PanelCard>
-          </div>
+          <OverviewTab campaign={campaign} landingPath={landingPath} score={score} />
         )}
 
         {activeTab === "Landing Page" && (
@@ -665,195 +516,39 @@ export default function CampaignWorkspacePage() {
         )}
 
         {activeTab === "Google Ads" && (
-          <PanelCard title="Google Ads">
-            <div className="grid gap-5 lg:grid-cols-2">
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                  Headlines
-                </p>
-                <div className="mt-4 space-y-3">
-                  {(campaign.google_ads_json?.headlines || []).map((headline) => (
-                    <p key={headline} className="rounded-xl bg-slate-950 p-3 text-white">
-                      {headline}
-                    </p>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                  Descriptions
-                </p>
-                <div className="mt-4 space-y-3">
-                  {(campaign.google_ads_json?.descriptions || []).map((description) => (
-                    <p key={description} className="rounded-xl bg-slate-950 p-3 text-white">
-                      {description}
-                    </p>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </PanelCard>
+          <GoogleAdsTab campaign={campaign} />
         )}
 
         {activeTab === "SEO" && (
-          <SeoTab
-            campaign={campaign}
-            seoForm={seoForm}
-            setSeoForm={setSeoForm}
-            isSavingSeo={isSavingSeo}
-            seoMessage={seoMessage}
-            onSave={saveSeo}
-          />
+          <SeoTab campaign={campaign} />
         )}
 
         {activeTab === "Keywords" && (
-          <PanelCard title="Keywords">
-            <div className="grid gap-5 lg:grid-cols-3">
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="font-black text-white">Primary</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {(campaign.keywords_json?.primary_keywords || []).map((keyword) => (
-                    <span
-                      key={keyword}
-                      className="rounded-full bg-blue-500/10 px-3 py-1 text-sm font-bold text-blue-300"
-                    >
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="font-black text-white">Secondary</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {(campaign.keywords_json?.secondary_keywords || []).map((keyword) => (
-                    <span
-                      key={keyword}
-                      className="rounded-full bg-slate-950 px-3 py-1 text-sm font-bold text-slate-300"
-                    >
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="font-black text-white">Negative</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {(campaign.keywords_json?.negative_keywords || []).map((keyword) => (
-                    <span
-                      key={keyword}
-                      className="rounded-full bg-red-500/10 px-3 py-1 text-sm font-bold text-red-300"
-                    >
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </PanelCard>
+          <KeywordsTab campaign={campaign} />
         )}
 
         {activeTab === "Email" && (
-          <PanelCard title="Email Sequence">
-            <div className="space-y-4">
-              {(campaign.email_json || []).map((email, index) => (
-                <div
-                  key={`${email.subject}-${index}`}
-                  className="rounded-2xl border border-slate-800 bg-slate-900 p-5"
-                >
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                    Email {index + 1}
-                  </p>
-                  <p className="mt-2 text-xl font-black text-white">{email.subject}</p>
-                  <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-slate-300">
-                    {email.body}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </PanelCard>
+          <EmailTab campaign={campaign} />
         )}
 
         {activeTab === "Blog" && (
-          <PanelCard title="Blog">
-            <h2 className="text-2xl font-black text-white">
-              {campaign.blog_json?.title || "No blog title generated"}
-            </h2>
-
-            <div className="mt-5 space-y-3">
-              {(campaign.blog_json?.outline || []).map((item) => (
-                <p
-                  key={item}
-                  className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-slate-300"
-                >
-                  {item}
-                </p>
-              ))}
-            </div>
-          </PanelCard>
+          <BlogTab campaign={campaign} />
         )}
 
         {activeTab === "Social" && (
-          <PanelCard title="Social">
-            <div className="grid gap-5 lg:grid-cols-2">
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="font-black text-white">Facebook Ad</p>
-                <p className="mt-3 text-slate-300">
-                  {campaign.facebook_json?.primary_text || "No Facebook ad generated."}
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="font-black text-white">LinkedIn Post</p>
-                <p className="mt-3 text-slate-300">
-                  {campaign.linkedin_json?.post || "No LinkedIn post generated."}
-                </p>
-              </div>
-            </div>
-          </PanelCard>
+          <SocialTab campaign={campaign} />
         )}
 
         {activeTab === "Analytics" && (
-          <PanelCard title="Analytics">
-            <p className="text-slate-400">
-              Analytics will connect here after GA4, Google Ads, and campaign attribution are active.
-            </p>
-          </PanelCard>
+          <AnalyticsTab campaign={campaign} />
         )}
 
         {activeTab === "AI Insights" && (
-          <PanelCard title="AI Insights">
-            <div className="space-y-4">
-              <MiniRow
-                icon={<Sparkles className="h-5 w-5" />}
-                title="Improve campaign specificity"
-                detail="Add more profession-specific language to the hero section and FAQ."
-                value="Conversion"
-              />
-              <MiniRow
-                icon={<Search className="h-5 w-5" />}
-                title="Generate related campaign cluster"
-                detail="Build adjacent campaigns from the same profession family."
-                value="SEO"
-              />
-              <MiniRow
-                icon={<Target className="h-5 w-5" />}
-                title="Add tracking before ads"
-                detail="Do not scale paid spend until attribution and conversion tracking are active."
-                value="Critical"
-              />
-            </div>
-          </PanelCard>
+          <AiInsightsTab campaign={campaign} />
         )}
 
         {activeTab === "Settings" && (
-          <PanelCard title="Settings">
-            <p className="text-slate-400">
-              Campaign settings, publishing controls, and archive options will live here.
-            </p>
-          </PanelCard>
+          <SettingsTab campaign={campaign} />
         )}
       </div>
     </div>

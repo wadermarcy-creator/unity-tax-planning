@@ -29,58 +29,76 @@ export default function AdvisorNotes({ leadId }: AdvisorNotesProps) {
   const [noteText, setNoteText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    async function loadNotes() {
-      const { data, error } = await supabase
-        .from("mission_control_notes")
-        .select("*")
-        .eq("lead_id", leadId)
-        .order("created_at", { ascending: false });
+  async function loadNotes() {
+    setIsLoading(true);
 
-      if (!error && data) {
-        setNotes(data as Note[]);
-      }
+    const { data, error } = await supabase
+      .from("mission_control_notes")
+      .select("*")
+      .eq("lead_id", leadId)
+      .order("created_at", { ascending: false });
 
-      setIsLoading(false);
+    if (error) {
+      console.error(error);
+      setMessage(error.message);
+    } else {
+      setNotes((data || []) as Note[]);
     }
 
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
     loadNotes();
   }, [leadId]);
 
   async function addNote() {
     if (!noteText.trim()) return;
 
+    setMessage("");
     setIsSaving(true);
 
-    const { data, error } = await supabase
-      .from("mission_control_notes")
-      .insert([
-        {
-          lead_id: leadId,
-          note: noteText.trim(),
-        },
-      ])
-      .select()
-      .single();
+    try {
+      const { error } = await supabase.from("mission_control_notes").insert({
+        lead_id: leadId,
+        note: noteText.trim(),
+      });
 
-    if (!error && data) {
-      setNotes((current) => [data as Note, ...current]);
+      if (error) {
+        console.error(error);
+        setMessage(error.message);
+        setIsSaving(false);
+        return;
+      }
+
       setNoteText("");
+      await loadNotes();
+      setMessage("Note saved.");
+    } catch (error) {
+      console.error(error);
+      setMessage("Unexpected error saving note.");
     }
 
     setIsSaving(false);
   }
 
   async function deleteNote(noteId: string) {
+    setMessage("");
+
     const { error } = await supabase
       .from("mission_control_notes")
       .delete()
       .eq("id", noteId);
 
-    if (!error) {
-      setNotes((current) => current.filter((note) => note.id !== noteId));
+    if (error) {
+      console.error(error);
+      setMessage(error.message);
+      return;
     }
+
+    setNotes((current) => current.filter((note) => note.id !== noteId));
   }
 
   return (
@@ -98,7 +116,7 @@ export default function AdvisorNotes({ leadId }: AdvisorNotesProps) {
           value={noteText}
           onChange={(event) => setNoteText(event.target.value)}
           className="min-h-32 w-full resize-y rounded-2xl border border-slate-800 bg-slate-900 p-5 text-sm font-medium leading-7 text-white outline-none placeholder:text-slate-600 focus:border-blue-500"
-          placeholder="Add a note... Example: Called prospect, owns two businesses, wants to meet next week, CPA is involved."
+          placeholder="Add a note..."
         />
 
         <button
@@ -109,6 +127,12 @@ export default function AdvisorNotes({ leadId }: AdvisorNotesProps) {
         >
           {isSaving ? "Saving Note..." : "Add Note"}
         </button>
+
+        {message && (
+          <p className="mt-4 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold text-slate-300">
+            {message}
+          </p>
+        )}
       </div>
 
       <div className="mt-7 space-y-4">
