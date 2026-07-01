@@ -185,6 +185,28 @@ export default function CampaignWorkspacePage() {
   const [isSavingSeo, setIsSavingSeo] = useState(false);
   const [seoMessage, setSeoMessage] = useState("");
 
+  const [googleAdsForm, setGoogleAdsForm] = useState({
+    headlines: [""],
+    descriptions: [""],
+  });
+
+  const [isSavingGoogleAds, setIsSavingGoogleAds] = useState(false);
+  const [googleAdsMessage, setGoogleAdsMessage] = useState("");
+
+  const [keywordsForm, setKeywordsForm] = useState({
+    primary_keywords: "",
+    secondary_keywords: "",
+    negative_keywords: "",
+  });
+
+  const [isSavingKeywords, setIsSavingKeywords] = useState(false);
+  const [keywordsMessage, setKeywordsMessage] = useState("");
+
+  const [emailForm, setEmailForm] = useState<{ subject: string; body: string }[]>([]);
+
+  const [isSavingEmail, setIsSavingEmail] = useState(false);
+  const [emailMessage, setEmailMessage] = useState("");
+
   async function loadCampaign() {
     const { data, error } = await supabase
       .from("marketing_campaigns")
@@ -219,6 +241,30 @@ export default function CampaignWorkspacePage() {
       title: loadedCampaign.seo_json?.title || "",
       meta_description: loadedCampaign.seo_json?.meta_description || "",
     });
+
+    setGoogleAdsForm({
+      headlines:
+        loadedCampaign.google_ads_json?.headlines?.length
+          ? loadedCampaign.google_ads_json.headlines
+          : [""],
+      descriptions:
+        loadedCampaign.google_ads_json?.descriptions?.length
+          ? loadedCampaign.google_ads_json.descriptions
+          : [""],
+    });
+
+    setKeywordsForm({
+      primary_keywords: listToText(loadedCampaign.keywords_json?.primary_keywords),
+      secondary_keywords: listToText(loadedCampaign.keywords_json?.secondary_keywords),
+      negative_keywords: listToText(loadedCampaign.keywords_json?.negative_keywords),
+    });
+
+    setEmailForm(
+      (loadedCampaign.email_json || []).map((email) => ({
+        subject: email.subject || "",
+        body: email.body || "",
+      })),
+    );
 
     setIsLoading(false);
   }
@@ -325,6 +371,111 @@ export default function CampaignWorkspacePage() {
 
     setSeoMessage("SEO saved.");
     setIsSavingSeo(false);
+  }
+
+  async function saveGoogleAds() {
+    if (!campaign) return;
+
+    setGoogleAdsMessage("");
+    setIsSavingGoogleAds(true);
+
+    const updatedGoogleAds = {
+      ...(campaign.google_ads_json || {}),
+      headlines: googleAdsForm.headlines,
+      descriptions: googleAdsForm.descriptions,
+    };
+
+    const { error } = await supabase
+      .from("marketing_campaigns")
+      .update({
+        google_ads_json: updatedGoogleAds,
+      })
+      .eq("id", campaign.id);
+
+    if (error) {
+      console.error(error);
+      setGoogleAdsMessage("Google Ads could not be saved.");
+      setIsSavingGoogleAds(false);
+      return;
+    }
+
+    setCampaign({
+      ...campaign,
+      google_ads_json: updatedGoogleAds,
+    });
+
+    setGoogleAdsMessage("Google Ads saved.");
+    setIsSavingGoogleAds(false);
+  }
+
+  async function saveKeywords() {
+    if (!campaign) return;
+
+    setKeywordsMessage("");
+    setIsSavingKeywords(true);
+
+    const updatedKeywords = {
+      ...(campaign.keywords_json || {}),
+      primary_keywords: textToList(keywordsForm.primary_keywords),
+      secondary_keywords: textToList(keywordsForm.secondary_keywords),
+      negative_keywords: textToList(keywordsForm.negative_keywords),
+    };
+
+    const { error } = await supabase
+      .from("marketing_campaigns")
+      .update({
+        keywords_json: updatedKeywords,
+      })
+      .eq("id", campaign.id);
+
+    if (error) {
+      console.error(error);
+      setKeywordsMessage("Keywords could not be saved.");
+      setIsSavingKeywords(false);
+      return;
+    }
+
+    setCampaign({
+      ...campaign,
+      keywords_json: updatedKeywords,
+    });
+
+    setKeywordsMessage("Keywords saved.");
+    setIsSavingKeywords(false);
+  }
+
+  async function saveEmail() {
+    if (!campaign) return;
+
+    setEmailMessage("");
+    setIsSavingEmail(true);
+
+    const updatedEmail = emailForm.map((email) => ({
+      subject: email.subject,
+      body: email.body,
+    }));
+
+    const { error } = await supabase
+      .from("marketing_campaigns")
+      .update({
+        email_json: updatedEmail,
+      })
+      .eq("id", campaign.id);
+
+    if (error) {
+      console.error(error);
+      setEmailMessage("Email sequence could not be saved.");
+      setIsSavingEmail(false);
+      return;
+    }
+
+    setCampaign({
+      ...campaign,
+      email_json: updatedEmail,
+    });
+
+    setEmailMessage("Email sequence saved.");
+    setIsSavingEmail(false);
   }
 
   useEffect(() => {
@@ -591,7 +742,16 @@ export default function CampaignWorkspacePage() {
           />
         )}
 
-        {activeTab === "Google Ads" && <GoogleAdsTab campaign={campaign} />}
+        {activeTab === "Google Ads" && (
+          <GoogleAdsTab
+            campaign={campaign}
+            googleAdsForm={googleAdsForm}
+            setGoogleAdsForm={setGoogleAdsForm}
+            isSavingGoogleAds={isSavingGoogleAds}
+            googleAdsMessage={googleAdsMessage}
+            onSave={saveGoogleAds}
+          />
+        )}
 
         {activeTab === "SEO" && (
           <SeoTab
@@ -604,9 +764,27 @@ export default function CampaignWorkspacePage() {
           />
         )}
 
-        {activeTab === "Keywords" && <KeywordsTab campaign={campaign} />}
+        {activeTab === "Keywords" && (
+          <KeywordsTab
+            campaign={campaign}
+            keywordsForm={keywordsForm}
+            setKeywordsForm={setKeywordsForm}
+            isSavingKeywords={isSavingKeywords}
+            keywordsMessage={keywordsMessage}
+            onSave={saveKeywords}
+          />
+        )}
 
-        {activeTab === "Email" && <EmailTab campaign={campaign} />}
+        {activeTab === "Email" && (
+          <EmailTab
+            campaign={campaign}
+            emailForm={emailForm}
+            setEmailForm={setEmailForm}
+            isSavingEmail={isSavingEmail}
+            emailMessage={emailMessage}
+            onSave={saveEmail}
+          />
+        )}
 
         {activeTab === "Blog" && <BlogTab campaign={campaign} />}
 

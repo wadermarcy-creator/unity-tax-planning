@@ -3,28 +3,54 @@
 import { Mail } from "lucide-react";
 import type { MarketingCampaign } from "@/components/mission-control/campaigns/types";
 
-type EmailTabProps = {
-  campaign: MarketingCampaign;
+type EmailFormItem = {
+  subject: string;
+  body: string;
 };
 
-export default function EmailTab({ campaign }: EmailTabProps) {
-  const emails = campaign.email_json || [];
+type EmailTabProps = {
+  campaign: MarketingCampaign;
+  emailForm: EmailFormItem[];
+  setEmailForm: React.Dispatch<React.SetStateAction<EmailFormItem[]>>;
+  isSavingEmail: boolean;
+  emailMessage: string;
+  onSave: () => void;
+};
 
+function updateEmailValue(
+  emails: EmailFormItem[],
+  index: number,
+  field: keyof EmailFormItem,
+  value: string,
+) {
+  return emails.map((email, currentIndex) =>
+    currentIndex === index ? { ...email, [field]: value } : email,
+  );
+}
+
+export default function EmailTab({
+  campaign,
+  emailForm,
+  setEmailForm,
+  isSavingEmail,
+  emailMessage,
+  onSave,
+}: EmailTabProps) {
   return (
     <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
-            Email Sequence
+            Email Editor
           </p>
 
           <h2 className="mt-3 text-3xl font-black text-white">
-            Follow-Up Email Assets
+            Follow-Up Email Sequence
           </h2>
 
           <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
-            Review the AI-generated follow-up sequence for this campaign. These
-            emails can be used after a prospect completes the Tax Opportunity
+            Edit the follow-up email sequence for this campaign. These emails
+            can be used after a prospect completes the Tax Opportunity
             Assessment.
           </p>
         </div>
@@ -36,33 +62,81 @@ export default function EmailTab({ campaign }: EmailTabProps) {
 
       <div className="mt-8 grid gap-6 xl:grid-cols-[1fr_0.75fr]">
         <div className="space-y-5">
-          {emails.length === 0 ? (
+          {emailForm.length === 0 ? (
             <div className="rounded-[2rem] border border-slate-800 bg-slate-900 p-6">
               <p className="text-sm font-bold text-slate-400">
                 No email sequence has been generated yet.
               </p>
             </div>
           ) : (
-            emails.map((email, index) => (
+            emailForm.map((email, index) => (
               <article
-                key={`${email.subject}-${index}`}
+                key={`email-editor-${index}`}
                 className="rounded-[2rem] border border-slate-800 bg-slate-900 p-6"
               >
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-blue-300">
                   Email {index + 1}
                 </p>
 
-                <h3 className="mt-3 text-2xl font-black text-white">
-                  {email.subject}
-                </h3>
+                <label className="mt-5 block">
+                  <span className="mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                    Subject
+                  </span>
 
-                <div className="mt-5 rounded-2xl border border-slate-800 bg-slate-950 p-5">
-                  <p className="whitespace-pre-wrap text-sm font-medium leading-7 text-slate-300">
-                    {email.body}
-                  </p>
-                </div>
+                  <input
+                    value={email.subject}
+                    onChange={(event) =>
+                      setEmailForm((current) =>
+                        updateEmailValue(
+                          current,
+                          index,
+                          "subject",
+                          event.target.value,
+                        ),
+                      )
+                    }
+                    className="w-full rounded-2xl border border-slate-800 bg-slate-950 px-5 py-4 text-sm font-bold text-white outline-none focus:border-blue-500"
+                  />
+                </label>
+
+                <label className="mt-5 block">
+                  <span className="mb-2 block text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                    Body
+                  </span>
+
+                  <textarea
+                    value={email.body}
+                    onChange={(event) =>
+                      setEmailForm((current) =>
+                        updateEmailValue(
+                          current,
+                          index,
+                          "body",
+                          event.target.value,
+                        ),
+                      )
+                    }
+                    rows={10}
+                    className="w-full rounded-2xl border border-slate-800 bg-slate-950 px-5 py-4 text-sm font-bold leading-7 text-white outline-none focus:border-blue-500"
+                  />
+                </label>
               </article>
             ))
+          )}
+
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={isSavingEmail}
+            className="rounded-2xl bg-blue-600 px-6 py-4 text-sm font-black text-white shadow-lg shadow-blue-950/30 hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-700"
+          >
+            {isSavingEmail ? "Saving Emails..." : "Save Email Sequence"}
+          </button>
+
+          {emailMessage && (
+            <p className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold text-slate-300">
+              {emailMessage}
+            </p>
           )}
         </div>
 
@@ -75,20 +149,19 @@ export default function EmailTab({ campaign }: EmailTabProps) {
             <div className="mt-5 space-y-4">
               <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                  Emails Generated
+                  Emails
                 </p>
                 <p className="mt-2 text-3xl font-black text-white">
-                  {emails.length}
+                  {emailForm.length}
                 </p>
               </div>
 
               <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                  Intended Use
+                  Campaign
                 </p>
                 <p className="mt-2 text-sm font-bold leading-6 text-slate-300">
-                  Nurture prospects after assessment submission and encourage
-                  qualified prospects to schedule a strategy conversation.
+                  {campaign.name}
                 </p>
               </div>
             </div>
@@ -96,14 +169,14 @@ export default function EmailTab({ campaign }: EmailTabProps) {
 
           <div className="rounded-[2rem] border border-slate-800 bg-slate-900 p-6">
             <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
-              Future Upgrades
+              Next Upgrades
             </p>
 
             <div className="mt-5 space-y-3 text-sm leading-6 text-slate-400">
-              <p>Edit subject lines and body copy.</p>
               <p>Copy individual emails to clipboard.</p>
-              <p>Generate alternate versions with AI.</p>
-              <p>Connect to email automation later.</p>
+              <p>Rewrite subject lines with AI.</p>
+              <p>Send automatic confirmation emails after assessment.</p>
+              <p>Connect to an email automation provider later.</p>
             </div>
           </div>
         </div>

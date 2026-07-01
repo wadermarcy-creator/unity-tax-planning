@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import type { MarketingCampaign } from "@/components/mission-control/campaigns/types";
+import EditorActionBar from "./EditorActionBar";
 
 type SeoFormState = {
   title: string;
@@ -17,6 +18,21 @@ type SeoTabProps = {
   onSave: () => void;
 };
 
+function buildSeoCopy(seoForm: SeoFormState, campaign: MarketingCampaign) {
+  return [
+    "SEO TITLE",
+    seoForm.title || "Not set",
+    "",
+    "META DESCRIPTION",
+    seoForm.meta_description || "Not set",
+    "",
+    "URL",
+    `https://unitytaxplanning.com/landing/${
+      campaign.landing_page_json?.slug || campaign.slug
+    }`,
+  ].join("\n");
+}
+
 export default function SeoTab({
   campaign,
   seoForm,
@@ -27,6 +43,7 @@ export default function SeoTab({
 }: SeoTabProps) {
   const titleLength = seoForm.title.length;
   const metaLength = seoForm.meta_description.length;
+  const copyText = buildSeoCopy(seoForm, campaign);
 
   return (
     <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6">
@@ -50,6 +67,17 @@ export default function SeoTab({
         <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 px-5 py-4 text-blue-300">
           <Search className="h-6 w-6" />
         </div>
+      </div>
+
+      <div className="mt-6">
+        <EditorActionBar
+          saveLabel="Save SEO"
+          copyLabel="Copy SEO"
+          rewriteLabel="AI Rewrite"
+          copyText={copyText}
+          isSaving={isSavingSeo}
+          onSave={onSave}
+        />
       </div>
 
       <div className="mt-8 grid gap-6 xl:grid-cols-[1fr_0.8fr]">
@@ -88,15 +116,6 @@ export default function SeoTab({
               placeholder="Explore proactive tax planning strategies for pilots..."
             />
           </label>
-
-          <button
-            type="button"
-            onClick={onSave}
-            disabled={isSavingSeo}
-            className="rounded-2xl bg-blue-600 px-6 py-4 text-sm font-black text-white shadow-lg shadow-blue-950/30 hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-700"
-          >
-            {isSavingSeo ? "Saving SEO..." : "Save SEO"}
-          </button>
 
           {seoMessage && (
             <p className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold text-slate-300">
