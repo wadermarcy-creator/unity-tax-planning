@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { UserRound } from "lucide-react";
 import { usePathname } from "next/navigation";
 import {
   BarChart3,
@@ -35,6 +36,11 @@ const navSections = [
         href: "/mission-control/assessments",
         icon: FileText,
       },
+      {
+  label: "Client Copilot",
+  href: "/mission-control/client-copilot",
+  icon: UserRound,
+},
       {
         label: "Clients",
         href: "/mission-control/clients",

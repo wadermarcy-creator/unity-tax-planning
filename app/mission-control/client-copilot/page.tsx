@@ -1,0 +1,452 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  CalendarDays,
+  CheckCircle2,
+  CircleDollarSign,
+  ClipboardList,
+  Mail,
+  Phone,
+  Sparkles,
+  Star,
+  Target,
+} from "lucide-react";
+import Header from "@/components/mission-control/Header";
+import { supabase } from "@/lib/supabase";
+
+type LeadRecord = Record<string, any>;
+
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function getLeadName(lead: LeadRecord) {
+  return (
+    lead.full_name ||
+    lead.name ||
+    lead.first_name ||
+    lead.email ||
+    "Unnamed Prospect"
+  );
+}
+
+function getLeadEmail(lead: LeadRecord) {
+  return lead.email || lead.email_address || "No email";
+}
+
+function getLeadPhone(lead: LeadRecord) {
+  return lead.phone || lead.phone_number || "No phone";
+}
+
+function getLeadIncome(lead: LeadRecord) {
+  const possibleValues = [
+    lead.income,
+    lead.annual_income,
+    lead.household_income,
+    lead.estimated_income,
+  ];
+
+  for (const value of possibleValues) {
+    const parsed = Number(String(value || "").replace(/[^0-9.-]/g, ""));
+    if (Number.isFinite(parsed) && parsed > 0) return parsed;
+  }
+
+  return 0;
+}
+
+function getLeadOccupation(lead: LeadRecord) {
+  return (
+    lead.occupation ||
+    lead.profession ||
+    lead.job_title ||
+    lead.industry ||
+    "Occupation not provided"
+  );
+}
+
+function getLeadCreatedAt(lead: LeadRecord) {
+  const value = lead.created_at || lead.submitted_at || lead.inserted_at;
+  if (!value) return "Unknown date";
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
+function getLeadDetailPath(lead: LeadRecord) {
+  return `/mission-control/client-copilot/opportunities/${lead.id}`;
+}
+
+function calculateLeadScore(lead: LeadRecord) {
+  let score = 35;
+
+  const income = getLeadIncome(lead);
+
+  if (income >= 500000) score += 25;
+  else if (income >= 300000) score += 20;
+  else if (income >= 200000) score += 14;
+  else if (income >= 100000) score += 8;
+
+  const text = JSON.stringify(lead).toLowerCase();
+
+  if (text.includes("business") || text.includes("owner")) score += 12;
+  if (text.includes("rental") || text.includes("real estate")) score += 10;
+  if (text.includes("stock") || text.includes("rsu") || text.includes("capital gain")) score += 8;
+  if (text.includes("retire") || text.includes("ira") || text.includes("401")) score += 8;
+  if (text.includes("charity") || text.includes("donor") || text.includes("daf")) score += 5;
+  if (text.includes("estate") || text.includes("trust")) score += 5;
+
+  return Math.min(score, 100);
+}
+
+function getProjectedRevenue(score: number, income: number) {
+  if (score >= 90) return income >= 500000 ? 9500 : 7500;
+  if (score >= 80) return 6500;
+  if (score >= 70) return 4500;
+  return 2500;
+}
+
+function getScoreLabel(score: number) {
+  if (score >= 90) return "Priority";
+  if (score >= 80) return "Strong";
+  if (score >= 70) return "Qualified";
+  return "Review";
+}
+
+function getScoreTone(score: number) {
+  if (score >= 90) return "border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
+  if (score >= 80) return "border-blue-500/30 bg-blue-500/10 text-blue-300";
+  if (score >= 70) return "border-yellow-500/30 bg-yellow-500/10 text-yellow-300";
+  return "border-slate-700 bg-slate-900 text-slate-400";
+}
+
+function StatCard({
+  label,
+  value,
+  detail,
+  icon,
+}: {
+  label: string;
+  value: string;
+  detail: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
+            {label}
+          </p>
+          <p className="mt-3 text-4xl font-black text-white">{value}</p>
+          <p className="mt-2 text-sm font-bold text-slate-400">{detail}</p>
+        </div>
+
+        <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-4 text-blue-300">
+          {icon}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PriorityLeadCard({ lead }: { lead: LeadRecord }) {
+  const score = calculateLeadScore(lead);
+  const income = getLeadIncome(lead);
+  const projectedRevenue = getProjectedRevenue(score, income);
+  const tone = getScoreTone(score);
+
+  return (
+    <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <h3 className="text-2xl font-black text-white">{getLeadName(lead)}</h3>
+
+            <span className={`rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.14em] ${tone}`}>
+              {getScoreLabel(score)} · {score}/100
+            </span>
+          </div>
+
+          <p className="mt-3 text-sm font-bold text-slate-400">
+            {getLeadOccupation(lead)}
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-500">
+            <span className="inline-flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              {getLeadEmail(lead)}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              {getLeadPhone(lead)}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <CalendarDays className="h-4 w-4" />
+              {getLeadCreatedAt(lead)}
+            </span>
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+              Income
+            </p>
+            <p className="mt-2 text-xl font-black text-white">
+              {income ? formatCurrency(income) : "Unknown"}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+              Projected Revenue
+            </p>
+            <p className="mt-2 text-xl font-black text-emerald-300">
+              {formatCurrency(projectedRevenue)}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div className="rounded-2xl border border-violet-500/20 bg-violet-500/10 p-4">
+          <div className="flex gap-3">
+            <Sparkles className="mt-1 h-5 w-5 shrink-0 text-violet-300" />
+            <div>
+              <p className="font-black text-white">Client Copilot Recommendation</p>
+              <p className="mt-2 text-sm leading-6 text-violet-100/80">
+                Review this prospect first if you have time today. Prepare talking
+                points around income, retirement, investment, and tax complexity.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <Link
+          href={getLeadDetailPath(lead)}
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-4 text-sm font-black text-white hover:bg-blue-500"
+        >
+          Open Lead <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+    </article>
+  );
+}
+
+export default function ClientCopilotPage() {
+  const [leads, setLeads] = useState<LeadRecord[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  async function loadLeads() {
+    setIsLoading(true);
+
+    const { data, error } = await supabase
+      .from("tax_leads")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(25);
+
+    if (error) {
+      console.error(error);
+      setLeads([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setLeads((data || []) as LeadRecord[]);
+    setIsLoading(false);
+  }
+
+  useEffect(() => {
+    loadLeads();
+  }, []);
+
+  const rankedLeads = useMemo(() => {
+    return [...leads].sort(
+      (a, b) => calculateLeadScore(b) - calculateLeadScore(a),
+    );
+  }, [leads]);
+
+  const priorityLeads = rankedLeads.filter((lead) => calculateLeadScore(lead) >= 80);
+  const projectedRevenue = rankedLeads.reduce((sum, lead) => {
+    return sum + getProjectedRevenue(calculateLeadScore(lead), getLeadIncome(lead));
+  }, 0);
+
+  return (
+    <div className="min-h-screen">
+      <Header
+        title="Client Copilot"
+        subtitle="Prioritize prospects, prepare meetings, and move opportunities forward."
+      />
+
+      <div className="px-6 py-8 lg:px-10">
+        <section className="mb-8 rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 shadow-xl shadow-black/20">
+          <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+            <div>
+              <p className="text-sm font-black uppercase tracking-[0.22em] text-violet-300">
+                Client Copilot
+              </p>
+
+              <h1 className="mt-3 text-4xl font-black tracking-tight text-white">
+                Today&apos;s Opportunity Command Center
+              </h1>
+
+              <p className="mt-4 max-w-4xl text-lg leading-8 text-slate-300">
+                This dashboard turns submitted assessments into prioritized
+                opportunities. It starts with rule-based scoring today and will
+                become AI-powered meeting prep, follow-up, and proposal support.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-violet-500/30 bg-violet-500/10 p-5 text-violet-200">
+              <div className="flex items-center gap-3">
+                <Sparkles className="h-6 w-6" />
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.16em]">
+                    Copilot Mode
+                  </p>
+                  <p className="text-xl font-black">Pipeline Review</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="mb-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <StatCard
+            label="New Assessments"
+            value={String(leads.length)}
+            detail="Latest 25 loaded"
+            icon={<ClipboardList className="h-6 w-6" />}
+          />
+          <StatCard
+            label="Priority Leads"
+            value={String(priorityLeads.length)}
+            detail="Score 80+"
+            icon={<Star className="h-6 w-6" />}
+          />
+          <StatCard
+            label="Projected Revenue"
+            value={formatCurrency(projectedRevenue)}
+            detail="Rule-based estimate"
+            icon={<CircleDollarSign className="h-6 w-6" />}
+          />
+          <StatCard
+            label="Next Best Action"
+            value="Review"
+            detail="Start with highest score"
+            icon={<Target className="h-6 w-6" />}
+          />
+        </div>
+
+        <div className="mb-8 grid gap-6 xl:grid-cols-[1fr_0.9fr]">
+          <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+            <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
+              Suggested Actions
+            </p>
+
+            <div className="mt-6 space-y-3">
+              {[
+                ["Review top priority lead", "Open the highest-scoring assessment first."],
+                ["Prepare meeting brief", "Identify likely planning opportunities before the call."],
+                ["Send follow-up", "Move warm prospects forward while interest is high."],
+                ["Request documents", "Collect tax return, paystubs, investment statements, and entity documents."],
+              ].map(([title, detail]) => (
+                <div
+                  key={title}
+                  className="rounded-2xl border border-slate-800 bg-slate-900 p-5"
+                >
+                  <div className="flex gap-3">
+                    <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-emerald-300" />
+                    <div>
+                      <p className="font-black text-white">{title}</p>
+                      <p className="mt-2 text-sm leading-6 text-slate-400">
+                        {detail}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+            <p className="text-sm font-black uppercase tracking-[0.22em] text-emerald-300">
+              Pipeline Intelligence
+            </p>
+
+            <div className="mt-6 space-y-4">
+              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                  Scoring Model
+                </p>
+                <p className="mt-2 text-sm leading-7 text-slate-300">
+                  Current scoring uses income, occupation, business ownership,
+                  real estate, investment, retirement, charitable, and estate
+                  complexity signals.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                  Next Upgrade
+                </p>
+                <p className="mt-2 text-sm leading-7 text-slate-300">
+                  AI Meeting Prep will summarize each prospect, identify likely
+                  planning opportunities, and draft a first-call agenda.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
+                Priority Leads
+              </p>
+              <h2 className="mt-3 text-3xl font-black text-white">
+                Highest-value opportunities
+              </h2>
+            </div>
+
+            <button
+              type="button"
+              onClick={loadLeads}
+              className="rounded-2xl border border-slate-700 px-5 py-4 text-sm font-black text-slate-300 hover:border-blue-500 hover:text-white"
+            >
+              Refresh
+            </button>
+          </div>
+
+          <div className="mt-6 space-y-5">
+            {isLoading ? (
+              <p className="rounded-2xl border border-slate-800 bg-slate-900 p-5 text-sm text-slate-400">
+                Loading opportunities...
+              </p>
+            ) : rankedLeads.length === 0 ? (
+              <p className="rounded-2xl border border-slate-800 bg-slate-900 p-5 text-sm text-slate-400">
+                No assessments found yet.
+              </p>
+            ) : (
+              rankedLeads.slice(0, 8).map((lead) => (
+                <PriorityLeadCard key={lead.id} lead={lead} />
+              ))
+            )}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
