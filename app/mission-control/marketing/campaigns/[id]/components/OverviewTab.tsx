@@ -10,15 +10,11 @@ import {
   Target,
   TrendingUp,
 } from "lucide-react";
+import CampaignHealthPanel from "./CampaignHealthPanel";
+import type { MarketingCampaign } from "@/components/mission-control/campaigns/types";
 
 type OverviewTabProps = {
-  campaign: {
-    audience?: string | null;
-    location?: string | null;
-    landing_page_json?: {
-      primary_cta?: string;
-    } | null;
-  };
+  campaign: MarketingCampaign;
   landingPath: string;
   score: {
     completed: number;
@@ -80,7 +76,9 @@ export default function OverviewTab({
 }: OverviewTabProps) {
   return (
     <>
-      <div className="grid gap-6 xl:grid-cols-[1fr_0.95fr_0.95fr]">
+      <CampaignHealthPanel campaign={campaign} />
+
+      <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_0.95fr_0.95fr]">
         <PanelCard title="Campaign Overview">
           <p className="text-sm leading-7 text-slate-400">
             Your campaign is live and organized. Continue optimizing assets,
