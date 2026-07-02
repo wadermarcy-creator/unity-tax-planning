@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
 import {
   ArrowLeft,
   CalendarDays,
@@ -11,6 +9,7 @@ import {
   Sparkles,
   UserRound,
 } from "lucide-react";
+import { useParams } from "next/navigation";
 import Header from "@/components/mission-control/Header";
 import LeadScoreCard from "@/components/client-copilot/LeadScoreCard";
 import MeetingPrepCard from "@/components/client-copilot/MeetingPrepCard";
@@ -18,6 +17,12 @@ import OpportunitySummaryCard from "@/components/client-copilot/OpportunitySumma
 import AdvisorNotesCard from "@/components/client-copilot/AdvisorNotesCard";
 import NextActionsCard from "@/components/client-copilot/NextActionsCard";
 import ProposalPreviewCard from "@/components/client-copilot/ProposalPreviewCard";
+import {
+  UnityAIInsight,
+  UnityButton,
+  UnityCard,
+  UnityPageHero,
+} from "@/components/ui/UnityUI";
 import { supabase } from "@/lib/supabase";
 
 type LeadRecord = Record<string, any>;
@@ -251,13 +256,13 @@ export default function ClientCopilotOpportunityPage() {
         />
 
         <div className="p-10">
-          <Link
+          <UnityButton
             href="/mission-control/client-copilot"
-            className="inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-5 py-4 text-sm font-black text-white hover:bg-blue-500"
+            variant="secondary"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Client Copilot
-          </Link>
+          </UnityButton>
         </div>
       </div>
     );
@@ -271,54 +276,26 @@ export default function ClientCopilotOpportunityPage() {
       />
 
       <div className="px-6 py-8 lg:px-10">
-        <div className="mb-8">
-          <Link
+        <div className="mb-6">
+          <UnityButton
             href="/mission-control/client-copilot"
-            className="inline-flex items-center gap-2 text-sm font-black text-slate-400 hover:text-white"
+            variant="ghost"
+            className="px-0 py-0"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Client Copilot
-          </Link>
+          </UnityButton>
         </div>
 
-        <section className="mb-8 rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 shadow-xl shadow-black/20">
-          <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-            <div>
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="rounded-2xl border border-violet-500/30 bg-violet-500/10 p-4 text-violet-300">
-                  <UserRound className="h-7 w-7" />
-                </div>
-
-                <div>
-                  <p className="text-sm font-black uppercase tracking-[0.22em] text-violet-300">
-                    Opportunity Workspace
-                  </p>
-                  <h1 className="mt-2 text-4xl font-black tracking-tight text-white">
-                    {getLeadName(lead)}
-                  </h1>
-                </div>
-              </div>
-
-              <p className="mt-5 text-lg font-bold text-slate-300">
-                {getLeadOccupation(lead)}
-              </p>
-
-              <div className="mt-5 flex flex-wrap gap-4 text-sm text-slate-500">
-                <span className="inline-flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  {getLeadEmail(lead)}
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <Phone className="h-4 w-4" />
-                  {getLeadPhone(lead)}
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <CalendarDays className="h-4 w-4" />
-                  Submitted {getLeadCreatedAt(lead)}
-                </span>
-              </div>
-            </div>
-
+        <UnityPageHero
+          eyebrow="Opportunity Workspace"
+          title={getLeadName(lead)}
+          description={`${getLeadOccupation(
+            lead,
+          )} · Submitted ${getLeadCreatedAt(
+            lead,
+          )}. Use this workspace to score, prepare, position, and move the prospect toward engagement.`}
+          action={
             <div className="rounded-2xl border border-violet-500/30 bg-violet-500/10 p-5 text-violet-200">
               <div className="flex items-center gap-3">
                 <Sparkles className="h-6 w-6" />
@@ -330,10 +307,39 @@ export default function ClientCopilotOpportunityPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          }
+        />
 
-        <div className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
+        <UnityCard className="mt-6">
+          <div className="flex flex-wrap gap-4 text-sm text-slate-500">
+            <span className="inline-flex items-center gap-2">
+              <UserRound className="h-4 w-4" />
+              {getLeadOccupation(lead)}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Mail className="h-4 w-4" />
+              {getLeadEmail(lead)}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              {getLeadPhone(lead)}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <CalendarDays className="h-4 w-4" />
+              Submitted {getLeadCreatedAt(lead)}
+            </span>
+          </div>
+        </UnityCard>
+
+        <div className="mt-6">
+          <UnityAIInsight title="Client Copilot Guidance">
+            Start with the score and opportunity summary, then generate the AI
+            meeting brief before the first conversation. Use Proposal Preview to
+            frame the engagement while Hazel handles the full technical plan.
+          </UnityAIInsight>
+        </div>
+
+        <div className="mt-6 grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
           <div className="space-y-6">
             <LeadScoreCard
               score={score}
@@ -350,7 +356,11 @@ export default function ClientCopilotOpportunityPage() {
               opportunities={opportunities}
             />
 
-            <MeetingPrepCard lead={lead} score={score} projectedRevenue={projectedRevenue} />
+            <MeetingPrepCard
+              lead={lead}
+              score={score}
+              projectedRevenue={projectedRevenue}
+            />
 
             <ProposalPreviewCard
               prospectName={getLeadName(lead)}

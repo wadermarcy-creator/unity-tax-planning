@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import {
   ArrowRight,
   CalendarDays,
@@ -15,6 +14,16 @@ import {
   Target,
 } from "lucide-react";
 import Header from "@/components/mission-control/Header";
+import {
+  UnityAIInsight,
+  UnityBadge,
+  UnityButton,
+  UnityCard,
+  UnityCardHeader,
+  UnityEmptyState,
+  UnityMetricCard,
+  UnityPageHero,
+} from "@/components/ui/UnityUI";
 import { supabase } from "@/lib/supabase";
 
 type LeadRecord = Record<string, any>;
@@ -82,10 +91,6 @@ function getLeadCreatedAt(lead: LeadRecord) {
   }).format(new Date(value));
 }
 
-function getLeadDetailPath(lead: LeadRecord) {
-  return `/mission-control/client-copilot/opportunities/${lead.id}`;
-}
-
 function calculateLeadScore(lead: LeadRecord) {
   let score = 35;
 
@@ -122,59 +127,30 @@ function getScoreLabel(score: number) {
   return "Review";
 }
 
-function getScoreTone(score: number) {
-  if (score >= 90) return "border-emerald-500/30 bg-emerald-500/10 text-emerald-300";
-  if (score >= 80) return "border-blue-500/30 bg-blue-500/10 text-blue-300";
-  if (score >= 70) return "border-yellow-500/30 bg-yellow-500/10 text-yellow-300";
-  return "border-slate-700 bg-slate-900 text-slate-400";
-}
-
-function StatCard({
-  label,
-  value,
-  detail,
-  icon,
-}: {
-  label: string;
-  value: string;
-  detail: string;
-  icon: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
-            {label}
-          </p>
-          <p className="mt-3 text-4xl font-black text-white">{value}</p>
-          <p className="mt-2 text-sm font-bold text-slate-400">{detail}</p>
-        </div>
-
-        <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-4 text-blue-300">
-          {icon}
-        </div>
-      </div>
-    </div>
-  );
+function getScoreTone(score: number): "emerald" | "blue" | "yellow" | "slate" {
+  if (score >= 90) return "emerald";
+  if (score >= 80) return "blue";
+  if (score >= 70) return "yellow";
+  return "slate";
 }
 
 function PriorityLeadCard({ lead }: { lead: LeadRecord }) {
   const score = calculateLeadScore(lead);
   const income = getLeadIncome(lead);
   const projectedRevenue = getProjectedRevenue(score, income);
-  const tone = getScoreTone(score);
 
   return (
-    <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+    <UnityCard>
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-3">
-            <h3 className="text-2xl font-black text-white">{getLeadName(lead)}</h3>
+            <h3 className="text-2xl font-black text-white">
+              {getLeadName(lead)}
+            </h3>
 
-            <span className={`rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.14em] ${tone}`}>
+            <UnityBadge tone={getScoreTone(score)}>
               {getScoreLabel(score)} · {score}/100
-            </span>
+            </UnityBadge>
           </div>
 
           <p className="mt-3 text-sm font-bold text-slate-400">
@@ -219,27 +195,18 @@ function PriorityLeadCard({ lead }: { lead: LeadRecord }) {
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
-        <div className="rounded-2xl border border-violet-500/20 bg-violet-500/10 p-4">
-          <div className="flex gap-3">
-            <Sparkles className="mt-1 h-5 w-5 shrink-0 text-violet-300" />
-            <div>
-              <p className="font-black text-white">Client Copilot Recommendation</p>
-              <p className="mt-2 text-sm leading-6 text-violet-100/80">
-                Review this prospect first if you have time today. Prepare talking
-                points around income, retirement, investment, and tax complexity.
-              </p>
-            </div>
-          </div>
-        </div>
+        <UnityAIInsight title="Client Copilot Recommendation">
+          Review this prospect first if you have time today. Prepare talking
+          points around income, retirement, investment, and tax complexity.
+        </UnityAIInsight>
 
-        <Link
-          href={getLeadDetailPath(lead)}
-          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-4 text-sm font-black text-white hover:bg-blue-500"
+        <UnityButton
+          href={`/mission-control/client-copilot/opportunities/${lead.id}`}
         >
           Open Lead <ArrowRight className="h-4 w-4" />
-        </Link>
+        </UnityButton>
       </div>
-    </article>
+    </UnityCard>
   );
 }
 
@@ -277,9 +244,14 @@ export default function ClientCopilotPage() {
     );
   }, [leads]);
 
-  const priorityLeads = rankedLeads.filter((lead) => calculateLeadScore(lead) >= 80);
+  const priorityLeads = rankedLeads.filter(
+    (lead) => calculateLeadScore(lead) >= 80,
+  );
+
   const projectedRevenue = rankedLeads.reduce((sum, lead) => {
-    return sum + getProjectedRevenue(calculateLeadScore(lead), getLeadIncome(lead));
+    return (
+      sum + getProjectedRevenue(calculateLeadScore(lead), getLeadIncome(lead))
+    );
   }, 0);
 
   return (
@@ -290,24 +262,11 @@ export default function ClientCopilotPage() {
       />
 
       <div className="px-6 py-8 lg:px-10">
-        <section className="mb-8 rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 shadow-xl shadow-black/20">
-          <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-            <div>
-              <p className="text-sm font-black uppercase tracking-[0.22em] text-violet-300">
-                Client Copilot
-              </p>
-
-              <h1 className="mt-3 text-4xl font-black tracking-tight text-white">
-                Today&apos;s Opportunity Command Center
-              </h1>
-
-              <p className="mt-4 max-w-4xl text-lg leading-8 text-slate-300">
-                This dashboard turns submitted assessments into prioritized
-                opportunities. It starts with rule-based scoring today and will
-                become AI-powered meeting prep, follow-up, and proposal support.
-              </p>
-            </div>
-
+        <UnityPageHero
+          eyebrow="Client Copilot"
+          title="Today's Opportunity Command Center"
+          description="Turn submitted assessments into prioritized opportunities. Client Copilot helps you identify the highest-value prospects, prepare better meetings, and move qualified opportunities forward."
+          action={
             <div className="rounded-2xl border border-violet-500/30 bg-violet-500/10 p-5 text-violet-200">
               <div className="flex items-center gap-3">
                 <Sparkles className="h-6 w-6" />
@@ -319,48 +278,66 @@ export default function ClientCopilotPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          }
+        />
 
-        <div className="mb-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          <StatCard
+        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <UnityMetricCard
             label="New Assessments"
             value={String(leads.length)}
             detail="Latest 25 loaded"
+            tone="blue"
             icon={<ClipboardList className="h-6 w-6" />}
           />
-          <StatCard
+          <UnityMetricCard
             label="Priority Leads"
             value={String(priorityLeads.length)}
             detail="Score 80+"
+            tone="violet"
             icon={<Star className="h-6 w-6" />}
           />
-          <StatCard
+          <UnityMetricCard
             label="Projected Revenue"
             value={formatCurrency(projectedRevenue)}
             detail="Rule-based estimate"
+            tone="emerald"
             icon={<CircleDollarSign className="h-6 w-6" />}
           />
-          <StatCard
+          <UnityMetricCard
             label="Next Best Action"
             value="Review"
             detail="Start with highest score"
+            tone="yellow"
             icon={<Target className="h-6 w-6" />}
           />
         </div>
 
-        <div className="mb-8 grid gap-6 xl:grid-cols-[1fr_0.9fr]">
-          <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
-            <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
-              Suggested Actions
-            </p>
+        <div className="mt-8 grid gap-6 xl:grid-cols-[1fr_0.9fr]">
+          <UnityCard>
+            <UnityCardHeader
+              eyebrow="Suggested Actions"
+              title="What to do next"
+              description="Focus on the activities that move opportunities toward a signed engagement."
+            />
 
             <div className="mt-6 space-y-3">
               {[
-                ["Review top priority lead", "Open the highest-scoring assessment first."],
-                ["Prepare meeting brief", "Identify likely planning opportunities before the call."],
-                ["Send follow-up", "Move warm prospects forward while interest is high."],
-                ["Request documents", "Collect tax return, paystubs, investment statements, and entity documents."],
+                [
+                  "Review top priority lead",
+                  "Open the highest-scoring assessment first.",
+                ],
+                [
+                  "Prepare meeting brief",
+                  "Identify likely planning opportunities before the call.",
+                ],
+                [
+                  "Send follow-up",
+                  "Move warm prospects forward while interest is high.",
+                ],
+                [
+                  "Request documents",
+                  "Collect tax return, paystubs, investment statements, and entity documents.",
+                ],
               ].map(([title, detail]) => (
                 <div
                   key={title}
@@ -378,56 +355,46 @@ export default function ClientCopilotPage() {
                 </div>
               ))}
             </div>
-          </section>
+          </UnityCard>
 
-          <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
-            <p className="text-sm font-black uppercase tracking-[0.22em] text-emerald-300">
-              Pipeline Intelligence
-            </p>
+          <UnityCard>
+            <UnityCardHeader
+              eyebrow="Pipeline Intelligence"
+              title="Scoring model"
+              description="Client Copilot currently uses rule-based scoring. AI scoring can be layered in later."
+            />
 
             <div className="mt-6 space-y-4">
               <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                  Scoring Model
+                  Current Signals
                 </p>
                 <p className="mt-2 text-sm leading-7 text-slate-300">
-                  Current scoring uses income, occupation, business ownership,
-                  real estate, investment, retirement, charitable, and estate
-                  complexity signals.
+                  Income, occupation, business ownership, real estate,
+                  investment, retirement, charitable, and estate complexity.
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
-                  Next Upgrade
-                </p>
-                <p className="mt-2 text-sm leading-7 text-slate-300">
-                  AI Meeting Prep will summarize each prospect, identify likely
-                  planning opportunities, and draft a first-call agenda.
-                </p>
-              </div>
+              <UnityAIInsight title="Next Upgrade">
+                AI Meeting Prep already generates prospect-specific summaries,
+                planning opportunities, questions, document requests, and
+                follow-up emails inside each Opportunity Workspace.
+              </UnityAIInsight>
             </div>
-          </section>
+          </UnityCard>
         </div>
 
-        <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+        <UnityCard className="mt-8">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
-                Priority Leads
-              </p>
-              <h2 className="mt-3 text-3xl font-black text-white">
-                Highest-value opportunities
-              </h2>
-            </div>
+            <UnityCardHeader
+              eyebrow="Priority Leads"
+              title="Highest-value opportunities"
+              description="Open the strongest opportunities first and prepare them inside Client Copilot."
+            />
 
-            <button
-              type="button"
-              onClick={loadLeads}
-              className="rounded-2xl border border-slate-700 px-5 py-4 text-sm font-black text-slate-300 hover:border-blue-500 hover:text-white"
-            >
+            <UnityButton variant="secondary" onClick={loadLeads}>
               Refresh
-            </button>
+            </UnityButton>
           </div>
 
           <div className="mt-6 space-y-5">
@@ -436,16 +403,17 @@ export default function ClientCopilotPage() {
                 Loading opportunities...
               </p>
             ) : rankedLeads.length === 0 ? (
-              <p className="rounded-2xl border border-slate-800 bg-slate-900 p-5 text-sm text-slate-400">
-                No assessments found yet.
-              </p>
+              <UnityEmptyState
+                title="No assessments found yet"
+                description="New submitted assessments will appear here automatically."
+              />
             ) : (
-              rankedLeads.slice(0, 8).map((lead) => (
-                <PriorityLeadCard key={lead.id} lead={lead} />
-              ))
+              rankedLeads
+                .slice(0, 8)
+                .map((lead) => <PriorityLeadCard key={lead.id} lead={lead} />)
             )}
           </div>
-        </section>
+        </UnityCard>
       </div>
     </div>
   );
