@@ -17,6 +17,7 @@ import MeetingPrepCard from "@/components/client-copilot/MeetingPrepCard";
 import OpportunitySummaryCard from "@/components/client-copilot/OpportunitySummaryCard";
 import AdvisorNotesCard from "@/components/client-copilot/AdvisorNotesCard";
 import NextActionsCard from "@/components/client-copilot/NextActionsCard";
+import ProposalPreviewCard from "@/components/client-copilot/ProposalPreviewCard";
 import { supabase } from "@/lib/supabase";
 
 type LeadRecord = Record<string, any>;
@@ -349,7 +350,13 @@ export default function ClientCopilotOpportunityPage() {
               opportunities={opportunities}
             />
 
-            <MeetingPrepCard />
+            <MeetingPrepCard lead={lead} score={score} projectedRevenue={projectedRevenue} />
+
+            <ProposalPreviewCard
+              prospectName={getLeadName(lead)}
+              projectedRevenue={projectedRevenue}
+              opportunities={opportunities}
+            />
 
             <AdvisorNotesCard initialNotes={lead.admin_notes || ""} />
           </div>
