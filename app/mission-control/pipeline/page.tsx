@@ -10,7 +10,8 @@ import {
   UnityAIInsight,
   UnityButton,
   UnityPageHero,
-} from "@/components/ui/UnityUI";
+  useToast,
+} from "@/components/ui";
 import { supabase } from "@/lib/supabase";
 
 type LeadRecord = Record<string, any>;
@@ -153,10 +154,10 @@ function mapLeadToPipelineLead(lead: LeadRecord): PipelineLead {
 }
 
 export default function PipelinePage() {
+  const toast = useToast();
   const [leads, setLeads] = useState<PipelineLead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [updatingLeadId, setUpdatingLeadId] = useState("");
-  const [pipelineMessage, setPipelineMessage] = useState("");
 
   async function loadPipeline() {
     setIsLoading(true);
@@ -171,6 +172,10 @@ export default function PipelinePage() {
       console.error(error);
       setLeads([]);
       setIsLoading(false);
+      toast.error({
+        title: "Pipeline Failed",
+        description: "Could not load pipeline opportunities.",
+      });
       return;
     }
 
@@ -184,13 +189,15 @@ export default function PipelinePage() {
 
   useEffect(() => {
     loadPipeline();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function updateLeadStage(leadId: string, nextStage: string) {
     setUpdatingLeadId(leadId);
-    setPipelineMessage("");
 
     const previousLeads = leads;
+    const leadToUpdate = leads.find((lead) => lead.id === leadId);
+    const previousStage = leadToUpdate?.stage || "previous stage";
 
     setLeads((current) =>
       current.map((lead) =>
@@ -212,13 +219,22 @@ export default function PipelinePage() {
     if (error) {
       console.error(error);
       setLeads(previousLeads);
-      setPipelineMessage(
-        "Could not save stage. Make sure tax_leads has pipeline_stage.",
-      );
+      toast.error({
+        title: "Stage Not Saved",
+        description: "Make sure tax_leads has a text column named pipeline_stage.",
+      });
     } else if (nextStage === "Completed / Archived") {
-      setPipelineMessage("Opportunity archived and removed from the active board.");
+      toast.success({
+        title: "Opportunity Archived",
+        description: `${leadToUpdate?.name || "Opportunity"} was removed from the active board.`,
+        actionLabel: "Undo",
+        onAction: () => updateLeadStage(leadId, previousStage),
+      });
     } else {
-      setPipelineMessage("Pipeline stage saved.");
+      toast.success({
+        title: "Opportunity Updated",
+        description: `${leadToUpdate?.name || "Opportunity"} moved to ${nextStage}.`,
+      });
     }
 
     setUpdatingLeadId("");
@@ -286,12 +302,6 @@ export default function PipelinePage() {
             disappear from the active board. Archived count: {archivedCount}.
           </UnityAIInsight>
         </div>
-
-        {pipelineMessage && (
-          <p className="mt-5 rounded-2xl border border-slate-800 bg-slate-950/70 p-3 text-xs font-bold text-slate-300">
-            {pipelineMessage}
-          </p>
-        )}
 
         {isLoading ? (
           <p className="mt-5 rounded-2xl border border-slate-800 bg-slate-950/70 p-6 text-sm font-bold text-slate-400">
