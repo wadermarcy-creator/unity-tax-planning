@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
+import { captureAttribution, getStoredAttribution } from "@/lib/attribution";
 import DisclosureFooter from "@/components/DisclosureFooter";
 
 function getAttributionData() {
@@ -59,6 +60,10 @@ export default function TaxOpportunityScanPage() {
       concern: "",
       team: "",
     });
+
+  useEffect(() => {
+    captureAttribution();
+  }, []);
 
   function calculateQualificationRating() {
     let score = 0;
@@ -299,6 +304,7 @@ export default function TaxOpportunityScanPage() {
 
     const leadScore = calculateLeadScore(formData);
     const leadGrade = calculateLeadGrade(leadScore);
+    const attribution = getStoredAttribution();
 
     const lead = {
       first_name: String(formData.get("first_name") || ""),
@@ -319,7 +325,20 @@ export default function TaxOpportunityScanPage() {
 
       lead_score: leadScore,
       lead_grade: leadGrade,
+
       ...getAttributionData(),
+
+      utm_source: attribution.utm_source || null,
+      utm_medium: attribution.utm_medium || null,
+      utm_campaign: attribution.utm_campaign || null,
+      utm_term: attribution.utm_term || null,
+      utm_content: attribution.utm_content || null,
+      gclid: attribution.gclid || null,
+      fbclid: attribution.fbclid || null,
+      device_type: attribution.device_type || null,
+      browser_name: attribution.browser_name || null,
+      attribution_json: attribution.attribution_json || null,
+
       status: "new",
     };
 

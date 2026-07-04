@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { UserRound } from "lucide-react";
 import { usePathname } from "next/navigation";
 import {
   BarChart3,
   Bot,
   Brain,
+  BriefcaseBusiness,
   CheckSquare,
   Factory,
   FileText,
@@ -14,6 +14,8 @@ import {
   Megaphone,
   ScrollText,
   Settings,
+  TrendingUp,
+  UserRound,
   Users,
 } from "lucide-react";
 
@@ -22,9 +24,19 @@ const navSections = [
     label: "Home",
     items: [
       {
-        label: "Dashboard",
-        href: "/mission-control/dashboard",
+        label: "Morning Brief",
+        href: "/mission-control",
         icon: LayoutDashboard,
+      },
+      {
+        label: "Pipeline",
+        href: "/mission-control/pipeline",
+        icon: BriefcaseBusiness,
+      },
+      {
+        label: "Revenue Intelligence",
+        href: "/mission-control/revenue",
+        icon: TrendingUp,
       },
     ],
   },
@@ -37,10 +49,10 @@ const navSections = [
         icon: FileText,
       },
       {
-  label: "Client Copilot",
-  href: "/mission-control/client-copilot",
-  icon: UserRound,
-},
+        label: "Client Copilot",
+        href: "/mission-control/client-copilot",
+        icon: UserRound,
+      },
       {
         label: "Clients",
         href: "/mission-control/clients",
@@ -116,7 +128,7 @@ export default function Sidebar() {
   return (
     <aside className="hidden min-h-screen w-72 shrink-0 border-r border-slate-800 bg-slate-950 px-4 py-6 lg:block">
       <Link
-        href="/mission-control/dashboard"
+        href="/mission-control"
         className="mb-6 block rounded-[1.5rem] border border-blue-500/30 bg-blue-500/10 p-5"
       >
         <p className="text-xs font-black uppercase tracking-[0.3em] text-blue-300">
@@ -144,9 +156,12 @@ export default function Sidebar() {
             <div className="space-y-1">
               {section.items.map((item) => {
                 const Icon = item.icon;
+
                 const isActive =
-                  pathname === item.href ||
-                  pathname.startsWith(`${item.href}/`);
+                  item.href === "/mission-control"
+                    ? pathname === "/mission-control"
+                    : pathname === item.href ||
+                      pathname.startsWith(`${item.href}/`);
 
                 return (
                   <Link
