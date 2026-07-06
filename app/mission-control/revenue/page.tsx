@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowRight,
   BarChart3,
   CircleDollarSign,
   ClipboardList,
+  Download,
+  FileSpreadsheet,
   MousePointerClick,
   RefreshCw,
   Sparkles,
@@ -16,7 +19,6 @@ import {
 import Header from "@/components/mission-control/Header";
 import {
   UnityAIInsight,
-  UnityBadge,
   UnityButton,
   UnityCard,
   UnityCardHeader,
@@ -61,6 +63,19 @@ function formatCurrency(value: number) {
     currency: "USD",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function formatDate(value?: string) {
+  if (!value) return "No date captured";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "No date captured";
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
 }
 
 function getLeadName(lead: LeadRecord) {
@@ -237,27 +252,61 @@ function groupBy(leads: RevenueLead[], getKey: (lead: RevenueLead) => string) {
     .sort((a, b) => b.expectedRevenue - a.expectedRevenue);
 }
 
+function csvEscape(value: unknown) {
+  const stringValue = String(value ?? "");
+  return `"${stringValue.replace(/"/g, '""')}"`;
+}
+
+function downloadCsv(filename: string, rows: Array<Record<string, unknown>>) {
+  if (rows.length === 0) return false;
+
+  const headers = Object.keys(rows[0]);
+  const csv = [
+    headers.map(csvEscape).join(","),
+    ...rows.map((row) => headers.map((header) => csvEscape(row[header])).join(",")),
+  ].join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+
+  return true;
+}
+
 function MetricTable({
   title,
   description,
   rows,
   label,
+  exportRows,
 }: {
   title: string;
   description: string;
   rows: GroupedMetric[];
   label: string;
+  exportRows: () => void;
 }) {
   return (
     <UnityCard>
-      <UnityCardHeader
-        eyebrow={label}
-        title={title}
-        description={description}
-      />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <UnityCardHeader
+          eyebrow={label}
+          title={title}
+          description={description}
+        />
+
+        <UnityButton variant="secondary" onClick={exportRows}>
+          <Download className="h-4 w-4" />
+          Export
+        </UnityButton>
+      </div>
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-slate-800">
-        <div className="grid grid-cols-[1.4fr_0.6fr_0.7fr_0.7fr_1fr_1fr] gap-4 bg-slate-900 px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-slate-500">
+        <div className="hidden grid-cols-[1.4fr_0.6fr_0.7fr_0.7fr_1fr_1fr] gap-4 bg-slate-900 px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-slate-500 md:grid">
           <span>Name</span>
           <span>Leads</span>
           <span>Qualified</span>
@@ -274,28 +323,80 @@ function MetricTable({
             />
           </div>
         ) : (
-          rows.slice(0, 8).map((row) => (
-            <div
-              key={row.key}
-              className="grid grid-cols-[1.4fr_0.6fr_0.7fr_0.7fr_1fr_1fr] gap-4 border-t border-slate-800 px-5 py-4 text-sm"
-            >
-              <div className="min-w-0">
-                <p className="truncate font-black text-white">{row.key}</p>
-                <p className="mt-1 text-xs text-slate-500">
-                  Avg score {Math.round(row.averageScore)}/100
-                </p>
+          <div>
+            {rows.slice(0, 8).map((row) => (
+              <div key={row.key}>
+                <div className="hidden grid-cols-[1.4fr_0.6fr_0.7fr_0.7fr_1fr_1fr] gap-4 border-t border-slate-800 px-5 py-4 text-sm md:grid">
+                  <div className="min-w-0">
+                    <p className="truncate font-black text-white">{row.key}</p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      Avg score {Math.round(row.averageScore)}/100
+                    </p>
+                  </div>
+                  <p className="font-bold text-slate-300">{row.leads}</p>
+                  <p className="font-bold text-blue-300">{row.qualified}</p>
+                  <p className="font-bold text-emerald-300">{row.won}</p>
+                  <p className="font-black text-white">
+                    {formatCurrency(row.expectedRevenue)}
+                  </p>
+                  <p className="font-black text-slate-300">
+                    {formatCurrency(row.projectedRevenue)}
+                  </p>
+                </div>
+
+                <div className="border-t border-slate-800 p-5 md:hidden">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="truncate font-black text-white">{row.key}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-500">
+                        Avg score {Math.round(row.averageScore)}/100
+                      </p>
+                    </div>
+
+                    <div className="rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-black text-blue-200">
+                      {row.leads} leads
+                    </div>
+                  </div>
+
+                  <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+                    <div className="rounded-2xl bg-slate-900 p-4">
+                      <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                        Expected
+                      </p>
+                      <p className="mt-2 font-black text-white">
+                        {formatCurrency(row.expectedRevenue)}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl bg-slate-900 p-4">
+                      <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                        Projected
+                      </p>
+                      <p className="mt-2 font-black text-slate-300">
+                        {formatCurrency(row.projectedRevenue)}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl bg-slate-900 p-4">
+                      <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                        Qualified
+                      </p>
+                      <p className="mt-2 font-black text-blue-300">
+                        {row.qualified}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl bg-slate-900 p-4">
+                      <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                        Won
+                      </p>
+                      <p className="mt-2 font-black text-emerald-300">{row.won}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p className="font-bold text-slate-300">{row.leads}</p>
-              <p className="font-bold text-blue-300">{row.qualified}</p>
-              <p className="font-bold text-emerald-300">{row.won}</p>
-              <p className="font-black text-white">
-                {formatCurrency(row.expectedRevenue)}
-              </p>
-              <p className="font-black text-slate-300">
-                {formatCurrency(row.projectedRevenue)}
-              </p>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
     </UnityCard>
@@ -306,6 +407,7 @@ export default function RevenueIntelligencePage() {
   const toast = useToast();
   const [leads, setLeads] = useState<RevenueLead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [actionQueue, setActionQueue] = useState<RevenueLead[]>([]);
 
   async function loadRevenueData() {
     setIsLoading(true);
@@ -356,6 +458,21 @@ export default function RevenueIntelligencePage() {
     .reduce((sum, lead) => sum + lead.projectedRevenue, 0);
 
   const qualifiedLeads = activeLeads.filter((lead) => lead.score >= 80).length;
+  const averagePriorityScore =
+    activeLeads.length > 0
+      ? Math.round(
+          activeLeads.reduce((sum, lead) => sum + lead.score, 0) /
+            activeLeads.length,
+        )
+      : 0;
+
+  const stageCoverage =
+    projectedRevenue > 0 ? Math.round((expectedRevenue / projectedRevenue) * 100) : 0;
+
+  const priorityScore = Math.min(
+    100,
+    Math.round(averagePriorityScore * 0.7 + stageCoverage * 0.3),
+  );
 
   const campaignRows = useMemo(
     () => groupBy(activeLeads, (lead) => lead.utmCampaign),
@@ -378,6 +495,129 @@ export default function RevenueIntelligencePage() {
   );
 
   const topCampaign = campaignRows[0];
+  const topSource = sourceRows[0];
+  const topLandingPage = landingPageRows[0];
+  const topLead = useMemo(
+    () => [...activeLeads].sort((a, b) => b.score - a.score)[0],
+    [activeLeads],
+  );
+
+  const executiveRecommendation = topCampaign
+    ? `Double down on ${topCampaign.key}. It is currently producing ${topCampaign.leads} lead${
+        topCampaign.leads === 1 ? "" : "s"
+      } and ${formatCurrency(
+        topCampaign.expectedRevenue,
+      )} in stage-weighted expected annual revenue. Next move: review the highest-priority lead, confirm attribution, and create one follow-up campaign around the same audience.`
+    : "Revenue intelligence is waiting on assessment and attribution data. Once traffic starts flowing, this page will show the highest-value campaigns, sources, landing pages, and keywords.";
+
+  const leadExportRows = activeLeads.map((lead) => ({
+    name: lead.name,
+    stage: lead.stage,
+    score: lead.score,
+    projected_annual_revenue: lead.projectedRevenue,
+    expected_annual_revenue: Math.round(
+      lead.projectedRevenue * expectedMultiplier(lead.stage),
+    ),
+    source: lead.utmSource,
+    medium: lead.utmMedium,
+    campaign: lead.utmCampaign,
+    keyword: lead.utmTerm,
+    content: lead.utmContent,
+    landing_page: lead.landingPage,
+    referrer: lead.referrer,
+    created_at: lead.createdAt || "",
+  }));
+
+  function groupedExportRows(rows: GroupedMetric[]) {
+    return rows.map((row) => ({
+      name: row.key,
+      leads: row.leads,
+      qualified: row.qualified,
+      won: row.won,
+      average_score: Math.round(row.averageScore),
+      expected_annual_revenue: Math.round(row.expectedRevenue),
+      projected_annual_revenue: Math.round(row.projectedRevenue),
+    }));
+  }
+
+  async function copyExecutiveBrief() {
+    const brief = [
+      "Unity Tax Revenue Intelligence Brief",
+      `Priority Score: ${priorityScore}/100`,
+      `Projected Annual Revenue: ${formatCurrency(projectedRevenue)}`,
+      `Expected Revenue: ${formatCurrency(expectedRevenue)}`,
+      `Qualified Leads: ${qualifiedLeads}`,
+      `Recommendation: ${executiveRecommendation}`,
+    ].join("\n");
+
+    try {
+      await navigator.clipboard.writeText(brief);
+      toast.success({
+        title: "Brief Copied",
+        description: "Revenue intelligence summary copied to clipboard.",
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error({
+        title: "Copy Failed",
+        description: "Could not copy the revenue brief.",
+      });
+    }
+  }
+
+  function exportRevenueCsv() {
+    const didExport = downloadCsv("unity-tax-revenue-intelligence.csv", leadExportRows);
+
+    if (!didExport) {
+      toast.error({
+        title: "Nothing To Export",
+        description: "There are no active leads in the revenue view yet.",
+      });
+      return;
+    }
+
+    toast.success({
+      title: "Revenue CSV Exported",
+      description: "Lead-level revenue data has been downloaded.",
+    });
+  }
+
+  function exportGroupedCsv(filename: string, rows: GroupedMetric[]) {
+    const didExport = downloadCsv(filename, groupedExportRows(rows));
+
+    if (!didExport) {
+      toast.error({
+        title: "Nothing To Export",
+        description: "There is no grouped revenue data available yet.",
+      });
+      return;
+    }
+
+    toast.success({
+      title: "CSV Exported",
+      description: "Revenue performance data has been downloaded.",
+    });
+  }
+
+  function addLeadToQueue(lead?: RevenueLead) {
+    if (!lead) {
+      toast.error({
+        title: "No Lead Selected",
+        description: "A priority lead will appear here once assessment data is available.",
+      });
+      return;
+    }
+
+    setActionQueue((current) => {
+      if (current.some((queuedLead) => queuedLead.id === lead.id)) return current;
+      return [lead, ...current].slice(0, 5);
+    });
+
+    toast.success({
+      title: "Added To Revenue Queue",
+      description: `${lead.name} is queued for follow-up review.`,
+    });
+  }
 
   return (
     <div className="min-h-screen">
@@ -386,24 +626,36 @@ export default function RevenueIntelligencePage() {
         subtitle="See which campaigns, landing pages, and sources are creating pipeline value."
       />
 
-      <div className="px-6 py-8 lg:px-10">
+      <div className="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
         <UnityPageHero
           eyebrow="Revenue Intelligence"
           title="Know where your money is coming from."
           description="Track assessment submissions through attribution, pipeline stage, projected value, and expected revenue so you can make better advertising decisions."
           action={
-            <UnityButton variant="secondary" onClick={loadRevenueData}>
-              <RefreshCw className="h-4 w-4" />
-              Refresh Data
-            </UnityButton>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <UnityButton variant="secondary" onClick={copyExecutiveBrief}>
+                <ClipboardList className="h-4 w-4" />
+                Copy Brief
+              </UnityButton>
+
+              <UnityButton variant="secondary" onClick={exportRevenueCsv}>
+                <FileSpreadsheet className="h-4 w-4" />
+                Export CSV
+              </UnityButton>
+
+              <UnityButton variant="secondary" onClick={loadRevenueData}>
+                <RefreshCw className="h-4 w-4" />
+                Refresh
+              </UnityButton>
+            </div>
           }
         />
 
         <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           <UnityMetricCard
-            label="Pipeline Forecast"
+            label="Projected Annual Revenue"
             value={formatCurrency(projectedRevenue)}
-            detail="Projected annual revenue"
+            detail="Active pipeline forecast"
             tone="emerald"
             icon={<CircleDollarSign className="h-6 w-6" />}
           />
@@ -417,41 +669,110 @@ export default function RevenueIntelligencePage() {
           />
 
           <UnityMetricCard
+            label="Priority Score"
+            value={`${priorityScore}/100`}
+            detail="Lead quality plus stage progress"
+            tone="yellow"
+            icon={<Target className="h-6 w-6" />}
+          />
+
+          <UnityMetricCard
             label="Won / Hazel Revenue"
             value={formatCurrency(wonRevenue)}
             detail="Converted or handed off"
             tone="violet"
             icon={<Trophy className="h-6 w-6" />}
           />
-
-          <UnityMetricCard
-            label="Qualified Leads"
-            value={String(qualifiedLeads)}
-            detail="Score 80+"
-            tone="yellow"
-            icon={<Target className="h-6 w-6" />}
-          />
         </div>
 
-        <div className="mt-8">
-          <UnityAIInsight title="Revenue Intelligence Recommendation">
-            {topCampaign ? (
-              <>
-                Your strongest current campaign is{" "}
-                <strong>{topCampaign.key}</strong> with{" "}
-                <strong>{topCampaign.leads}</strong> leads and{" "}
-                <strong>{formatCurrency(topCampaign.expectedRevenue)}</strong>{" "}
-                in expected annual revenue. Once Google Ads spend is connected,
-                this page can calculate true ROI and budget recommendations.
-              </>
-            ) : (
-              <>
-                Attribution data will appear here as new assessments are
-                submitted. Once traffic starts flowing, this page will show which
-                campaigns and landing pages create the most valuable pipeline.
-              </>
-            )}
+        <div className="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+          <UnityAIInsight title="AI Executive Recommendation">
+            {executiveRecommendation}
           </UnityAIInsight>
+
+          <UnityCard>
+            <UnityCardHeader
+              eyebrow="Best Revenue Opportunity"
+              title={topLead ? topLead.name : "No priority lead yet"}
+              description={
+                topLead
+                  ? `${topLead.stage} • ${topLead.score}/100 priority score • ${formatCurrency(
+                      topLead.projectedRevenue,
+                    )} projected annual revenue`
+                  : "New assessments will appear here once revenue data is available."
+              }
+            />
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => addLeadToQueue(topLead)}
+                className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-left transition hover:bg-emerald-500/15"
+              >
+                <p className="text-sm font-black text-emerald-200">Queue Review</p>
+                <p className="mt-2 text-xs font-bold leading-5 text-slate-400">
+                  Add the top prospect to your revenue follow-up queue.
+                </p>
+              </button>
+
+              <Link
+                href="/mission-control/assessments"
+                className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-4 text-left transition hover:bg-blue-500/15"
+              >
+                <p className="flex items-center gap-2 text-sm font-black text-blue-200">
+                  Open Assessments
+                  <ArrowRight className="h-4 w-4" />
+                </p>
+                <p className="mt-2 text-xs font-bold leading-5 text-slate-400">
+                  Review the underlying assessment and contact details.
+                </p>
+              </Link>
+            </div>
+          </UnityCard>
+        </div>
+
+        <div className="mt-8 grid gap-6 xl:grid-cols-3">
+          <UnityCard>
+            <UnityCardHeader
+              eyebrow="Top Campaign"
+              title={topCampaign ? topCampaign.key : "No campaign data"}
+              description={
+                topCampaign
+                  ? `${topCampaign.leads} lead${
+                      topCampaign.leads === 1 ? "" : "s"
+                    } • ${formatCurrency(topCampaign.expectedRevenue)} expected`
+                  : "Campaign attribution will appear after tagged traffic submits assessments."
+              }
+            />
+          </UnityCard>
+
+          <UnityCard>
+            <UnityCardHeader
+              eyebrow="Top Source"
+              title={topSource ? topSource.key : "No source data"}
+              description={
+                topSource
+                  ? `${topSource.leads} lead${
+                      topSource.leads === 1 ? "" : "s"
+                    } • ${formatCurrency(topSource.expectedRevenue)} expected`
+                  : "Source attribution will appear once UTM source is captured."
+              }
+            />
+          </UnityCard>
+
+          <UnityCard>
+            <UnityCardHeader
+              eyebrow="Top Landing Page"
+              title={topLandingPage ? topLandingPage.key : "No landing page data"}
+              description={
+                topLandingPage
+                  ? `${topLandingPage.leads} lead${
+                      topLandingPage.leads === 1 ? "" : "s"
+                    } • ${formatCurrency(topLandingPage.expectedRevenue)} expected`
+                  : "Landing page attribution will appear after published pages receive traffic."
+              }
+            />
+          </UnityCard>
         </div>
 
         {isLoading ? (
@@ -467,6 +788,9 @@ export default function RevenueIntelligencePage() {
               title="Top campaigns"
               description="Grouped by UTM campaign or saved campaign name."
               rows={campaignRows}
+              exportRows={() =>
+                exportGroupedCsv("unity-tax-revenue-by-campaign.csv", campaignRows)
+              }
             />
 
             <div className="grid gap-6 xl:grid-cols-2">
@@ -475,6 +799,9 @@ export default function RevenueIntelligencePage() {
                 title="Top sources"
                 description="Grouped by UTM source."
                 rows={sourceRows}
+                exportRows={() =>
+                  exportGroupedCsv("unity-tax-revenue-by-source.csv", sourceRows)
+                }
               />
 
               <MetricTable
@@ -482,6 +809,12 @@ export default function RevenueIntelligencePage() {
                 title="Top landing pages"
                 description="Grouped by captured landing page."
                 rows={landingPageRows}
+                exportRows={() =>
+                  exportGroupedCsv(
+                    "unity-tax-revenue-by-landing-page.csv",
+                    landingPageRows,
+                  )
+                }
               />
             </div>
 
@@ -490,47 +823,91 @@ export default function RevenueIntelligencePage() {
               title="Top keywords"
               description="Grouped by UTM term. Google Ads keyword data should pass through utm_term or ValueTrack."
               rows={keywordRows}
+              exportRows={() =>
+                exportGroupedCsv("unity-tax-revenue-by-keyword.csv", keywordRows)
+              }
             />
 
-            <UnityCard>
-              <UnityCardHeader
-                eyebrow="Next Upgrade"
-                title="True ROI tracking"
-                description="This page is currently using projected and expected revenue. The next layer is adding campaign spend so Mission Control can calculate cost per lead, cost per qualified lead, cost per client, and return on ad spend."
-              />
+            <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+              <UnityCard>
+                <UnityCardHeader
+                  eyebrow="Revenue Action Queue"
+                  title="Follow-up priorities"
+                  description="One-click queue for the prospects that deserve manual review before ad spend scales."
+                />
 
-              <div className="mt-6 grid gap-4 md:grid-cols-3">
-                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                  <MousePointerClick className="h-6 w-6 text-blue-300" />
-                  <p className="mt-4 font-black text-white">
-                    Click-to-lead attribution
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">
-                    Capture UTM, GCLID, source, keyword, and landing page.
-                  </p>
+                <div className="mt-6 grid gap-3">
+                  {actionQueue.length === 0 ? (
+                    <UnityEmptyState
+                      title="No queued revenue reviews yet"
+                      description="Use Queue Review on the top revenue opportunity to build a short action list."
+                    />
+                  ) : (
+                    actionQueue.map((lead) => (
+                      <div
+                        key={lead.id}
+                        className="rounded-2xl border border-slate-800 bg-slate-900 p-4"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="min-w-0">
+                            <p className="truncate font-black text-white">{lead.name}</p>
+                            <p className="mt-1 text-xs font-bold text-slate-500">
+                              {lead.stage} • Submitted {formatDate(lead.createdAt)}
+                            </p>
+                          </div>
+                          <div className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-xs font-black text-yellow-200">
+                            {lead.score}/100
+                          </div>
+                        </div>
+                        <p className="mt-3 text-sm font-black text-emerald-300">
+                          {formatCurrency(lead.projectedRevenue)} projected annual revenue
+                        </p>
+                      </div>
+                    ))
+                  )}
                 </div>
+              </UnityCard>
 
-                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                  <BarChart3 className="h-6 w-6 text-violet-300" />
-                  <p className="mt-4 font-black text-white">
-                    Spend-to-revenue reporting
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">
-                    Add campaign spend to calculate ROI and CAC.
-                  </p>
-                </div>
+              <UnityCard>
+                <UnityCardHeader
+                  eyebrow="Next Upgrade"
+                  title="True ROI tracking"
+                  description="This page is currently using projected and expected revenue. The next layer is adding campaign spend so Mission Control can calculate cost per lead, cost per qualified lead, cost per client, and return on ad spend."
+                />
 
-                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                  <Sparkles className="h-6 w-6 text-emerald-300" />
-                  <p className="mt-4 font-black text-white">
-                    AI budget recommendations
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">
-                    Increase winners, pause losers, and create new campaigns.
-                  </p>
+                <div className="mt-6 grid gap-4 md:grid-cols-3">
+                  <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                    <MousePointerClick className="h-6 w-6 text-blue-300" />
+                    <p className="mt-4 font-black text-white">
+                      Click-to-lead attribution
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-400">
+                      Capture UTM, GCLID, source, keyword, and landing page.
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                    <BarChart3 className="h-6 w-6 text-violet-300" />
+                    <p className="mt-4 font-black text-white">
+                      Spend-to-revenue reporting
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-400">
+                      Add campaign spend to calculate ROI and CAC.
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                    <Sparkles className="h-6 w-6 text-emerald-300" />
+                    <p className="mt-4 font-black text-white">
+                      AI budget recommendations
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-400">
+                      Increase winners, pause losers, and create new campaigns.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </UnityCard>
+              </UnityCard>
+            </div>
           </div>
         )}
       </div>
