@@ -78,6 +78,10 @@ function getCampaignBrief(campaign: CampaignIdea, location: string) {
   ].join("\n");
 }
 
+function getLandingPagePath(campaign: CampaignIdea) {
+  return `/landing/${campaign.slug}`;
+}
+
 function getCampaignBuilderHref(
   campaign: CampaignIdea,
   factoryLocation: string,
@@ -257,6 +261,25 @@ export default function CampaignFactoryPage() {
     } catch (error) {
       console.error(error);
       showToast("Could not copy campaign brief.", "error");
+    }
+  }
+
+  async function copySuggestedUrl(campaign: CampaignIdea) {
+    const landingPath = getLandingPagePath(campaign);
+    const suggestedUrl = `${window.location.origin}${landingPath}`;
+
+    try {
+      await navigator.clipboard.writeText(suggestedUrl);
+      showToast(
+        "Suggested URL copied. Build and publish the campaign before it goes live.",
+        "success",
+      );
+    } catch (error) {
+      console.error(error);
+      showToast(
+        `Suggested URL: ${landingPath}. Build and publish before it goes live.`,
+        "warning",
+      );
     }
   }
 
@@ -801,12 +824,14 @@ export default function CampaignFactoryPage() {
                           Copy
                         </button>
 
-                        <Link
-                          href={`/landing/${campaign.slug}`}
+                        <button
+                          type="button"
+                          onClick={() => copySuggestedUrl(campaign)}
+                          title="Copies the future public URL. Build and publish the campaign before opening it live."
                           className="rounded-2xl border border-slate-700 px-4 py-4 text-center text-sm font-black text-slate-300 transition hover:border-violet-500 hover:text-white"
                         >
-                          URL
-                        </Link>
+                          Copy URL
+                        </button>
                       </div>
                     </article>
                   );

@@ -57,6 +57,60 @@ type GroupedMetric = {
   averageScore: number;
 };
 
+
+type DonutSegment = {
+  label: string;
+  value: number;
+  stroke: string;
+};
+
+const ANNUAL_REVENUE_GOAL = 1000000;
+const DONUT_STROKES = ["#60a5fa", "#34d399", "#a78bfa", "#fbbf24", "#fb7185", "#94a3b8"];
+
+function clampPercent(value: number) {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function getPercent(value: number, total: number) {
+  if (total <= 0) return 0;
+  return clampPercent((value / total) * 100);
+}
+
+function compactMetric(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
+function buildDonutSegments(
+  rows: GroupedMetric[],
+  valueKey: "projectedRevenue" | "expectedRevenue" | "leads" = "expectedRevenue",
+) {
+  const topRows = rows.filter((row) => row[valueKey] > 0).slice(0, 5);
+  const remaining = rows
+    .filter((row) => row[valueKey] > 0)
+    .slice(5)
+    .reduce((sum, row) => sum + row[valueKey], 0);
+
+  const segments = topRows.map((row, index) => ({
+    label: row.key,
+    value: row[valueKey],
+    stroke: DONUT_STROKES[index % DONUT_STROKES.length],
+  }));
+
+  if (remaining > 0) {
+    segments.push({
+      label: "Other",
+      value: remaining,
+      stroke: DONUT_STROKES[5],
+    });
+  }
+
+  return segments;
+}
+
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -275,6 +329,244 @@ function downloadCsv(filename: string, rows: Array<Record<string, unknown>>) {
   URL.revokeObjectURL(url);
 
   return true;
+}
+
+
+function ProgressRing({
+  label,
+  value,
+  percent,
+  description,
+  footer,
+}: {
+  label: string;
+  value: string;
+  percent: number;
+  description: string;
+  footer: string;
+}) {
+  const radius = 44;
+  const circumference = 2 * Math.PI * radius;
+  const safePercent = clampPercent(percent);
+  const offset = circumference - (safePercent / 100) * circumference;
+
+  return (
+    <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-5 shadow-lg shadow-black/20">
+      <div className="flex items-center gap-5">
+        <div className="relative h-28 w-28 shrink-0">
+          <svg viewBox="0 0 120 120" className="h-28 w-28 -rotate-90">
+            <circle
+              cx="60"
+              cy="60"
+              r={radius}
+              fill="none"
+              stroke="rgba(30, 41, 59, 0.95)"
+              strokeWidth="13"
+            />
+            <circle
+              cx="60"
+              cy="60"
+              r={radius}
+              fill="none"
+              stroke="url(#revenueRingGradient)"
+              strokeLinecap="round"
+              strokeWidth="13"
+              strokeDasharray={circumference}
+              strokeDashoffset={offset}
+            />
+            <defs>
+              <linearGradient id="revenueRingGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stopColor="#60a5fa" />
+                <stop offset="55%" stopColor="#34d399" />
+                <stop offset="100%" stopColor="#a78bfa" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-2xl font-black text-white">{safePercent}%</span>
+            <span className="text-[0.62rem] font-black uppercase tracking-[0.16em] text-slate-500">
+              Complete
+            </span>
+          </div>
+        </div>
+
+        <div className="min-w-0">
+          <p className="text-xs font-black uppercase tracking-[0.22em] text-blue-300">
+            {label}
+          </p>
+          <p className="mt-2 text-2xl font-black text-white">{value}</p>
+          <p className="mt-2 text-sm font-semibold leading-6 text-slate-400">
+            {description}
+          </p>
+          <p className="mt-3 rounded-2xl border border-slate-800 bg-slate-900 px-3 py-2 text-xs font-bold text-slate-400">
+            {footer}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DonutChartCard({
+  title,
+  description,
+  centerLabel,
+  centerValue,
+  segments,
+}: {
+  title: string;
+  description: string;
+  centerLabel: string;
+  centerValue: string;
+  segments: DonutSegment[];
+}) {
+  const radius = 46;
+  const circumference = 2 * Math.PI * radius;
+  const total = segments.reduce((sum, segment) => sum + segment.value, 0);
+  let runningOffset = 0;
+
+  return (
+    <UnityCard>
+      <UnityCardHeader eyebrow="Revenue Mix" title={title} description={description} />
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-[15rem_1fr] lg:items-center">
+        <div className="relative mx-auto h-60 w-60">
+          <svg viewBox="0 0 140 140" className="h-60 w-60 -rotate-90">
+            <circle
+              cx="70"
+              cy="70"
+              r={radius}
+              fill="none"
+              stroke="rgba(30, 41, 59, 0.95)"
+              strokeWidth="18"
+            />
+            {total > 0 &&
+              segments.map((segment) => {
+                const dash = (segment.value / total) * circumference;
+                const dashOffset = -runningOffset;
+                runningOffset += dash;
+
+                return (
+                  <circle
+                    key={segment.label}
+                    cx="70"
+                    cy="70"
+                    r={radius}
+                    fill="none"
+                    stroke={segment.stroke}
+                    strokeLinecap="round"
+                    strokeWidth="18"
+                    strokeDasharray={`${dash} ${circumference - dash}`}
+                    strokeDashoffset={dashOffset}
+                  />
+                );
+              })}
+          </svg>
+
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <p className="text-[0.64rem] font-black uppercase tracking-[0.2em] text-slate-500">
+              {centerLabel}
+            </p>
+            <p className="mt-2 text-3xl font-black text-white">{centerValue}</p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {total === 0 ? (
+            <UnityEmptyState
+              title="No chart data yet"
+              description="Revenue mix will populate once tagged assessments are created."
+            />
+          ) : (
+            segments.map((segment) => (
+              <div
+                key={segment.label}
+                className="rounded-2xl border border-slate-800 bg-slate-900 p-4"
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span
+                      className="h-3 w-3 shrink-0 rounded-full"
+                      style={{ backgroundColor: segment.stroke }}
+                    />
+                    <p className="truncate text-sm font-black text-white">{segment.label}</p>
+                  </div>
+                  <p className="shrink-0 text-sm font-black text-slate-300">
+                    {getPercent(segment.value, total)}%
+                  </p>
+                </div>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-800">
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${getPercent(segment.value, total)}%`,
+                      backgroundColor: segment.stroke,
+                    }}
+                  />
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </UnityCard>
+  );
+}
+
+function RankedRevenueBars({ rows }: { rows: GroupedMetric[] }) {
+  const topRows = rows.slice(0, 5);
+  const maxValue = topRows.reduce(
+    (max, row) => Math.max(max, row.expectedRevenue),
+    0,
+  );
+
+  return (
+    <UnityCard>
+      <UnityCardHeader
+        eyebrow="Circle Graph Companion"
+        title="Top revenue opportunities"
+        description="A ranked view is easier than a pie chart when you need to decide where the next ad dollar should go."
+      />
+
+      <div className="mt-6 space-y-4">
+        {topRows.length === 0 ? (
+          <UnityEmptyState
+            title="No ranked revenue yet"
+            description="Campaign revenue rankings will appear once leads are tagged with attribution data."
+          />
+        ) : (
+          topRows.map((row, index) => {
+            const width = maxValue > 0 ? getPercent(row.expectedRevenue, maxValue) : 0;
+
+            return (
+              <div key={row.key} className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-black text-white">
+                      {index + 1}. {row.key}
+                    </p>
+                    <p className="mt-1 text-xs font-bold text-slate-500">
+                      {row.leads} lead{row.leads === 1 ? "" : "s"} • {row.qualified} qualified
+                    </p>
+                  </div>
+                  <p className="shrink-0 text-sm font-black text-emerald-300">
+                    {formatCurrency(row.expectedRevenue)}
+                  </p>
+                </div>
+
+                <div className="mt-4 h-3 overflow-hidden rounded-full bg-slate-800">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-blue-500 via-emerald-400 to-violet-400"
+                    style={{ width: `${width}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </UnityCard>
+  );
 }
 
 function MetricTable({
@@ -502,6 +794,16 @@ export default function RevenueIntelligencePage() {
     [activeLeads],
   );
 
+  const stageRows = useMemo(
+    () => groupBy(activeLeads, (lead) => lead.stage),
+    [activeLeads],
+  );
+
+  const revenueGoalProgress = getPercent(projectedRevenue, ANNUAL_REVENUE_GOAL);
+  const expectedGoalProgress = getPercent(expectedRevenue, ANNUAL_REVENUE_GOAL);
+  const qualifiedLeadPercent = getPercent(qualifiedLeads, activeLeads.length);
+  const stageDonutSegments = buildDonutSegments(stageRows, "expectedRevenue");
+
   const executiveRecommendation = topCampaign
     ? `Double down on ${topCampaign.key}. It is currently producing ${topCampaign.leads} lead${
         topCampaign.leads === 1 ? "" : "s"
@@ -683,6 +985,58 @@ export default function RevenueIntelligencePage() {
             tone="violet"
             icon={<Trophy className="h-6 w-6" />}
           />
+        </div>
+
+        <div className="mt-8 grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+          <UnityCard>
+            <UnityCardHeader
+              eyebrow="Visual Revenue Dashboard"
+              title="Progress toward the $1M annual revenue target"
+              description="Use these rings as the quick executive read before deciding which campaign, source, or lead deserves attention."
+            />
+
+            <div className="mt-6 grid gap-4">
+              <ProgressRing
+                label="Goal Progress"
+                value={formatCurrency(projectedRevenue)}
+                percent={revenueGoalProgress}
+                description={`Projected annual revenue against the ${formatCurrency(
+                  ANNUAL_REVENUE_GOAL,
+                )} launch target.`}
+                footer={`${formatCurrency(
+                  Math.max(ANNUAL_REVENUE_GOAL - projectedRevenue, 0),
+                )} remaining to goal`}
+              />
+
+              <ProgressRing
+                label="Stage-Weighted Progress"
+                value={formatCurrency(expectedRevenue)}
+                percent={expectedGoalProgress}
+                description="Expected revenue after applying stage probability to the active pipeline."
+                footer={`${stageCoverage}% of projected revenue is weighted into the current pipeline`}
+              />
+
+              <ProgressRing
+                label="Qualified Lead Ratio"
+                value={`${qualifiedLeads}/${activeLeads.length}`}
+                percent={qualifiedLeadPercent}
+                description="Share of active assessments scoring high enough to justify fast follow-up."
+                footer={`${averagePriorityScore}/100 average priority score`}
+              />
+            </div>
+          </UnityCard>
+
+          <DonutChartCard
+            title="Expected revenue by pipeline stage"
+            description="A donut view of where the stage-weighted revenue currently sits across the active pipeline."
+            centerLabel="Expected"
+            centerValue={formatCurrency(expectedRevenue)}
+            segments={stageDonutSegments}
+          />
+        </div>
+
+        <div className="mt-8">
+          <RankedRevenueBars rows={campaignRows} />
         </div>
 
         <div className="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">

@@ -12,7 +12,6 @@ import {
   RefreshCw,
   Search,
   Sparkles,
-  TrendingUp,
   Users,
 } from "lucide-react";
 import Header from "@/components/mission-control/Header";
@@ -43,6 +42,32 @@ type ToastState = {
   description: string;
 } | null;
 
+
+type ReportSegment = {
+  label: string;
+  value: number;
+  stroke: string;
+};
+
+const REPORT_STROKES = ["#60a5fa", "#34d399", "#a78bfa", "#fbbf24", "#fb7185", "#94a3b8"];
+
+function clampPercent(value: number) {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function getPercent(value: number, total: number) {
+  if (total <= 0) return 0;
+  return clampPercent((value / total) * 100);
+}
+
+function compactNumber(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
 const datasetConfigs: DatasetConfig[] = [
   {
     key: "campaigns",
@@ -66,7 +91,7 @@ const datasetConfigs: DatasetConfig[] = [
     key: "leads",
     label: "Lead Reports",
     shortLabel: "Leads",
-    description: "Website leads and form submissions available for CSV export.",
+    description: "General website leads, if a separate leads table is active.",
     tableName: "leads",
     exportName: "unity-tax-leads.csv",
     icon: Users,
@@ -75,8 +100,8 @@ const datasetConfigs: DatasetConfig[] = [
     key: "assessments",
     label: "Assessment Reports",
     shortLabel: "Assessments",
-    description: "Tax assessment records and opportunity-scan data, if this table is active.",
-    tableName: "assessments",
+    description: "Tax Opportunity Assessment submissions from the live tax_leads table.",
+    tableName: "tax_leads",
     exportName: "unity-tax-assessments.csv",
     icon: BarChart3,
   },
@@ -236,11 +261,38 @@ export default function ReportsPage() {
   const publishedCampaigns = datasets.campaigns.rows.filter(
     (row) => getStringValue(row, "status").toLowerCase() === "published",
   ).length;
+  const draftCampaigns = Math.max(0, totalCampaigns - publishedCampaigns);
+  const totalLandingPages = datasets.landingPages.rows.length;
   const activeLandingPages = datasets.landingPages.rows.filter((row) => {
     const value = row.is_active;
     return value === true || String(value).toLowerCase() === "true";
   }).length;
+  const inactiveLandingPages = Math.max(0, totalLandingPages - activeLandingPages);
+  const leadRecords = datasets.leads.rows.length;
+  const assessmentRecords = datasets.assessments.rows.length;
   const totalExportableRecords = allRows.length;
+  const availableDatasetCount = datasetConfigs.filter(
+    (config) => !datasets[config.key].isLoading && !datasets[config.key].error,
+  ).length;
+  const datasetReadinessPercent = getPercent(availableDatasetCount, datasetConfigs.length);
+  const publishedCampaignPercent = getPercent(publishedCampaigns, totalCampaigns);
+  const activeLandingPagePercent = getPercent(activeLandingPages, totalLandingPages);
+  const launchAssetTotal = totalCampaigns + totalLandingPages;
+  const launchReadyAssets = publishedCampaigns + activeLandingPages;
+  const launchReadinessPercent = getPercent(launchReadyAssets, launchAssetTotal);
+  const exportReadinessPercent = totalExportableRecords > 0 ? 100 : datasetReadinessPercent;
+  const assessmentCapturePercent = assessmentRecords > 0 ? 100 : 0;
+  const datasetSegments = datasetConfigs.map((config, index) => ({
+    label: config.shortLabel,
+    value: datasets[config.key].rows.length,
+    stroke: REPORT_STROKES[index % REPORT_STROKES.length],
+  }));
+  const launchStatusSegments = [
+    { label: "Published Campaigns", value: publishedCampaigns, stroke: REPORT_STROKES[1] },
+    { label: "Draft Campaigns", value: draftCampaigns, stroke: REPORT_STROKES[0] },
+    { label: "Active Landing Pages", value: activeLandingPages, stroke: REPORT_STROKES[2] },
+    { label: "Inactive Landing Pages", value: inactiveLandingPages, stroke: REPORT_STROKES[3] },
+  ];
 
   function showToast(title: string, description: string) {
     setToast({ title, description });
@@ -340,11 +392,13 @@ export default function ReportsPage() {
     const summary = [
       "Unity Tax Mission Control Report Summary",
       `Total exportable records: ${totalExportableRecords}`,
-      `Campaigns: ${totalCampaigns}`,
-      `Published campaigns: ${publishedCampaigns}`,
-      `Active landing pages: ${activeLandingPages}`,
-      `Lead records: ${datasets.leads.rows.length}`,
-      `Assessment records: ${datasets.assessments.rows.length}`,
+      `Campaign records: ${totalCampaigns}`,
+      `Published campaigns: ${publishedCampaigns} of ${totalCampaigns}`,
+      `Landing page records: ${totalLandingPages}`,
+      `Active landing pages: ${activeLandingPages} of ${totalLandingPages}`,
+      `Assessment records: ${assessmentRecords}`,
+      `Lead records from separate leads table: ${leadRecords}`,
+      `Launch asset readiness: ${launchReadinessPercent}%`,
     ].join("\n");
 
     await navigator.clipboard.writeText(summary);
@@ -384,12 +438,12 @@ export default function ReportsPage() {
                 <p className="mt-2 text-2xl font-black text-white">{totalExportableRecords}</p>
               </div>
               <div className="rounded-3xl border border-slate-700 bg-slate-950/70 p-4">
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Published</p>
-                <p className="mt-2 text-2xl font-black text-white">{publishedCampaigns}</p>
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Campaigns Live</p>
+                <p className="mt-2 text-2xl font-black text-white">{publishedCampaigns}/{totalCampaigns}</p>
               </div>
               <div className="rounded-3xl border border-slate-700 bg-slate-950/70 p-4">
-                <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Pages</p>
-                <p className="mt-2 text-2xl font-black text-white">{activeLandingPages}</p>
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Pages Live</p>
+                <p className="mt-2 text-2xl font-black text-white">{activeLandingPages}/{totalLandingPages}</p>
               </div>
               <div className="rounded-3xl border border-slate-700 bg-slate-950/70 p-4">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Priority</p>
@@ -407,23 +461,78 @@ export default function ReportsPage() {
             icon={Megaphone}
           />
           <MetricCard
+            label="Published Campaigns"
+            value={`${publishedCampaigns}/${totalCampaigns}`}
+            description={`${publishedCampaignPercent}% of campaign records are live`}
+            icon={Megaphone}
+          />
+          <MetricCard
             label="Active Landing Pages"
-            value={String(activeLandingPages)}
-            description="Public pages ready for traffic"
+            value={`${activeLandingPages}/${totalLandingPages}`}
+            description={`${activeLandingPagePercent}% of landing pages are public`}
             icon={FileText}
           />
           <MetricCard
-            label="Lead Records"
-            value={String(datasets.leads.rows.length)}
-            description="Website lead submissions detected"
+            label="Assessments"
+            value={String(assessmentRecords)}
+            description="Tax Opportunity Assessment submissions"
             icon={Users}
           />
-          <MetricCard
-            label="Export Readiness"
-            value={totalExportableRecords > 0 ? "Ready" : "Waiting"}
-            description="CSV export status"
-            icon={TrendingUp}
-          />
+        </div>
+
+        <div className="mb-6 grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+          <section className="rounded-[2rem] border border-slate-800 bg-slate-950 p-5 shadow-2xl shadow-slate-950/30 sm:p-6">
+            <div className="mb-5">
+              <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-300">
+                Visual Report Health
+              </p>
+              <h3 className="mt-2 text-2xl font-black text-white">
+                Export readiness at a glance
+              </h3>
+              <p className="mt-2 text-sm font-semibold leading-6 text-slate-400">
+                These rings show whether Mission Control has enough data to support clean launch reporting.
+              </p>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+              <ReportProgressRing
+                label="Export Records"
+                value={totalExportableRecords > 0 ? "Ready" : "Waiting"}
+                percent={exportReadinessPercent}
+                description={`${totalExportableRecords} total rows across report sources`}
+              />
+              <ReportProgressRing
+                label="Launch Assets"
+                value={`${launchReadyAssets}/${launchAssetTotal}`}
+                percent={launchReadinessPercent}
+                description="Published campaigns plus active landing pages"
+              />
+              <ReportProgressRing
+                label="Assessments"
+                value={assessmentRecords > 0 ? "Capturing" : "Waiting"}
+                percent={assessmentCapturePercent}
+                description={`${assessmentRecords} Tax Opportunity Assessment records`}
+              />
+            </div>
+          </section>
+
+          <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+            <ReportDonutCard
+              title="Data source mix"
+              description="Where exportable Mission Control records currently live."
+              centerLabel="Rows"
+              centerValue={compactNumber(totalExportableRecords)}
+              segments={datasetSegments}
+            />
+
+            <ReportDonutCard
+              title="Launch asset mix"
+              description="Published campaigns, draft campaigns, active pages, and inactive pages shown as separate launch assets."
+              centerLabel="Ready"
+              centerValue={`${launchReadinessPercent}%`}
+              segments={launchStatusSegments}
+            />
+          </div>
         </div>
 
         <div className="mb-6 grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
@@ -644,6 +753,185 @@ export default function ReportsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+
+function ReportProgressRing({
+  label,
+  value,
+  percent,
+  description,
+}: {
+  label: string;
+  value: string;
+  percent: number;
+  description: string;
+}) {
+  const radius = 42;
+  const circumference = 2 * Math.PI * radius;
+  const safePercent = clampPercent(percent);
+  const offset = circumference - (safePercent / 100) * circumference;
+
+  return (
+    <div className="rounded-[1.5rem] border border-slate-800 bg-slate-900/70 p-5 text-center">
+      <div className="relative mx-auto h-28 w-28">
+        <svg viewBox="0 0 120 120" className="h-28 w-28 -rotate-90">
+          <circle
+            cx="60"
+            cy="60"
+            r={radius}
+            fill="none"
+            stroke="rgba(30, 41, 59, 0.95)"
+            strokeWidth="13"
+          />
+          <circle
+            cx="60"
+            cy="60"
+            r={radius}
+            fill="none"
+            stroke="url(#reportRingGradient)"
+            strokeLinecap="round"
+            strokeWidth="13"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+          />
+          <defs>
+            <linearGradient id="reportRingGradient" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stopColor="#60a5fa" />
+              <stop offset="55%" stopColor="#34d399" />
+              <stop offset="100%" stopColor="#a78bfa" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-2xl font-black text-white">{safePercent}%</span>
+          <span className="text-[0.62rem] font-black uppercase tracking-[0.16em] text-slate-500">
+            Status
+          </span>
+        </div>
+      </div>
+
+      <p className="mt-4 text-xs font-black uppercase tracking-[0.2em] text-blue-300">
+        {label}
+      </p>
+      <p className="mt-2 text-xl font-black text-white">{value}</p>
+      <p className="mt-2 text-xs font-bold leading-5 text-slate-400">{description}</p>
+    </div>
+  );
+}
+
+function ReportDonutCard({
+  title,
+  description,
+  centerLabel,
+  centerValue,
+  segments,
+}: {
+  title: string;
+  description: string;
+  centerLabel: string;
+  centerValue: string;
+  segments: ReportSegment[];
+}) {
+  const radius = 46;
+  const circumference = 2 * Math.PI * radius;
+  const total = segments.reduce((sum, segment) => sum + segment.value, 0);
+  let runningOffset = 0;
+
+  return (
+    <section className="rounded-[2rem] border border-slate-800 bg-slate-950 p-5 shadow-2xl shadow-slate-950/30 sm:p-6">
+      <div>
+        <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-300">
+          Donut Chart
+        </p>
+        <h3 className="mt-2 text-2xl font-black text-white">{title}</h3>
+        <p className="mt-2 text-sm font-semibold leading-6 text-slate-400">
+          {description}
+        </p>
+      </div>
+
+      <div className="mt-6 grid gap-5 sm:grid-cols-[12rem_1fr] sm:items-center xl:grid-cols-1 2xl:grid-cols-[12rem_1fr]">
+        <div className="relative mx-auto h-48 w-48">
+          <svg viewBox="0 0 140 140" className="h-48 w-48 -rotate-90">
+            <circle
+              cx="70"
+              cy="70"
+              r={radius}
+              fill="none"
+              stroke="rgba(30, 41, 59, 0.95)"
+              strokeWidth="18"
+            />
+            {total > 0 &&
+              segments
+                .filter((segment) => segment.value > 0)
+                .map((segment) => {
+                  const dash = (segment.value / total) * circumference;
+                  const dashOffset = -runningOffset;
+                  runningOffset += dash;
+
+                  return (
+                    <circle
+                      key={segment.label}
+                      cx="70"
+                      cy="70"
+                      r={radius}
+                      fill="none"
+                      stroke={segment.stroke}
+                      strokeLinecap="round"
+                      strokeWidth="18"
+                      strokeDasharray={`${dash} ${circumference - dash}`}
+                      strokeDashoffset={dashOffset}
+                    />
+                  );
+                })}
+          </svg>
+
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <p className="text-[0.64rem] font-black uppercase tracking-[0.2em] text-slate-500">
+              {centerLabel}
+            </p>
+            <p className="mt-2 text-3xl font-black text-white">{centerValue}</p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {total === 0 ? (
+            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold leading-6 text-slate-400">
+              No chart data yet. Generate campaigns, publish pages, or submit test assessments to activate this visual.
+            </div>
+          ) : (
+            segments
+              .filter((segment) => segment.value > 0)
+              .map((segment) => (
+                <div key={segment.label} className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span
+                        className="h-3 w-3 shrink-0 rounded-full"
+                        style={{ backgroundColor: segment.stroke }}
+                      />
+                      <p className="truncate text-sm font-black text-white">{segment.label}</p>
+                    </div>
+                    <p className="shrink-0 text-sm font-black text-slate-300">
+                      {segment.value}
+                    </p>
+                  </div>
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-800">
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${getPercent(segment.value, total)}%`,
+                        backgroundColor: segment.stroke,
+                      }}
+                    />
+                  </div>
+                </div>
+              ))
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
 
