@@ -4,16 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BarChart3,
-  Bot,
   Brain,
   BriefcaseBusiness,
-  CheckSquare,
   Factory,
   FileText,
   LayoutDashboard,
   Megaphone,
   ScrollText,
-  Settings,
   TrendingUp,
   UserRound,
   Users,
@@ -55,7 +52,7 @@ const navSections = [
       },
       {
         label: "Clients",
-        href: "/mission-control/clients",
+        href: "/mission-control/assessments",
         icon: Users,
       },
     ],
@@ -93,30 +90,15 @@ const navSections = [
         href: "/mission-control/strategy-builder",
         icon: ScrollText,
       },
-      {
-        label: "AI",
-        href: "/mission-control/ai",
-        icon: Bot,
-      },
     ],
   },
   {
     label: "Operations",
     items: [
       {
-        label: "Tasks",
-        href: "/mission-control/tasks",
-        icon: CheckSquare,
-      },
-      {
         label: "Reports",
         href: "/mission-control/reports",
         icon: BarChart3,
-      },
-      {
-        label: "Settings",
-        href: "/mission-control/settings",
-        icon: Settings,
       },
     ],
   },
@@ -129,7 +111,7 @@ export default function Sidebar() {
     <aside className="hidden min-h-screen w-72 shrink-0 border-r border-slate-800 bg-slate-950 px-4 py-6 lg:block">
       <Link
         href="/mission-control"
-        className="mb-6 block rounded-[1.5rem] border border-blue-500/30 bg-blue-500/10 p-5"
+        className="mb-6 block rounded-[1.5rem] border border-blue-500/30 bg-blue-500/10 p-5 transition hover:border-blue-400/60 hover:bg-blue-500/15"
       >
         <p className="text-xs font-black uppercase tracking-[0.3em] text-blue-300">
           Unity
@@ -165,7 +147,7 @@ export default function Sidebar() {
 
                 return (
                   <Link
-                    key={item.href}
+                    key={`${section.label}-${item.label}`}
                     href={item.href}
                     className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black transition ${
                       isActive
