@@ -1,9 +1,38 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, BriefcaseBusiness, CalendarDays, CircleDollarSign, ClipboardList, Flame, RefreshCw, Sparkles, Star, Target, TrendingUp } from "lucide-react";
+import {
+  ArrowRight,
+  BarChart3,
+  BriefcaseBusiness,
+  CalendarDays,
+  CheckCircle2,
+  CircleDollarSign,
+  Clipboard,
+  ClipboardList,
+  Download,
+  Flame,
+  Mail,
+  Phone,
+  RefreshCw,
+  Sparkles,
+  Star,
+  Target,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import Header from "@/components/mission-control/Header";
-import { UnityAIInsight, UnityBadge, UnityButton, UnityCard, UnityCardHeader, UnityEmptyState, UnityMetricCard, UnityPageHero, useToast } from "@/components/ui";
+import {
+  UnityAIInsight,
+  UnityBadge,
+  UnityButton,
+  UnityCard,
+  UnityCardHeader,
+  UnityEmptyState,
+  UnityMetricCard,
+  UnityPageHero,
+  useToast,
+} from "@/components/ui";
 import { supabase } from "@/lib/supabase";
 
 type LeadRecord = Record<string, any>;
@@ -11,6 +40,8 @@ type LeadRecord = Record<string, any>;
 type BriefOpportunity = {
   id: string;
   name: string;
+  email: string;
+  phone: string;
   occupation: string;
   stage: string;
   score: number;
@@ -19,14 +50,6 @@ type BriefOpportunity = {
   recommendation: string;
 };
 
-const ACTIVE_STAGES = [
-  "New Assessment",
-  "Qualified",
-  "Meeting Scheduled",
-  "Proposal Sent",
-  "Won",
-  "Sent to Hazel",
-];
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
@@ -38,22 +61,51 @@ function formatCurrency(value: number) {
 
 function formatDate(value?: string) {
   if (!value) return "Unknown";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Unknown";
+
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
-  }).format(new Date(value));
+  }).format(date);
 }
 
 function getLeadName(lead: LeadRecord) {
-  return lead.full_name || lead.name || lead.first_name || lead.email || "Unnamed Prospect";
+  return (
+    lead.full_name ||
+    lead.name ||
+    [lead.first_name, lead.last_name].filter(Boolean).join(" ") ||
+    lead.email ||
+    "Unnamed Prospect"
+  );
+}
+
+function getLeadEmail(lead: LeadRecord) {
+  return lead.email || lead.email_address || lead.contact_email || "";
+}
+
+function getLeadPhone(lead: LeadRecord) {
+  return lead.phone || lead.phone_number || lead.mobile || lead.cell || "";
 }
 
 function getLeadOccupation(lead: LeadRecord) {
-  return lead.occupation || lead.profession || lead.job_title || lead.industry || "Occupation not provided";
+  return (
+    lead.occupation ||
+    lead.profession ||
+    lead.job_title ||
+    lead.industry ||
+    "Occupation not provided"
+  );
 }
 
 function getLeadIncome(lead: LeadRecord) {
-  const possibleValues = [lead.income, lead.annual_income, lead.household_income, lead.estimated_income];
+  const possibleValues = [
+    lead.income,
+    lead.annual_income,
+    lead.household_income,
+    lead.estimated_income,
+  ];
 
   for (const value of possibleValues) {
     const parsed = Number(String(value || "").replace(/[^0-9.-]/g, ""));
@@ -109,7 +161,12 @@ function assignStage(lead: LeadRecord, score: number) {
 }
 
 function getRecommendation(stage: string, score: number) {
-  if (stage === "New Assessment") return score >= 80 ? "Review today. This prospect is likely worth moving forward." : "Review and decide whether this prospect is a fit.";
+  if (stage === "New Assessment") {
+    return score >= 80
+      ? "Review today. This prospect is likely worth moving forward."
+      : "Review and decide whether this prospect is a fit.";
+  }
+
   if (stage === "Qualified") return "Schedule the strategy conversation and prepare outreach.";
   if (stage === "Meeting Scheduled") return "Generate the AI meeting brief before the call.";
   if (stage === "Proposal Sent") return "Follow up with a clear next step and address likely objections.";
@@ -126,6 +183,8 @@ function mapLeadToBriefOpportunity(lead: LeadRecord): BriefOpportunity {
   return {
     id: String(lead.id),
     name: getLeadName(lead),
+    email: getLeadEmail(lead),
+    phone: getLeadPhone(lead),
     occupation: getLeadOccupation(lead),
     stage,
     score,
@@ -151,7 +210,76 @@ function getStageTone(stage: string): "blue" | "violet" | "emerald" | "yellow" |
   return "slate";
 }
 
-function FocusCard({ opportunity }: { opportunity: BriefOpportunity }) {
+function getMailToLink(opportunity: BriefOpportunity) {
+  const subject = encodeURIComponent("Unity Tax Planning Follow-Up");
+  const body = encodeURIComponent(
+    `Hi ${opportunity.name},\n\nI reviewed your tax planning assessment and noticed a few areas that may be worth discussing. Would you be open to scheduling a strategy conversation?\n\nBest,\nWade`,
+  );
+
+  return opportunity.email ? `mailto:${opportunity.email}?subject=${subject}&body=${body}` : "/mission-control/client-copilot";
+}
+
+function createBriefText(opportunity: BriefOpportunity) {
+  return [
+    `Prospect: ${opportunity.name}`,
+    `Occupation: ${opportunity.occupation}`,
+    `Stage: ${opportunity.stage}`,
+    `Priority Score: ${opportunity.score}/100`,
+    `Projected Annual Revenue: ${formatCurrency(opportunity.projectedRevenue)}`,
+    `Recommended Action: ${opportunity.recommendation}`,
+  ].join("\n");
+}
+
+function csvEscape(value: string | number) {
+  return `"${String(value).replace(/"/g, '""')}"`;
+}
+
+function exportCsv(filename: string, rows: BriefOpportunity[]) {
+  const headers = [
+    "Name",
+    "Email",
+    "Phone",
+    "Occupation",
+    "Stage",
+    "Priority Score",
+    "Projected Annual Revenue",
+    "Submitted",
+    "Recommended Action",
+  ];
+
+  const body = rows.map((row) =>
+    [
+      row.name,
+      row.email,
+      row.phone,
+      row.occupation,
+      row.stage,
+      row.score,
+      row.projectedRevenue,
+      row.createdAt || "",
+      row.recommendation,
+    ]
+      .map(csvEscape)
+      .join(","),
+  );
+
+  const csv = [headers.map(csvEscape).join(","), ...body].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+function FocusCard({
+  opportunity,
+  onCopyBrief,
+}: {
+  opportunity: BriefOpportunity;
+  onCopyBrief: (opportunity: BriefOpportunity) => void;
+}) {
   return (
     <UnityCard>
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
@@ -177,9 +305,25 @@ function FocusCard({ opportunity }: { opportunity: BriefOpportunity }) {
           </div>
         </div>
 
-        <UnityButton href={`/mission-control/client-copilot/opportunities/${opportunity.id}`}>
-          Open Workspace <ArrowRight className="h-4 w-4" />
-        </UnityButton>
+        <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[19rem] lg:grid-cols-1 xl:grid-cols-2">
+          <UnityButton href="/mission-control/client-copilot">
+            Open Copilot <ArrowRight className="h-4 w-4" />
+          </UnityButton>
+
+          <UnityButton href="/mission-control/assessments" variant="secondary">
+            Review Assessment
+          </UnityButton>
+
+          <UnityButton onClick={() => onCopyBrief(opportunity)} variant="secondary">
+            <Clipboard className="h-4 w-4" />
+            Copy Brief
+          </UnityButton>
+
+          <UnityButton href={getMailToLink(opportunity)} variant="ai">
+            <Mail className="h-4 w-4" />
+            Email
+          </UnityButton>
+        </div>
       </div>
 
       <div className="mt-6">
@@ -249,6 +393,11 @@ export default function MissionControlMorningBriefPage() {
     [activeOpportunities],
   );
 
+  const qualifiedOpportunities = useMemo(
+    () => activeOpportunities.filter((opportunity) => opportunity.stage === "Qualified"),
+    [activeOpportunities],
+  );
+
   const pipelineRevenue = useMemo(
     () => activeOpportunities.reduce((sum, opportunity) => sum + opportunity.projectedRevenue, 0),
     [activeOpportunities],
@@ -256,21 +405,83 @@ export default function MissionControlMorningBriefPage() {
 
   const expectedRevenue = Math.round(pipelineRevenue * 0.58);
   const archivedCount = opportunities.length - activeOpportunities.length;
+  const priorityScore = topFocus?.score || 0;
+  const nextAction = topFocus
+    ? `Start with ${topFocus.name}. ${topFocus.recommendation}`
+    : "Create assessment volume and campaign activity to seed the pipeline.";
+
+  async function copyText(text: string, successTitle: string, successDescription: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success({
+        title: successTitle,
+        description: successDescription,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error({
+        title: "Copy Failed",
+        description: "The text could not be copied to your clipboard.",
+      });
+    }
+  }
+
+  function handleCopyBrief(opportunity: BriefOpportunity) {
+    copyText(
+      createBriefText(opportunity),
+      "Brief Copied",
+      `${opportunity.name}'s executive brief is ready to paste.`,
+    );
+  }
+
+  function handleCopyExecutiveSummary() {
+    const summary = [
+      "Unity Tax Mission Control Morning Brief",
+      `Active Opportunities: ${activeOpportunities.length}`,
+      `Priority Leads: ${priorityOpportunities.length}`,
+      `Priority Score: ${priorityScore}/100`,
+      `Projected Annual Revenue: ${formatCurrency(pipelineRevenue)}`,
+      `Expected Close Estimate: ${formatCurrency(expectedRevenue)}`,
+      `Recommended Action: ${nextAction}`,
+    ].join("\n");
+
+    copyText(summary, "Executive Summary Copied", "Mission Control summary is ready to paste.");
+  }
+
+  function handleExportActive() {
+    exportCsv("unity-tax-active-opportunities.csv", activeOpportunities);
+    toast.success({
+      title: "Export Ready",
+      description: "Active opportunities CSV has been downloaded.",
+    });
+  }
 
   return (
     <div className="min-h-screen">
       <Header title="Mission Control" subtitle="Your daily operating brief for proactive tax planning." />
 
-      <div className="px-6 py-8 lg:px-10">
+      <div className="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
         <UnityPageHero
           eyebrow="Morning Brief"
           title="Good morning, Wade."
           description="Mission Control has reviewed your opportunity pipeline and surfaced the highest-value actions to focus on today."
           action={
-            <UnityButton variant="secondary" onClick={loadBrief}>
-              <RefreshCw className="h-4 w-4" />
-              Refresh Brief
-            </UnityButton>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <UnityButton variant="secondary" onClick={handleCopyExecutiveSummary}>
+                <Clipboard className="h-4 w-4" />
+                Copy Brief
+              </UnityButton>
+
+              <UnityButton variant="secondary" onClick={handleExportActive}>
+                <Download className="h-4 w-4" />
+                Export CSV
+              </UnityButton>
+
+              <UnityButton variant="secondary" onClick={loadBrief}>
+                <RefreshCw className="h-4 w-4" />
+                Refresh Brief
+              </UnityButton>
+            </div>
           }
         />
 
@@ -284,17 +495,17 @@ export default function MissionControlMorningBriefPage() {
           />
 
           <UnityMetricCard
-            label="Priority Leads"
-            value={String(priorityOpportunities.length)}
-            detail="Score 80+"
-            tone="violet"
+            label="Priority Score"
+            value={`${priorityScore}/100`}
+            detail={topFocus ? `${topFocus.name} is today's focus` : "No active focus yet"}
+            tone={getScoreTone(priorityScore)}
             icon={<Star className="h-6 w-6" />}
           />
 
           <UnityMetricCard
-            label="Pipeline Forecast"
+            label="Projected Annual Revenue"
             value={formatCurrency(pipelineRevenue)}
-            detail="Projected annual revenue"
+            detail="Revenue currently in motion"
             tone="emerald"
             icon={<CircleDollarSign className="h-6 w-6" />}
           />
@@ -312,15 +523,42 @@ export default function MissionControlMorningBriefPage() {
           <div className="space-y-6">
             <UnityCard>
               <UnityCardHeader
-                eyebrow="Today's Focus"
-                title="Highest-priority opportunity"
-                description="Start here first. This is the most valuable active opportunity based on lead score and projected annual revenue."
+                eyebrow="AI Executive Recommendation"
+                title="Start with the highest-value action"
+                description="This is the one move most likely to create revenue momentum today."
                 action={
                   <UnityBadge tone="emerald">
                     <Flame className="mr-1 h-3 w-3" />
-                    Focus
+                    Launch Focus
                   </UnityBadge>
                 }
+              />
+
+              <div className="mt-6">
+                <UnityAIInsight title="Mission Control Recommendation">
+                  {topFocus ? (
+                    <>
+                      Start with <strong>{topFocus.name}</strong>. This opportunity has a priority score of{" "}
+                      <strong>{topFocus.score}/100</strong> and a projected annual value of{" "}
+                      <strong>{formatCurrency(topFocus.projectedRevenue)}</strong>. The next best action is:{" "}
+                      <strong>{topFocus.recommendation}</strong>
+                    </>
+                  ) : (
+                    <>
+                      Your active pipeline is clear. Focus on assessment volume, campaign publishing, and follow-up systems
+                      to create new opportunities.
+                    </>
+                  )}
+                </UnityAIInsight>
+              </div>
+            </UnityCard>
+
+            <UnityCard>
+              <UnityCardHeader
+                eyebrow="Today's Focus"
+                title="Highest-priority opportunity"
+                description="Start here first. This is the most valuable active opportunity based on lead score and projected annual revenue."
+                action={<UnityBadge tone={getScoreTone(priorityScore)}>Priority {priorityScore}/100</UnityBadge>}
               />
 
               <div className="mt-6">
@@ -329,7 +567,7 @@ export default function MissionControlMorningBriefPage() {
                     Building morning brief...
                   </p>
                 ) : topFocus ? (
-                  <FocusCard opportunity={topFocus} />
+                  <FocusCard opportunity={topFocus} onCopyBrief={handleCopyBrief} />
                 ) : (
                   <UnityEmptyState
                     title="No active opportunities"
@@ -344,6 +582,7 @@ export default function MissionControlMorningBriefPage() {
                 eyebrow="Priority Opportunities"
                 title="Top prospects to review"
                 description="These are the prospects most likely to deserve advisor attention today."
+                action={<UnityBadge tone="blue">{priorityOpportunities.length} Priority</UnityBadge>}
               />
 
               <div className="mt-6 space-y-4">
@@ -366,12 +605,16 @@ export default function MissionControlMorningBriefPage() {
                           <p className="mt-2 text-sm text-slate-400">{opportunity.recommendation}</p>
                         </div>
 
-                        <UnityButton
-                          href={`/mission-control/client-copilot/opportunities/${opportunity.id}`}
-                          variant="secondary"
-                        >
-                          Open
-                        </UnityButton>
+                        <div className="flex flex-col gap-2 sm:flex-row">
+                          <UnityButton onClick={() => handleCopyBrief(opportunity)} variant="secondary">
+                            <Clipboard className="h-4 w-4" />
+                            Copy
+                          </UnityButton>
+
+                          <UnityButton href="/mission-control/client-copilot" variant="secondary">
+                            Open Copilot
+                          </UnityButton>
+                        </div>
                       </div>
                     </div>
                   ))
@@ -383,33 +626,6 @@ export default function MissionControlMorningBriefPage() {
           <div className="space-y-6">
             <UnityCard>
               <UnityCardHeader
-                eyebrow="Executive Recommendation"
-                title="What matters today"
-                description="A simple operating summary based on the current state of your pipeline."
-              />
-
-              <div className="mt-6">
-                <UnityAIInsight title="Mission Control Recommendation">
-                  {topFocus ? (
-                    <>
-                      Start with <strong>{topFocus.name}</strong>. This opportunity
-                      has the highest current priority score and a projected annual
-                      value of <strong>{formatCurrency(topFocus.projectedRevenue)}</strong>.
-                      After that, review proposal-stage opportunities and prepare
-                      meeting briefs for scheduled calls.
-                    </>
-                  ) : (
-                    <>
-                      Your active pipeline is clear. Focus on campaign generation,
-                      assessment volume, and follow-up systems to create new opportunities.
-                    </>
-                  )}
-                </UnityAIInsight>
-              </div>
-            </UnityCard>
-
-            <UnityCard>
-              <UnityCardHeader
                 eyebrow="Operating Snapshot"
                 title="Stage pressure"
                 description="Quickly see where work is building up."
@@ -419,12 +635,22 @@ export default function MissionControlMorningBriefPage() {
                 <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
                   <div className="flex items-center justify-between gap-4">
                     <div>
+                      <p className="text-xs font-black uppercase tracking-[0.16em] text-blue-300">
+                        Qualified
+                      </p>
+                      <p className="mt-2 text-sm text-slate-400">Ready for advisor review.</p>
+                    </div>
+                    <p className="text-3xl font-black text-white">{qualifiedOpportunities.length}</p>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-violet-300">
                         Meetings Scheduled
                       </p>
-                      <p className="mt-2 text-sm text-slate-400">
-                        Prep these before the call.
-                      </p>
+                      <p className="mt-2 text-sm text-slate-400">Prep these before the call.</p>
                     </div>
                     <p className="text-3xl font-black text-white">{meetingOpportunities.length}</p>
                   </div>
@@ -436,9 +662,7 @@ export default function MissionControlMorningBriefPage() {
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-yellow-300">
                         Proposals Sent
                       </p>
-                      <p className="mt-2 text-sm text-slate-400">
-                        Follow-up risk lives here.
-                      </p>
+                      <p className="mt-2 text-sm text-slate-400">Follow-up risk lives here.</p>
                     </div>
                     <p className="text-3xl font-black text-white">{proposalOpportunities.length}</p>
                   </div>
@@ -450,9 +674,7 @@ export default function MissionControlMorningBriefPage() {
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-emerald-300">
                         Active Forecast
                       </p>
-                      <p className="mt-2 text-sm text-slate-400">
-                        Revenue currently in motion.
-                      </p>
+                      <p className="mt-2 text-sm text-slate-400">Revenue currently in motion.</p>
                     </div>
                     <p className="text-3xl font-black text-white">{formatCurrency(pipelineRevenue)}</p>
                   </div>
@@ -462,9 +684,9 @@ export default function MissionControlMorningBriefPage() {
 
             <UnityCard>
               <UnityCardHeader
-                eyebrow="Quick Actions"
+                eyebrow="One-Click Actions"
                 title="Move faster"
-                description="Jump into the highest-value workflows."
+                description="Jump into the highest-value launch workflows without dead-end routes."
               />
 
               <div className="mt-6 grid gap-3">
@@ -473,14 +695,73 @@ export default function MissionControlMorningBriefPage() {
                   Open Pipeline
                 </UnityButton>
 
+                <UnityButton href="/mission-control/assessments" variant="secondary">
+                  <Users className="h-4 w-4" />
+                  Review Assessments
+                </UnityButton>
+
                 <UnityButton href="/mission-control/client-copilot" variant="secondary">
                   <Target className="h-4 w-4" />
                   Open Client Copilot
                 </UnityButton>
 
+                <UnityButton href="/mission-control/reports" variant="secondary">
+                  <BarChart3 className="h-4 w-4" />
+                  Open Reports
+                </UnityButton>
+
                 <UnityButton href="/mission-control/marketing/campaign-factory" variant="ai">
                   <Sparkles className="h-4 w-4" />
                   Open Campaign Factory
+                </UnityButton>
+              </div>
+            </UnityCard>
+
+            <UnityCard>
+              <UnityCardHeader
+                eyebrow="Launch Readiness"
+                title="Daily checklist"
+                description="Keep the operating system tight before sending paid traffic."
+              />
+
+              <div className="mt-6 space-y-3">
+                {[
+                  "Review top opportunity",
+                  "Confirm scheduled meetings have briefs",
+                  "Follow up on proposal-stage leads",
+                  "Publish or test one campaign asset",
+                  "Export reports before end of day",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-300" />
+                    <p className="text-sm font-bold text-slate-300">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </UnityCard>
+
+            <UnityCard>
+              <UnityCardHeader
+                eyebrow="Contact Queue"
+                title="Fast outreach"
+                description="Use safe launch actions for the top opportunity."
+              />
+
+              <div className="mt-6 grid gap-3">
+                <UnityButton
+                  href={topFocus?.email ? getMailToLink(topFocus) : "/mission-control/client-copilot"}
+                  variant="secondary"
+                >
+                  <Mail className="h-4 w-4" />
+                  Email Top Prospect
+                </UnityButton>
+
+                <UnityButton
+                  href={topFocus?.phone ? `tel:${topFocus.phone}` : "/mission-control/client-copilot"}
+                  variant="secondary"
+                >
+                  <Phone className="h-4 w-4" />
+                  Call Top Prospect
                 </UnityButton>
               </div>
             </UnityCard>
