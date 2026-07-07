@@ -32,16 +32,74 @@ const nextSteps = [
   ["Strategy conversation", "If there is a fit, we will discuss next steps together.", "upcoming"],
 ];
 
-const resources = [
-  ["Tax Planning Checklist", "A simple checklist of documents and topics to gather.", "/samples"],
-  ["Sample Tax Plans", "Review examples of proactive planning opportunities.", "/samples"],
-  ["How It Works", "See the process from assessment to strategy review.", "/how-it-works"],
+type Resource = {
+  title: string;
+  description: string;
+  href?: string;
+  eyebrow: string;
+};
+
+const resources: Resource[] = [
+  {
+    title: "Tax Planning Checklist",
+    description:
+      "Use the prep list below to gather tax returns, account statements, and planning documents.",
+    eyebrow: "On this page",
+  },
+  {
+    title: "Sample Tax Plans",
+    description:
+      "Return to the main site to review sample planning scenarios and opportunity examples.",
+    href: "/",
+    eyebrow: "View examples",
+  },
+  {
+    title: "How It Works",
+    description: "See the process from assessment to strategy review.",
+    href: "/how-it-works",
+    eyebrow: "Learn process",
+  },
 ];
 
 function StatusIcon({ status }: { status: string }) {
   if (status === "complete") return <CheckCircle2 className="h-5 w-5 text-emerald-300" />;
   if (status === "current") return <Sparkles className="h-5 w-5 text-violet-300" />;
   return <CalendarDays className="h-5 w-5 text-slate-500" />;
+}
+
+function ResourceCard({ resource }: { resource: Resource }) {
+  const cardContent = (
+    <>
+      <div className="flex items-center justify-between gap-3">
+        <Download className="h-5 w-5 text-blue-300" />
+        <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-400">
+          {resource.eyebrow}
+        </span>
+      </div>
+
+      <p className="mt-4 font-black text-white">{resource.title}</p>
+      <p className="mt-2 text-sm leading-6 text-slate-400">
+        {resource.description}
+      </p>
+    </>
+  );
+
+  if (resource.href) {
+    return (
+      <Link
+        href={resource.href}
+        className="rounded-2xl border border-slate-800 bg-slate-900 p-5 transition hover:border-blue-500/60"
+      >
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+      {cardContent}
+    </div>
+  );
 }
 
 export default function TaxOpportunityScanThankYouPage() {
@@ -223,14 +281,8 @@ export default function TaxOpportunityScanThankYouPage() {
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {resources.map(([title, description, href]) => (
-                <Link key={title} href={href} className="rounded-2xl border border-slate-800 bg-slate-900 p-5 transition hover:border-blue-500/60">
-                  <Download className="h-5 w-5 text-blue-300" />
-                  <p className="mt-4 font-black text-white">{title}</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">
-                    {description}
-                  </p>
-                </Link>
+              {resources.map((resource) => (
+                <ResourceCard key={resource.title} resource={resource} />
               ))}
             </div>
 

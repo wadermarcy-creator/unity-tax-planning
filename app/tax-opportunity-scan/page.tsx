@@ -5,38 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
-import { captureAttribution, getStoredAttribution } from "@/lib/attribution";
+import { captureAttribution } from "@/lib/attribution";
 import DisclosureFooter from "@/components/DisclosureFooter";
-
-function getAttributionData() {
-  if (typeof window === "undefined") {
-    return {
-      campaign_slug: null,
-      campaign_name: null,
-      source: null,
-      medium: null,
-      campaign: null,
-      referrer: null,
-      landing_page: null,
-    };
-  }
-
-  const params = new URLSearchParams(window.location.search);
-  const pathname = window.location.pathname;
-
-  const isLandingPage = pathname.startsWith("/landing/");
-  const campaignSlug = isLandingPage ? pathname.replace("/landing/", "") : null;
-
-  return {
-    campaign_slug: campaignSlug,
-    campaign_name: campaignSlug,
-    source: params.get("utm_source"),
-    medium: params.get("utm_medium"),
-    campaign: params.get("utm_campaign"),
-    referrer: document.referrer || null,
-    landing_page: pathname,
-  };
-}
 
 type QualificationAnswers = {
   profile: string;
@@ -293,6 +263,23 @@ export default function TaxOpportunityScanPage() {
     ].join("\n\n");
   }
 
+  async function insertTaxLeadForLaunch(payloads: Record<string, unknown>[]) {
+    let lastError: unknown = null;
+
+    for (const payload of payloads) {
+      const { error } = await supabase.from("tax_leads").insert([payload]);
+
+      if (!error) {
+        return null;
+      }
+
+      lastError = error;
+      console.warn("Lead insert attempt failed. Trying launch-safe fallback.", error);
+    }
+
+    return lastError;
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -304,9 +291,9 @@ export default function TaxOpportunityScanPage() {
 
     const leadScore = calculateLeadScore(formData);
     const leadGrade = calculateLeadGrade(leadScore);
-    const attribution = getStoredAttribution();
+    const concernSummary = buildConcernSummary(formData);
 
-    const lead = {
+    const fullLaunchPayload: Record<string, unknown> = {
       first_name: String(formData.get("first_name") || ""),
       last_name: String(formData.get("last_name") || ""),
       email: String(formData.get("email") || ""),
@@ -321,28 +308,39 @@ export default function TaxOpportunityScanPage() {
       current_cpa: formData.get("current_cpa") === "on",
       upcoming_sale: formData.get("upcoming_sale") === "on",
 
-      biggest_tax_concern: buildConcernSummary(formData),
-
+      biggest_tax_concern: concernSummary,
       lead_score: leadScore,
       lead_grade: leadGrade,
-
-      ...getAttributionData(),
-
-      utm_source: attribution.utm_source || null,
-      utm_medium: attribution.utm_medium || null,
-      utm_campaign: attribution.utm_campaign || null,
-      utm_term: attribution.utm_term || null,
-      utm_content: attribution.utm_content || null,
-      gclid: attribution.gclid || null,
-      fbclid: attribution.fbclid || null,
-      device_type: attribution.device_type || null,
-      browser_name: attribution.browser_name || null,
-      attribution_json: attribution.attribution_json || null,
-
       status: "new",
     };
 
-    const { error } = await supabase.from("tax_leads").insert([lead]);
+    const corePayload: Record<string, unknown> = {
+      first_name: fullLaunchPayload.first_name,
+      last_name: fullLaunchPayload.last_name,
+      email: fullLaunchPayload.email,
+      phone: fullLaunchPayload.phone,
+      household_income: fullLaunchPayload.household_income,
+      investable_assets: fullLaunchPayload.investable_assets,
+      biggest_tax_concern: concernSummary,
+      lead_score: leadScore,
+      lead_grade: leadGrade,
+      status: "new",
+    };
+
+    const minimumPayload: Record<string, unknown> = {
+      first_name: fullLaunchPayload.first_name,
+      last_name: fullLaunchPayload.last_name,
+      email: fullLaunchPayload.email,
+      phone: fullLaunchPayload.phone,
+      biggest_tax_concern: concernSummary,
+      status: "new",
+    };
+
+    const error = await insertTaxLeadForLaunch([
+      fullLaunchPayload,
+      corePayload,
+      minimumPayload,
+    ]);
 
     if (error) {
       console.error(error);
