@@ -16,11 +16,31 @@ type QualificationAnswers = {
   team: string;
 };
 
+type RequiredField = {
+  name: string;
+  label: string;
+};
+
+const requiredFullAssessmentFields: RequiredField[] = [
+  { name: "first_name", label: "First name" },
+  { name: "last_name", label: "Last name" },
+  { name: "email", label: "Email address" },
+  { name: "household_income", label: "Annual household income" },
+  { name: "investable_assets", label: "Investable assets" },
+  { name: "planning_goal", label: "Primary planning goal" },
+  { name: "desired_service", label: "Planning service of interest" },
+  { name: "urgency", label: "When you would like to begin" },
+  { name: "biggest_tax_concern", label: "Brief description of your concern" },
+];
+
 export default function TaxOpportunityScanPage() {
   const router = useRouter();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
+  const [qualificationMessage, setQualificationMessage] = useState("");
+  const [validationMessage, setValidationMessage] = useState("");
+  const [missingRequiredFields, setMissingRequiredFields] = useState<string[]>([]);
   const [showAssessment, setShowAssessment] = useState(false);
   const [qualificationAnswers, setQualificationAnswers] =
     useState<QualificationAnswers>({
@@ -34,6 +54,101 @@ export default function TaxOpportunityScanPage() {
   useEffect(() => {
     captureAttribution();
   }, []);
+
+  function scrollToElement(id: string) {
+    window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 50);
+  }
+
+  function focusField(name: string) {
+    window.setTimeout(() => {
+      const field = document.querySelector<HTMLElement>(`[name="${name}"], #${name}`);
+
+      field?.scrollIntoView({ behavior: "smooth", block: "center" });
+      field?.focus({ preventScroll: true });
+    }, 50);
+  }
+
+  function getMissingQualificationFields() {
+    const missing: { key: keyof QualificationAnswers; label: string }[] = [];
+
+    if (!qualificationAnswers.profile) {
+      missing.push({ key: "profile", label: "Which best describes you" });
+    }
+
+    if (!qualificationAnswers.income) {
+      missing.push({ key: "income", label: "Approximate household income" });
+    }
+
+    if (!qualificationAnswers.assets) {
+      missing.push({ key: "assets", label: "Approximate investable assets" });
+    }
+
+    if (!qualificationAnswers.concern) {
+      missing.push({ key: "concern", label: "Biggest planning concern" });
+    }
+
+    if (!qualificationAnswers.team) {
+      missing.push({ key: "team", label: "CPA or financial advisor status" });
+    }
+
+    return missing;
+  }
+
+  function handleContinueToAssessment() {
+    const missing = getMissingQualificationFields();
+
+    if (missing.length > 0) {
+      setQualificationMessage(
+        "Please complete the highlighted qualification questions before continuing.",
+      );
+      focusField(missing[0].key);
+      return;
+    }
+
+    setQualificationMessage("");
+    setValidationMessage("");
+    setMissingRequiredFields([]);
+    setShowAssessment(true);
+    scrollToElement("tax-scan-full-assessment");
+  }
+
+  function validateFullAssessment(form: HTMLFormElement) {
+    const formData = new FormData(form);
+    const missing = requiredFullAssessmentFields.filter((field) => {
+      return !String(formData.get(field.name) || "").trim();
+    });
+
+    const email = String(formData.get("email") || "").trim();
+    const emailLooksValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const invalidEmail = email && !emailLooksValid;
+
+    const missingLabels = missing.map((field) => field.label);
+
+    if (invalidEmail) {
+      missingLabels.push("Valid email address");
+    }
+
+    if (missingLabels.length > 0) {
+      const firstProblemField = missing[0]?.name || "email";
+
+      setMissingRequiredFields(missingLabels);
+      setValidationMessage(
+        "Please complete the required items below before submitting your assessment.",
+      );
+      setMessage("");
+      focusField(firstProblemField);
+      return false;
+    }
+
+    setValidationMessage("");
+    setMissingRequiredFields([]);
+    return true;
+  }
 
   function calculateQualificationRating() {
     let score = 0;
@@ -283,10 +398,15 @@ export default function TaxOpportunityScanPage() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    const form = event.currentTarget;
+
+    if (!validateFullAssessment(form)) {
+      return;
+    }
+
     setIsSubmitting(true);
     setMessage("");
 
-    const form = event.currentTarget;
     const formData = new FormData(form);
 
     const leadScore = calculateLeadScore(formData);
@@ -351,6 +471,8 @@ export default function TaxOpportunityScanPage() {
       return;
     }
 
+    setValidationMessage("");
+    setMissingRequiredFields([]);
     form.reset();
     router.push("/thank-you");
   }
@@ -458,7 +580,10 @@ export default function TaxOpportunityScanPage() {
           </div>
 
           {!showAssessment ? (
-            <section className="rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl shadow-black/30 sm:p-8 lg:p-10">
+            <section
+              id="tax-scan-qualification"
+              className="rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl shadow-black/30 sm:p-8 lg:p-10"
+            >
               <div className="mb-10">
                 <p className="mb-3 text-sm font-black uppercase tracking-[0.22em] text-blue-600">
                   Step One
@@ -618,6 +743,17 @@ export default function TaxOpportunityScanPage() {
                 </div>
               </div>
 
+              {qualificationMessage && (
+                <div className="mt-8 rounded-2xl border-2 border-red-200 bg-red-50 p-5 text-red-800">
+                  <p className="text-base font-black">{qualificationMessage}</p>
+                  <ul className="mt-3 list-disc space-y-1 pl-5 text-sm font-bold leading-6">
+                    {getMissingQualificationFields().map((field) => (
+                      <li key={field.key}>{field.label}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {qualificationComplete && (
                 <div className="mt-8 rounded-[2rem] border-2 border-blue-500 bg-slate-950 p-7 text-white shadow-xl shadow-blue-950/20">
                   <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
@@ -649,11 +785,16 @@ export default function TaxOpportunityScanPage() {
 
               <button
                 type="button"
-                disabled={!qualificationComplete}
-                onClick={() => setShowAssessment(true)}
-                className="mt-8 w-full rounded-2xl bg-blue-600 px-6 py-5 text-lg font-black text-white shadow-xl transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-400"
+                onClick={handleContinueToAssessment}
+                className={`mt-8 w-full rounded-2xl px-6 py-5 text-lg font-black text-white shadow-xl transition ${
+                  qualificationComplete
+                    ? "bg-blue-600 hover:bg-blue-500"
+                    : "bg-slate-700 hover:bg-slate-600"
+                }`}
               >
-                Continue to Full Assessment
+                {qualificationComplete
+                  ? "Continue to Full Assessment"
+                  : "Complete Required Questions to Continue"}
               </button>
 
               <p className="mt-5 text-center text-sm font-medium leading-6 text-slate-500">
@@ -664,13 +805,20 @@ export default function TaxOpportunityScanPage() {
             </section>
           ) : (
             <form
+              id="tax-scan-full-assessment"
+              noValidate
               onSubmit={handleSubmit}
-              className="rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl shadow-black/30 sm:p-8 lg:p-10"
+              className="scroll-mt-8 rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl shadow-black/30 sm:p-8 lg:p-10"
             >
               <div className="mb-10">
                 <button
                   type="button"
-                  onClick={() => setShowAssessment(false)}
+                  onClick={() => {
+                    setValidationMessage("");
+                    setMissingRequiredFields([]);
+                    setShowAssessment(false);
+                    scrollToElement("tax-scan-qualification");
+                  }}
                   className="mb-6 rounded-full border-2 border-slate-300 px-5 py-3 text-sm font-black text-slate-700 hover:border-blue-500 hover:text-blue-600"
                 >
                   ← Back to qualification
@@ -688,6 +836,21 @@ export default function TaxOpportunityScanPage() {
                   There are no perfect answers. Estimates and approximate ranges
                   are fine for this initial assessment.
                 </p>
+
+                {validationMessage && (
+                  <div className="mt-6 rounded-2xl border-2 border-red-200 bg-red-50 p-5 text-red-800">
+                    <p className="text-base font-black">{validationMessage}</p>
+                    <p className="mt-2 text-sm font-bold leading-6">
+                      We highlighted the first item that needs attention so you
+                      do not have to hunt through the form.
+                    </p>
+                    <ul className="mt-3 list-disc space-y-1 pl-5 text-sm font-bold leading-6">
+                      {missingRequiredFields.map((field) => (
+                        <li key={field}>{field}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
 
               <section className="mb-10 border-b-2 border-slate-200 pb-10">
@@ -1305,6 +1468,12 @@ export default function TaxOpportunityScanPage() {
                   will be provided before any paid planning work begins.
                 </p>
               </div>
+
+              {validationMessage && (
+                <div className="mt-6 rounded-2xl border-2 border-red-200 bg-red-50 p-5 text-sm font-bold leading-6 text-red-800">
+                  {validationMessage} Please complete: {missingRequiredFields.join(", ")}.
+                </div>
+              )}
 
               <button
                 type="submit"
