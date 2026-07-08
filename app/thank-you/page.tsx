@@ -16,6 +16,8 @@ import {
   UserRound,
 } from "lucide-react";
 
+const CALENDLY_URL = "https://calendly.com/wade-unitytaxplanning/30min";
+
 const opportunityAreas = [
   "Tax return review",
   "Retirement tax strategy",
@@ -29,7 +31,7 @@ const nextSteps = [
   ["Assessment received", "Your responses have been submitted securely.", "complete"],
   ["Opportunity review started", "Your assessment is being reviewed for planning signals.", "complete"],
   ["Advisor review", "An advisor will validate which opportunities may apply.", "current"],
-  ["Strategy conversation", "If there is a fit, we will discuss next steps together.", "upcoming"],
+  ["Strategy conversation", "If there is a fit, schedule a Tax Opportunity Review to discuss next steps.", "upcoming"],
 ];
 
 type Resource = {
@@ -62,8 +64,14 @@ const resources: Resource[] = [
 ];
 
 function StatusIcon({ status }: { status: string }) {
-  if (status === "complete") return <CheckCircle2 className="h-5 w-5 text-emerald-300" />;
-  if (status === "current") return <Sparkles className="h-5 w-5 text-violet-300" />;
+  if (status === "complete") {
+    return <CheckCircle2 className="h-5 w-5 text-emerald-300" />;
+  }
+
+  if (status === "current") {
+    return <Sparkles className="h-5 w-5 text-violet-300" />;
+  }
+
   return <CalendarDays className="h-5 w-5 text-slate-500" />;
 }
 
@@ -102,6 +110,19 @@ function ResourceCard({ resource }: { resource: Resource }) {
   );
 }
 
+function CalendlyButton({ className = "" }: { className?: string }) {
+  return (
+    <a
+      href={CALENDLY_URL}
+      target="_blank"
+      rel="noreferrer"
+      className={`inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-4 text-sm font-black text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-500 ${className}`}
+    >
+      Schedule Your Review <CalendarDays className="h-4 w-4" />
+    </a>
+  );
+}
+
 export default function TaxOpportunityScanThankYouPage() {
   return (
     <main className="min-h-screen bg-[#050816] px-6 py-10 text-white">
@@ -122,6 +143,17 @@ export default function TaxOpportunityScanThankYouPage() {
                 reviewing for proactive tax planning. An advisor will validate
                 the information before making any recommendations.
               </p>
+
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <CalendlyButton className="w-full sm:w-auto" />
+
+                <Link
+                  href="/how-it-works"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-4 text-sm font-black text-slate-200 transition hover:border-blue-500/60 hover:text-white sm:w-auto"
+                >
+                  See How It Works <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
 
             <div className="rounded-[2rem] border border-emerald-500/30 bg-emerald-500/10 p-6 lg:min-w-[300px]">
@@ -147,6 +179,32 @@ export default function TaxOpportunityScanThankYouPage() {
           </div>
         </section>
 
+        <section className="mt-8 rounded-[2rem] border border-blue-500/30 bg-blue-500/10 p-6 shadow-2xl shadow-blue-950/20">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-blue-400/30 bg-blue-500/20">
+                <CalendarDays className="h-7 w-7 text-blue-200" />
+              </div>
+
+              <div>
+                <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
+                  Book the next step
+                </p>
+                <h2 className="mt-2 text-3xl font-black text-white">
+                  Schedule your Tax Opportunity Review.
+                </h2>
+                <p className="mt-3 max-w-3xl text-sm font-medium leading-7 text-blue-100/80">
+                  If you are ready to talk through your assessment, choose a time
+                  on Wade’s calendar. The call is designed to confirm whether a
+                  deeper tax planning review may make sense.
+                </p>
+              </div>
+            </div>
+
+            <CalendlyButton className="w-full shrink-0 lg:w-auto" />
+          </div>
+        </section>
+
         <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6">
             <div className="flex items-center gap-3">
@@ -163,7 +221,10 @@ export default function TaxOpportunityScanThankYouPage() {
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               {opportunityAreas.map((area) => (
-                <div key={area} className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <div
+                  key={area}
+                  className="rounded-2xl border border-slate-800 bg-slate-900 p-5"
+                >
                   <div className="flex gap-3">
                     <CheckCircle2 className="mt-1 h-5 w-5 shrink-0 text-emerald-300" />
                     <div>
@@ -194,7 +255,10 @@ export default function TaxOpportunityScanThankYouPage() {
 
             <div className="mt-6 space-y-4">
               {nextSteps.map(([title, description, status]) => (
-                <div key={title} className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <div
+                  key={title}
+                  className="rounded-2xl border border-slate-800 bg-slate-900 p-5"
+                >
                   <div className="flex gap-3">
                     <StatusIcon status={status} />
                     <div>
@@ -319,9 +383,16 @@ export default function TaxOpportunityScanThankYouPage() {
               </p>
             </div>
 
-            <Link href="/" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-blue-600 px-5 py-4 text-sm font-black text-white hover:bg-blue-500">
-              Return Home <ArrowRight className="h-4 w-4" />
-            </Link>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <CalendlyButton className="w-full sm:w-auto" />
+
+              <Link
+                href="/"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-4 text-sm font-black text-slate-200 transition hover:border-blue-500/60 hover:text-white sm:w-auto"
+              >
+                Return Home <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </section>
       </div>
