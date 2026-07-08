@@ -395,6 +395,26 @@ export default function TaxOpportunityScanPage() {
     return lastError;
   }
 
+
+  async function sendAssessmentEmails(payload: Record<string, unknown>) {
+    try {
+      const response = await fetch("/api/assessment-emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.warn("Assessment emails could not be sent.", errorText);
+      }
+    } catch (error) {
+      console.warn("Assessment emails could not be sent.", error);
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -470,6 +490,30 @@ export default function TaxOpportunityScanPage() {
       setIsSubmitting(false);
       return;
     }
+
+    await sendAssessmentEmails({
+      firstName: String(formData.get("first_name") || ""),
+      lastName: String(formData.get("last_name") || ""),
+      email: String(formData.get("email") || ""),
+      phone: String(formData.get("phone") || ""),
+      householdIncome: String(formData.get("household_income") || ""),
+      investableAssets: String(formData.get("investable_assets") || ""),
+      retirementAssets: String(formData.get("retirement_assets") || ""),
+      planningGoal: String(formData.get("planning_goal") || ""),
+      desiredService: String(formData.get("desired_service") || ""),
+      urgency: String(formData.get("urgency") || ""),
+      referralSource: String(formData.get("referral_source") || ""),
+      leadScore,
+      leadGrade,
+      qualificationProfile: qualificationAnswers.profile,
+      qualificationIncome: qualificationAnswers.income,
+      qualificationAssets: qualificationAnswers.assets,
+      qualificationConcern: qualificationAnswers.concern,
+      qualificationTeam: qualificationAnswers.team,
+      selectedTopics: getCheckedTopics(formData),
+      concernSummary,
+      calendlyLink: "https://calendly.com/wade-unitytaxplanning/30min",
+    });
 
     setValidationMessage("");
     setMissingRequiredFields([]);
