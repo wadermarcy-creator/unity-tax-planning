@@ -35,7 +35,7 @@ type Lead = {
   biggest_tax_concern: string | null;
 };
 
-type FilterValue = "all" | "new" | "qualified" | "follow_up" | "nurture";
+type FilterValue = "all" | "active" | "new" | "qualified" | "follow_up" | "nurture" | "closed" | "archived";
 
 function getFullName(lead: Lead) {
   return `${lead.first_name || ""} ${lead.last_name || ""}`.trim() || "Unnamed";
@@ -92,6 +92,10 @@ function formatCurrency(value: number) {
 
 function normalizeText(value: string | null) {
   return (value || "").toLowerCase();
+}
+
+function isDormantStatus(status: string | null) {
+  return ["closed", "archived"].includes(status || "");
 }
 
 function estimateAnnualRevenue(lead: Lead) {
@@ -250,9 +254,10 @@ export default function AssessmentsPage() {
       const status = lead.status || "new";
       const matchesFilter =
         filter === "all" ||
-        (filter === "qualified" && score >= 100) ||
-        (filter === "follow_up" && ["follow_up", "contacted", "in_review"].includes(status)) ||
-        (filter === "nurture" && score < 70) ||
+        (filter === "active" && !isDormantStatus(status)) ||
+        (filter === "qualified" && score >= 100 && !isDormantStatus(status)) ||
+        (filter === "follow_up" && ["follow_up", "contacted", "in_review", "reviewing", "discovery", "proposal"].includes(status)) ||
+        (filter === "nurture" && score < 70 && !isDormantStatus(status)) ||
         status === filter;
 
       if (!matchesFilter) return false;
@@ -277,7 +282,7 @@ export default function AssessmentsPage() {
   }, [filter, leads, search]);
 
   const rankedLeads = useMemo(() => {
-    return [...leads].sort((a, b) => {
+    return leads.filter((lead) => !isDormantStatus(lead.status)).sort((a, b) => {
       const scoreDifference = (b.lead_score ?? 0) - (a.lead_score ?? 0);
       if (scoreDifference !== 0) return scoreDifference;
 
@@ -290,9 +295,12 @@ export default function AssessmentsPage() {
   const counts = useMemo(() => {
     return {
       all: leads.length,
+      active: leads.filter((lead) => !isDormantStatus(lead.status)).length,
       new: leads.filter((lead) => (lead.status || "new") === "new").length,
-      qualified: leads.filter((lead) => (lead.lead_score ?? 0) >= 100).length,
-      nurture: leads.filter((lead) => (lead.lead_score ?? 0) < 70).length,
+      qualified: leads.filter((lead) => (lead.lead_score ?? 0) >= 100 && !isDormantStatus(lead.status)).length,
+      nurture: leads.filter((lead) => (lead.lead_score ?? 0) < 70 && !isDormantStatus(lead.status)).length,
+      closed: leads.filter((lead) => lead.status === "closed").length,
+      archived: leads.filter((lead) => lead.status === "archived").length,
     };
   }, [leads]);
 

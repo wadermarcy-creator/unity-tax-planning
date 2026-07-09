@@ -35,12 +35,14 @@ type Toast = {
 };
 
 const pipelineStages = [
-  { label: "New", value: "new" },
-  { label: "Reviewing", value: "reviewing" },
-  { label: "Contacted", value: "contacted" },
-  { label: "Discovery", value: "discovery" },
-  { label: "Proposal", value: "proposal" },
-  { label: "Client", value: "client" },
+  { label: "New", value: "new", description: "Assessment received and waiting for review." },
+  { label: "Reviewing", value: "reviewing", description: "Assessing fit, urgency, and planning angle." },
+  { label: "Contacted", value: "contacted", description: "Initial email, call, or text has been sent." },
+  { label: "Discovery", value: "discovery", description: "Conversation scheduled or in progress." },
+  { label: "Proposal", value: "proposal", description: "Scope and pricing are being discussed." },
+  { label: "Client", value: "client", description: "Converted into an active relationship." },
+  { label: "Closed", value: "closed", description: "Not moving forward right now." },
+  { label: "Archived", value: "archived", description: "Hidden from active prospect workflow." },
 ];
 
 function getFullName(lead: Lead) {
@@ -68,6 +70,29 @@ function getOpportunityTone(score: number | null) {
   if (value >= 40)
     return "border-orange-500/40 bg-orange-500/10 text-orange-300";
   return "border-slate-700 bg-slate-900 text-slate-300";
+}
+
+function getStatusLabel(status: string | null) {
+  if (!status) return "New";
+
+  return status
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function getStatusTone(status: string | null) {
+  const value = status || "new";
+
+  if (value === "client") return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
+  if (["proposal", "discovery", "contacted"].includes(value)) {
+    return "border-blue-500/40 bg-blue-500/10 text-blue-300";
+  }
+  if (value === "reviewing") return "border-violet-500/40 bg-violet-500/10 text-violet-300";
+  if (["closed", "archived"].includes(value)) {
+    return "border-slate-700 bg-slate-900 text-slate-400";
+  }
+
+  return "border-orange-500/40 bg-orange-500/10 text-orange-300";
 }
 
 function formatDate(value: string) {
@@ -225,6 +250,67 @@ function getLeadBrief(lead: Lead, signals: string[], opportunities: string[]) {
   ].join("\n");
 }
 
+const calendlyUrl = "https://calendly.com/wade-unitytaxplanning/30min";
+
+function getIntroEmail(lead: Lead, opportunities: string[]) {
+  const firstName = lead.first_name || getFullName(lead);
+  const topOpportunities = opportunities.slice(0, 3);
+
+  return [
+    `Hi ${firstName},`,
+    "",
+    "Thank you for completing the Unity Tax Opportunity Assessment. I reviewed your answers and there may be a few areas worth discussing further.",
+    "",
+    topOpportunities.length > 0
+      ? `The main areas I would want to review are: ${topOpportunities.join(", ")}.`
+      : "The main thing I would like to understand is the timing around your income, assets, and planning concern.",
+    "",
+    "The next step would be a short call to confirm your goals, timing, and whether a deeper tax strategy review makes sense.",
+    "",
+    `You can book a time here: ${calendlyUrl}`,
+    "",
+    "Best,",
+    "Wade Marcy",
+    "Unity Tax Planning",
+  ].join("\n");
+}
+
+function getCallScript(lead: Lead, opportunities: string[]) {
+  const name = getFullName(lead);
+  const firstOpportunity = opportunities[0] || "your tax planning situation";
+
+  return [
+    `Call Script — ${name}`,
+    "",
+    `Opening: Hi ${lead.first_name || name}, this is Wade with Unity Tax Planning. I saw your Tax Opportunity Assessment come through and wanted to quickly follow up while the details are fresh.`,
+    "",
+    `Bridge: Based on what you submitted, the first area I would want to understand better is ${firstOpportunity.toLowerCase()}.`,
+    "",
+    "Discovery questions:",
+    "1. What prompted you to complete the assessment today?",
+    "2. Is there a specific tax event, retirement date, sale, or income change coming up?",
+    "3. Are you already working with a CPA, advisor, or attorney on this?",
+    "4. What would make a planning review valuable enough for you to move forward?",
+    "",
+    "Close: The best next step is a short strategy-fit call so I can confirm whether there is enough planning opportunity to justify a deeper review.",
+    "",
+    `Calendly: ${calendlyUrl}`,
+  ].join("\n");
+}
+
+function getFirstCallAgenda(lead: Lead, signals: string[], opportunities: string[]) {
+  return [
+    `First Call Agenda — ${getFullName(lead)}`,
+    "",
+    "1. Confirm the immediate reason they submitted the assessment.",
+    `2. Review key signals: ${signals.join(", ") || "assessment details"}.`,
+    `3. Discuss likely planning areas: ${opportunities.join(", ") || "tax planning review"}.`,
+    "4. Confirm current CPA, advisor, and estate/legal team involvement.",
+    "5. Identify timing, documents needed, and whether a paid engagement is appropriate.",
+    "6. Set next step: strategy review, nurture, or close out.",
+  ].join("\n");
+}
+
 export default function AssessmentDetailPage() {
   const params = useParams();
   const id = String(params.id || "");
@@ -317,6 +403,21 @@ export default function AssessmentDetailPage() {
 
   const leadBrief = useMemo(
     () => (lead ? getLeadBrief(lead, signals, opportunities) : ""),
+    [lead, opportunities, signals],
+  );
+
+  const introEmail = useMemo(
+    () => (lead ? getIntroEmail(lead, opportunities) : ""),
+    [lead, opportunities],
+  );
+
+  const callScript = useMemo(
+    () => (lead ? getCallScript(lead, opportunities) : ""),
+    [lead, opportunities],
+  );
+
+  const firstCallAgenda = useMemo(
+    () => (lead ? getFirstCallAgenda(lead, signals, opportunities) : ""),
     [lead, opportunities, signals],
   );
 
@@ -430,12 +531,11 @@ export default function AssessmentDetailPage() {
   const opportunityLabel = getOpportunityLabel(lead.lead_score);
   const opportunityTone = getOpportunityTone(lead.lead_score);
   const priorityScore = lead.lead_score ?? 0;
+  const statusLabel = getStatusLabel(currentStatus);
   const mailHref = lead.email
     ? `mailto:${lead.email}?subject=${encodeURIComponent(
-        "Unity Tax Planning Assessment",
-      )}&body=${encodeURIComponent(
-        `Hi ${lead.first_name || getFullName(lead)},\n\nThank you for completing the Unity Tax Planning assessment. I reviewed your information and would like to schedule a short call to walk through the opportunities that may apply to your situation.\n\nBest,\nUnity Tax Planning`,
-      )}`
+        "Unity Tax Planning Assessment Follow-Up",
+      )}&body=${encodeURIComponent(introEmail)}`
     : "";
   const phoneHref = lead.phone ? `tel:${lead.phone}` : "";
 
@@ -530,6 +630,31 @@ export default function AssessmentDetailPage() {
                   </span>
                 )}
 
+                <a
+                  href={calendlyUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl border border-blue-500/30 bg-blue-500/10 px-5 py-3 text-sm font-black text-blue-300 transition hover:border-blue-400 hover:text-blue-200"
+                >
+                  Open Calendly
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(introEmail, "Intro email copied.")}
+                  className="rounded-2xl border border-slate-800 bg-slate-900 px-5 py-3 text-sm font-black text-slate-300 transition hover:border-blue-500 hover:text-white"
+                >
+                  Copy Intro Email
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(callScript, "Call script copied.")}
+                  className="rounded-2xl border border-slate-800 bg-slate-900 px-5 py-3 text-sm font-black text-slate-300 transition hover:border-blue-500 hover:text-white"
+                >
+                  Copy Call Script
+                </button>
+
                 <Link
                   href="/mission-control/strategy-builder"
                   onClick={() => saveHandoff("strategy-builder")}
@@ -598,7 +723,7 @@ export default function AssessmentDetailPage() {
             )}
           </div>
 
-          <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
+          <div className="grid gap-3 md:grid-cols-4 xl:grid-cols-8">
             {pipelineStages.map((stage) => {
               const isActive = currentStatus === stage.value;
 
@@ -618,6 +743,7 @@ export default function AssessmentDetailPage() {
                     Stage
                   </p>
                   <p className="mt-2 text-base font-black">{stage.label}</p>
+                  <p className="mt-2 text-xs font-bold leading-5 opacity-75">{stage.description}</p>
                 </button>
               );
             })}
@@ -672,6 +798,78 @@ export default function AssessmentDetailPage() {
             </article>
 
             <AdvisorNotes leadId={lead.id} />
+
+            <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <p className="text-sm font-black uppercase tracking-[0.22em] text-emerald-300">
+                    Follow-Up Assets
+                  </p>
+
+                  <h2 className="mt-3 text-2xl font-black text-white">
+                    Copy-ready outreach for this lead
+                  </h2>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(firstCallAgenda, "First-call agenda copied.")}
+                  className="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-black text-slate-300 transition hover:border-blue-500 hover:text-white"
+                >
+                  Copy Agenda
+                </button>
+              </div>
+
+              <div className="mt-6 grid gap-4 lg:grid-cols-3">
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-blue-300">
+                    Intro Email
+                  </p>
+                  <p className="mt-3 line-clamp-5 whitespace-pre-wrap text-sm font-semibold leading-6 text-slate-400">
+                    {introEmail}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(introEmail, "Intro email copied.")}
+                    className="mt-4 rounded-2xl border border-slate-700 px-4 py-3 text-sm font-black text-slate-300 transition hover:border-blue-500 hover:text-white"
+                  >
+                    Copy Email
+                  </button>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
+                    Call Script
+                  </p>
+                  <p className="mt-3 line-clamp-5 whitespace-pre-wrap text-sm font-semibold leading-6 text-slate-400">
+                    {callScript}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(callScript, "Call script copied.")}
+                    className="mt-4 rounded-2xl border border-slate-700 px-4 py-3 text-sm font-black text-slate-300 transition hover:border-blue-500 hover:text-white"
+                  >
+                    Copy Script
+                  </button>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-violet-300">
+                    First-Call Agenda
+                  </p>
+                  <p className="mt-3 line-clamp-5 whitespace-pre-wrap text-sm font-semibold leading-6 text-slate-400">
+                    {firstCallAgenda}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(firstCallAgenda, "First-call agenda copied.")}
+                    className="mt-4 rounded-2xl border border-slate-700 px-4 py-3 text-sm font-black text-slate-300 transition hover:border-blue-500 hover:text-white"
+                  >
+                    Copy Agenda
+                  </button>
+                </div>
+              </div>
+            </article>
 
             <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -733,6 +931,30 @@ export default function AssessmentDetailPage() {
               </p>
 
               <div className="mt-5 grid gap-3">
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(introEmail, "Intro email copied.")}
+                  className="rounded-2xl border border-blue-500/30 bg-blue-500/10 px-5 py-4 text-left text-sm font-black text-blue-300 transition hover:border-blue-400 hover:text-blue-200"
+                >
+                  Copy Intro Email
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(callScript, "Call script copied.")}
+                  className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-4 text-left text-sm font-black text-emerald-300 transition hover:border-emerald-400 hover:text-emerald-200"
+                >
+                  Copy Call Script
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(firstCallAgenda, "First-call agenda copied.")}
+                  className="rounded-2xl border border-violet-500/30 bg-violet-500/10 px-5 py-4 text-left text-sm font-black text-violet-300 transition hover:border-violet-400 hover:text-violet-200"
+                >
+                  Copy First-Call Agenda
+                </button>
+
                 <Link
                   href="/mission-control/client-copilot"
                   onClick={() => saveHandoff("client-copilot")}
@@ -833,6 +1055,65 @@ export default function AssessmentDetailPage() {
                   <p className="mt-2 font-black text-white">
                     {formatDate(lead.created_at)}
                   </p>
+                </div>
+              </div>
+            </article>
+
+            <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+              <p className="text-sm font-black uppercase tracking-[0.22em] text-slate-400">
+                Workflow Status
+              </p>
+
+              <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
+                    Current Stage
+                  </p>
+                  <p className="mt-2 text-xl font-black text-white">{statusLabel}</p>
+                </div>
+
+                <span className={`rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.16em] ${getStatusTone(currentStatus)}`}>
+                  {statusLabel}
+                </span>
+              </div>
+
+              <div className="mt-4 grid gap-3">
+                <button
+                  type="button"
+                  onClick={() => updateStatus("contacted")}
+                  disabled={isUpdatingStatus}
+                  className="rounded-2xl border border-blue-500/30 bg-blue-500/10 px-5 py-3 text-left text-sm font-black text-blue-300 transition hover:border-blue-400 hover:text-blue-200 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Mark Contacted
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => updateStatus("client")}
+                  disabled={isUpdatingStatus}
+                  className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-3 text-left text-sm font-black text-emerald-300 transition hover:border-emerald-400 hover:text-emerald-200 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Move to Client
+                </button>
+
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                  <button
+                    type="button"
+                    onClick={() => updateStatus("closed")}
+                    disabled={isUpdatingStatus}
+                    className="rounded-2xl border border-orange-500/30 bg-orange-500/10 px-5 py-3 text-left text-sm font-black text-orange-300 transition hover:border-orange-400 hover:text-orange-200 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Close
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => updateStatus("archived")}
+                    disabled={isUpdatingStatus}
+                    className="rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-left text-sm font-black text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Archive
+                  </button>
                 </div>
               </div>
             </article>

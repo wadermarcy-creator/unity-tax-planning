@@ -49,6 +49,12 @@ const filters = [
   { label: "High Value", value: "high-value" },
 ];
 
+const inactiveStatuses = ["client", "closed", "archived"];
+
+function isActiveProspectStatus(status: string | null) {
+  return !inactiveStatuses.includes(status || "new");
+}
+
 function getFullName(lead: Lead) {
   return `${lead.first_name || ""} ${lead.last_name || ""}`.trim() || "Unnamed Prospect";
 }
@@ -251,7 +257,7 @@ export default function ProspectsPage() {
   }, []);
 
   const prospects = useMemo(() => {
-    return leads.filter((lead) => lead.status !== "client");
+    return leads.filter((lead) => isActiveProspectStatus(lead.status));
   }, [leads]);
 
   const filteredProspects = useMemo(() => {
@@ -344,6 +350,31 @@ export default function ProspectsPage() {
 
     setMovingId(null);
     showToast(`${getFullName(lead)} moved to Clients.`);
+  }
+
+  async function updateProspectStatus(lead: Lead, status: "contacted" | "closed" | "archived") {
+    setMovingId(lead.id);
+
+    const { error } = await supabase
+      .from("tax_leads")
+      .update({ status })
+      .eq("id", lead.id);
+
+    if (error) {
+      console.error(error);
+      showToast("Prospect status could not be updated.", "error");
+      setMovingId(null);
+      return;
+    }
+
+    setLeads((currentLeads) =>
+      currentLeads.map((currentLead) =>
+        currentLead.id === lead.id ? { ...currentLead, status } : currentLead,
+      ),
+    );
+
+    setMovingId(null);
+    showToast(`${getFullName(lead)} marked ${getStatusLabel(status)}.`);
   }
 
   const executiveBrief = [
@@ -654,6 +685,35 @@ export default function ProspectsPage() {
                         <Clipboard className="h-4 w-4" />
                         Copy Brief
                       </button>
+
+                      <button
+                        type="button"
+                        onClick={() => updateProspectStatus(lead, "contacted")}
+                        disabled={movingId === lead.id}
+                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-blue-500/40 bg-blue-500/10 px-5 py-3 text-sm font-black text-blue-200 transition hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        Mark Contacted
+                      </button>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => updateProspectStatus(lead, "closed")}
+                          disabled={movingId === lead.id}
+                          className="inline-flex items-center justify-center rounded-2xl border border-orange-500/40 bg-orange-500/10 px-4 py-3 text-xs font-black text-orange-200 transition hover:bg-orange-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          Close
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => updateProspectStatus(lead, "archived")}
+                          disabled={movingId === lead.id}
+                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-xs font-black text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          Archive
+                        </button>
+                      </div>
 
                       <div className="grid grid-cols-2 gap-3">
                         <a
