@@ -528,10 +528,21 @@ export default function AssessmentsPage() {
             <div className="mt-5 flex flex-wrap gap-3">
               {[
                 { label: "All", value: "all", count: counts.all },
+                { label: "Active", value: "active", count: counts.active },
                 { label: "New", value: "new", count: counts.new },
                 { label: "Qualified", value: "qualified", count: counts.qualified },
-                { label: "Follow Up", value: "follow_up", count: leads.filter((lead) => ["follow_up", "contacted", "in_review"].includes(lead.status || "")).length },
+                {
+                  label: "Follow Up",
+                  value: "follow_up",
+                  count: leads.filter((lead) =>
+                    ["follow_up", "contacted", "in_review", "reviewing", "discovery", "proposal"].includes(
+                      lead.status || "",
+                    ),
+                  ).length,
+                },
                 { label: "Nurture", value: "nurture", count: counts.nurture },
+                { label: "Closed", value: "closed", count: counts.closed },
+                { label: "Archived", value: "archived", count: counts.archived },
               ].map((item) => (
                 <button
                   key={item.value}
