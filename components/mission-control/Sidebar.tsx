@@ -66,6 +66,11 @@ const navSections = [
     label: "Marketing",
     items: [
       {
+        label: "Campaign Watch",
+        href: "/mission-control/campaign-watch",
+        icon: BarChart3,
+      },
+      {
         label: "Campaigns",
         href: "/mission-control/marketing/campaigns",
         icon: Megaphone,
