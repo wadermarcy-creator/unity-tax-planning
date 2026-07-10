@@ -31,7 +31,7 @@ type FollowUpStep = {
 const calendlyLink = "https://calendly.com/wade-unitytaxplanning/30min";
 const fromEmail =
   process.env.UNITY_TAX_FROM_EMAIL ||
-  "Unity Tax Planning <info@unitytaxplanning.com>";
+  "Wade Marcy <info@unitytaxplanning.com>";
 const replyToEmail =
   process.env.UNITY_TAX_REPLY_TO_EMAIL || "wade@unitytaxplanning.com";
 const internalAlertEmail =
@@ -51,19 +51,19 @@ const followUpSteps: FollowUpStep[] = [
   {
     emailType: "day_1_review_process",
     minimumAgeHours: 24,
-    subject: "What we review during a tax planning assessment",
+    subject: "Your tax planning assessment",
     preview: "A quick look at what happens after your Tax Opportunity Scan.",
   },
   {
     emailType: "day_3_common_gaps",
     minimumAgeHours: 72,
-    subject: "Common tax planning gaps we look for",
+    subject: "A few tax planning items to review",
     preview: "A few areas we commonly review before a planning engagement begins.",
   },
   {
     emailType: "day_7_final_prompt",
     minimumAgeHours: 168,
-    subject: "Still want us to review your tax planning picture?",
+    subject: "Checking in",
     preview: "One final reminder to schedule your Tax Opportunity Review.",
   },
 ];
@@ -121,16 +121,18 @@ function buildTextEmail(lead: TaxLead, step: FollowUpStep) {
     return [
       `Hi ${firstName},`,
       "",
-      "I wanted to share what we typically review after someone completes the Unity Tax Opportunity Scan.",
+      "I wanted to make sure you had the scheduling link in case you would like to talk through your Tax Opportunity Scan.",
       "",
-      "The review usually focuses on income, assets, timing, planning concerns, current professionals involved, and whether there are any upcoming decisions that could create tax consequences.",
-      "",
-      "If you would like to walk through your assessment, you can schedule a review here:",
+      "Here is the link:",
       calendlyLink,
       "",
-      "This review is educational and does not create a client relationship. No tax, legal, or investment advice is provided until your situation is reviewed in more detail and an engagement is accepted.",
+      "On the call, we will usually look at income, investments, retirement accounts, business ownership, capital gains, and any major planning decisions coming up.",
       "",
-      "— Wade Marcy",
+      "No pressure at all — I just wanted to make sure you had the next step.",
+      "",
+      "Thanks,",
+      "",
+      "Wade Marcy",
       "Unity Tax Planning",
     ].join("\n");
   }
@@ -139,14 +141,16 @@ function buildTextEmail(lead: TaxLead, step: FollowUpStep) {
     return [
       `Hi ${firstName},`,
       "",
-      "A few common tax planning gaps we look for include Roth conversion timing, capital gains exposure, business-owner planning, charitable giving strategy, estate coordination, and whether tax planning is being coordinated with investment decisions.",
+      "A few areas we commonly look at during this type of review are Roth conversion timing, capital gains, business-owner planning, charitable giving, estate coordination, and whether tax planning is being coordinated with investment decisions.",
       "",
-      "Your assessment helps us decide whether any of those areas may deserve a deeper review.",
+      "Your assessment helps us decide whether any of those areas may be worth reviewing further.",
       "",
-      "You can schedule your Tax Opportunity Review here:",
+      "Here is the scheduling link again in case helpful:",
       calendlyLink,
       "",
-      "— Wade Marcy",
+      "Thanks,",
+      "",
+      "Wade Marcy",
       "Unity Tax Planning",
     ].join("\n");
   }
@@ -154,77 +158,75 @@ function buildTextEmail(lead: TaxLead, step: FollowUpStep) {
   return [
     `Hi ${firstName},`,
     "",
-    "I wanted to send one final follow-up on your Unity Tax Opportunity Scan.",
+    "I wanted to send one final follow-up on your Tax Opportunity Scan.",
     "",
-    "If you still want us to review your tax planning picture, you can schedule a time here:",
+    "If you still want to talk through it, you can schedule a time here:",
     calendlyLink,
     "",
     "If now is not the right time, no action is needed.",
     "",
-    "— Wade Marcy",
+    "Thanks,",
+    "",
+    "Wade Marcy",
     "Unity Tax Planning",
   ].join("\n");
 }
 
 function buildHtmlEmail(lead: TaxLead, step: FollowUpStep) {
   const firstName = escapeHtml(clean(lead.first_name) || "there");
-  let mainCopy = "";
-  let bulletItems: string[] = [];
+  const scheduleLink = `<a href="${escapeHtml(calendlyLink)}" style="color:#2563eb;text-decoration:underline;">${escapeHtml(calendlyLink)}</a>`;
 
   if (step.emailType === "day_1_review_process") {
-    mainCopy =
-      "After someone completes the Unity Tax Opportunity Scan, we typically review whether their income, assets, timing, and planning concerns suggest that a deeper tax planning conversation may be useful.";
-    bulletItems = [
-      "Income and investable asset ranges",
-      "Retirement, business, capital gains, or estate planning concerns",
-      "Current CPA or advisor involvement",
-      "Upcoming decisions that may create tax consequences",
-    ];
-  } else if (step.emailType === "day_3_common_gaps") {
-    mainCopy =
-      "Many planning opportunities are missed because tax, investment, retirement, charitable, and estate decisions are reviewed separately instead of together.";
-    bulletItems = [
-      "Roth conversion timing",
-      "Capital gains planning",
-      "Business-owner tax strategy",
-      "Charitable giving structure",
-      "Investment tax efficiency",
-    ];
-  } else {
-    mainCopy =
-      "I wanted to send one final follow-up on your Unity Tax Opportunity Scan. If you still want us to review your tax planning picture, you can schedule a time below. If now is not the right time, no action is needed.";
-    bulletItems = [
-      "Schedule a review if you want to continue",
-      "Ignore this email if timing is not right",
-      "No client relationship is created unless an engagement is accepted",
-    ];
+    return `
+      <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#111827;background:#ffffff;margin:0;padding:0;">
+        <p>Hi ${firstName},</p>
+
+        <p>I wanted to make sure you had the scheduling link in case you would like to talk through your Tax Opportunity Scan.</p>
+
+        <p>Here is the link:<br />${scheduleLink}</p>
+
+        <p>On the call, we will usually look at income, investments, retirement accounts, business ownership, capital gains, and any major planning decisions coming up.</p>
+
+        <p>No pressure at all — I just wanted to make sure you had the next step.</p>
+
+        <p>Thanks,</p>
+
+        <p>Wade Marcy<br />Unity Tax Planning</p>
+      </div>
+    `;
+  }
+
+  if (step.emailType === "day_3_common_gaps") {
+    return `
+      <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#111827;background:#ffffff;margin:0;padding:0;">
+        <p>Hi ${firstName},</p>
+
+        <p>A few areas we commonly look at during this type of review are Roth conversion timing, capital gains, business-owner planning, charitable giving, estate coordination, and whether tax planning is being coordinated with investment decisions.</p>
+
+        <p>Your assessment helps us decide whether any of those areas may be worth reviewing further.</p>
+
+        <p>Here is the scheduling link again in case helpful:<br />${scheduleLink}</p>
+
+        <p>Thanks,</p>
+
+        <p>Wade Marcy<br />Unity Tax Planning</p>
+      </div>
+    `;
   }
 
   return `
-    <div style="margin:0;padding:0;background:#f8fafc;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
-      <div style="max-width:640px;margin:0 auto;padding:32px 20px;">
-        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:32px;box-shadow:0 20px 40px rgba(15,23,42,0.08);">
-          <p style="margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#2563eb;">Unity Tax Planning</p>
-          <h1 style="margin:0 0 18px;font-size:28px;line-height:1.15;color:#0f172a;">${escapeHtml(step.subject)}</h1>
-          <p style="margin:0 0 18px;font-size:16px;line-height:1.7;color:#334155;">Hi ${firstName},</p>
-          <p style="margin:0 0 18px;font-size:16px;line-height:1.7;color:#334155;">${escapeHtml(mainCopy)}</p>
-          <div style="border-radius:18px;background:#f8fafc;border:1px solid #e2e8f0;padding:18px;margin:0 0 24px;">
-            ${bulletItems
-              .map(
-                (item) =>
-                  `<p style="margin:0 0 10px;font-size:14px;line-height:1.6;color:#334155;"><strong style="color:#2563eb;">✓</strong> ${escapeHtml(item)}</p>`,
-              )
-              .join("")}
-          </div>
-          <p style="margin:0 0 28px;">
-            <a href="${escapeHtml(calendlyLink)}" style="display:inline-block;border-radius:16px;background:#2563eb;color:#ffffff;font-size:15px;font-weight:800;text-decoration:none;padding:14px 22px;">Schedule Your Review</a>
-          </p>
-          <div style="border-radius:18px;background:#eff6ff;border:1px solid #bfdbfe;padding:18px;margin:0 0 24px;">
-            <p style="margin:0;font-size:14px;line-height:1.7;color:#1e3a8a;">This review is educational and does not create a client relationship. No tax, legal, or investment advice is provided until your situation is reviewed in more detail and an engagement is accepted.</p>
-          </div>
-          <p style="margin:0;font-size:15px;line-height:1.7;color:#334155;">— Wade Marcy<br />Unity Tax Planning</p>
-        </div>
-      </div>
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#111827;background:#ffffff;margin:0;padding:0;">
+      <p>Hi ${firstName},</p>
+
+      <p>I wanted to send one final follow-up on your Tax Opportunity Scan.</p>
+
+      <p>If you still want to talk through it, you can schedule a time here:<br />${scheduleLink}</p>
+
+      <p>If now is not the right time, no action is needed.</p>
+
+      <p>Thanks,</p>
+
+      <p>Wade Marcy<br />Unity Tax Planning</p>
     </div>
   `;
 }

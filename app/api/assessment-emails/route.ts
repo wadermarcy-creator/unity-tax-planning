@@ -29,7 +29,7 @@ const internalAlertEmail =
   process.env.UNITY_TAX_INTERNAL_EMAIL || "wade@unitytaxplanning.com";
 const fromEmail =
   process.env.UNITY_TAX_FROM_EMAIL ||
-  "Unity Tax Planning <info@unitytaxplanning.com>";
+  "Wade Marcy <info@unitytaxplanning.com>";
 const replyToEmail =
   process.env.UNITY_TAX_REPLY_TO_EMAIL || "wade@unitytaxplanning.com";
 
@@ -69,12 +69,16 @@ function buildProspectText(payload: AssessmentEmailPayload) {
     "",
     "Thanks for completing the Unity Tax Opportunity Scan.",
     "",
-    "Your assessment has been received and is now queued for review. If you would like to schedule your Tax Opportunity Review, you can book a time here:",
+    "I received your assessment and will review the information you submitted. If you would like to talk through it, here is the scheduling link:",
     bookingLink,
+    "",
+    "On the call, we will usually look at income, investments, retirement accounts, business ownership, capital gains, and any major planning decisions coming up.",
     "",
     "This review is educational and does not create a client relationship. No tax, legal, or investment advice is provided until your situation is reviewed in more detail and an engagement is accepted.",
     "",
-    "— Wade Marcy",
+    "Thanks,",
+    "",
+    "Wade Marcy",
     "Unity Tax Planning",
   ].join("\n");
 }
@@ -84,23 +88,22 @@ function buildProspectHtml(payload: AssessmentEmailPayload) {
   const bookingLink = clean(payload.calendlyLink) || calendlyLink;
 
   return `
-    <div style="margin:0;padding:0;background:#f8fafc;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
-      <div style="max-width:640px;margin:0 auto;padding:32px 20px;">
-        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:32px;box-shadow:0 20px 40px rgba(15,23,42,0.08);">
-          <p style="margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#2563eb;">Unity Tax Planning</p>
-          <h1 style="margin:0 0 18px;font-size:28px;line-height:1.15;color:#0f172a;">Your Tax Opportunity Scan was received.</h1>
-          <p style="margin:0 0 18px;font-size:16px;line-height:1.7;color:#334155;">Hi ${firstName},</p>
-          <p style="margin:0 0 18px;font-size:16px;line-height:1.7;color:#334155;">Thanks for completing the Unity Tax Opportunity Scan. Your assessment has been received and is now queued for review.</p>
-          <p style="margin:0 0 24px;font-size:16px;line-height:1.7;color:#334155;">If you would like to schedule your Tax Opportunity Review, you can book a time below.</p>
-          <p style="margin:0 0 28px;">
-            <a href="${escapeHtml(bookingLink)}" style="display:inline-block;border-radius:16px;background:#2563eb;color:#ffffff;font-size:15px;font-weight:800;text-decoration:none;padding:14px 22px;">Schedule Your Review</a>
-          </p>
-          <div style="border-radius:18px;background:#eff6ff;border:1px solid #bfdbfe;padding:18px;margin:0 0 24px;">
-            <p style="margin:0;font-size:14px;line-height:1.7;color:#1e3a8a;">This review is educational and does not create a client relationship. No tax, legal, or investment advice is provided until your situation is reviewed in more detail and an engagement is accepted.</p>
-          </div>
-          <p style="margin:0;font-size:15px;line-height:1.7;color:#334155;">— Wade Marcy<br />Unity Tax Planning</p>
-        </div>
-      </div>
+    <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#111827;background:#ffffff;margin:0;padding:0;">
+      <p>Hi ${firstName},</p>
+
+      <p>Thanks for completing the Unity Tax Opportunity Scan.</p>
+
+      <p>I received your assessment and will review the information you submitted. If you would like to talk through it, here is the scheduling link:</p>
+
+      <p><a href="${escapeHtml(bookingLink)}" style="color:#2563eb;text-decoration:underline;">${escapeHtml(bookingLink)}</a></p>
+
+      <p>On the call, we will usually look at income, investments, retirement accounts, business ownership, capital gains, and any major planning decisions coming up.</p>
+
+      <p style="font-size:13px;color:#4b5563;line-height:1.5;">This review is educational and does not create a client relationship. No tax, legal, or investment advice is provided until your situation is reviewed in more detail and an engagement is accepted.</p>
+
+      <p>Thanks,</p>
+
+      <p>Wade Marcy<br />Unity Tax Planning</p>
     </div>
   `;
 }
