@@ -51,6 +51,7 @@ const pipelineStages = [
   { label: "New", value: "new", description: "Assessment received and waiting for review." },
   { label: "Reviewing", value: "reviewing", description: "Assessing fit, urgency, and planning angle." },
   { label: "Contacted", value: "contacted", description: "Initial email, call, or text has been sent." },
+  { label: "Scheduled", value: "scheduled", description: "Calendly meeting booked; automated follow-ups are suppressed." },
   { label: "Discovery", value: "discovery", description: "Conversation scheduled or in progress." },
   { label: "Proposal", value: "proposal", description: "Scope and pricing are being discussed." },
   { label: "Client", value: "client", description: "Converted into an active relationship." },
@@ -163,7 +164,7 @@ function getStatusTone(status: string | null) {
   const value = status || "new";
 
   if (value === "client") return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
-  if (["proposal", "discovery", "contacted"].includes(value)) {
+  if (["proposal", "discovery", "scheduled", "contacted"].includes(value)) {
     return "border-blue-500/40 bg-blue-500/10 text-blue-300";
   }
   if (value === "reviewing") return "border-violet-500/40 bg-violet-500/10 text-violet-300";
