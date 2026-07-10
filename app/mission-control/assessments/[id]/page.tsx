@@ -34,6 +34,19 @@ type Toast = {
   message: string;
 };
 
+type EmailEvent = {
+  id: string;
+  lead_id: string;
+  email_type: string;
+  recipient_email: string;
+  status: string;
+  provider: string | null;
+  provider_message_id: string | null;
+  error_message: string | null;
+  sent_at: string;
+  created_at: string;
+};
+
 const pipelineStages = [
   { label: "New", value: "new", description: "Assessment received and waiting for review." },
   { label: "Reviewing", value: "reviewing", description: "Assessing fit, urgency, and planning angle." },
@@ -44,6 +57,72 @@ const pipelineStages = [
   { label: "Closed", value: "closed", description: "Not moving forward right now." },
   { label: "Archived", value: "archived", description: "Hidden from active prospect workflow." },
 ];
+
+const followUpSequence = [
+  {
+    label: "Day 1",
+    type: "day_1_review_process",
+    description: "What we review during a tax planning assessment.",
+  },
+  {
+    label: "Day 3",
+    type: "day_3_common_gaps",
+    description: "Common gaps and planning areas worth reviewing.",
+  },
+  {
+    label: "Day 7",
+    type: "day_7_final_prompt",
+    description: "Final soft prompt before this lead goes quiet.",
+  },
+];
+
+const suppressedFollowUpStatuses = [
+  "scheduled",
+  "discovery",
+  "proposal",
+  "client",
+  "closed",
+  "archived",
+];
+
+function getEmailTypeLabel(emailType: string) {
+  if (emailType === "assessment_received") return "Immediate confirmation";
+  if (emailType === "day_1_review_process") return "Day 1 review process";
+  if (emailType === "day_3_common_gaps") return "Day 3 common gaps";
+  if (emailType === "day_7_final_prompt") return "Day 7 final prompt";
+
+  return emailType
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function getFollowUpSuppressionReason(status: string | null) {
+  const value = status || "new";
+
+  if (suppressedFollowUpStatuses.includes(value)) {
+    return `Suppressed because lead status is ${getStatusLabel(value)}.`;
+  }
+
+  return "Active while this lead remains new, reviewing, or contacted.";
+}
+
+function getLastEmailEvent(events: EmailEvent[]) {
+  if (events.length === 0) return null;
+
+  return [...events].sort(
+    (left, right) =>
+      new Date(right.sent_at).getTime() - new Date(left.sent_at).getTime(),
+  )[0];
+}
+
+function getNextEmailDue(events: EmailEvent[], currentStatus: string) {
+  if (suppressedFollowUpStatuses.includes(currentStatus)) return "Suppressed";
+
+  const sentTypes = new Set(events.map((event) => event.email_type));
+  const nextEmail = followUpSequence.find((email) => !sentTypes.has(email.type));
+
+  return nextEmail ? nextEmail.label : "Sequence complete";
+}
 
 function getFullName(lead: Lead) {
   return `${lead.first_name || ""} ${lead.last_name || ""}`.trim() || "Unnamed";
@@ -320,6 +399,9 @@ export default function AssessmentDetailPage() {
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [toast, setToast] = useState<Toast | null>(null);
+  const [emailEvents, setEmailEvents] = useState<EmailEvent[]>([]);
+  const [isLoadingEmailEvents, setIsLoadingEmailEvents] = useState(true);
+  const [emailEventsMessage, setEmailEventsMessage] = useState("");
 
   const showToast = useCallback((message: string) => {
     const nextToast = { id: Date.now(), message };
@@ -331,6 +413,41 @@ export default function AssessmentDetailPage() {
       );
     }, 2600);
   }, []);
+
+  const loadEmailEvents = useCallback(async () => {
+    if (!id) return;
+
+    setIsLoadingEmailEvents(true);
+    setEmailEventsMessage("");
+
+    try {
+      const response = await fetch(`/api/prospect-email-events/${id}`, {
+        cache: "no-store",
+      });
+
+      const result = (await response.json()) as {
+        ok?: boolean;
+        events?: EmailEvent[];
+        error?: string;
+      };
+
+      if (!response.ok || !result.ok) {
+        setEmailEvents([]);
+        setEmailEventsMessage(
+          result.error || "Email follow-up status could not be loaded.",
+        );
+        return;
+      }
+
+      setEmailEvents(result.events || []);
+    } catch (error) {
+      console.error(error);
+      setEmailEvents([]);
+      setEmailEventsMessage("Email follow-up status could not be loaded.");
+    } finally {
+      setIsLoadingEmailEvents(false);
+    }
+  }, [id]);
 
   const loadLead = useCallback(async () => {
     if (!id) return;
@@ -352,7 +469,8 @@ export default function AssessmentDetailPage() {
 
   useEffect(() => {
     loadLead();
-  }, [loadLead]);
+    loadEmailEvents();
+  }, [loadLead, loadEmailEvents]);
 
   async function updateStatus(nextStatus: string) {
     if (!lead) return;
@@ -538,6 +656,10 @@ export default function AssessmentDetailPage() {
       )}&body=${encodeURIComponent(introEmail)}`
     : "";
   const phoneHref = lead.phone ? `tel:${lead.phone}` : "";
+  const followUpsSuppressed = suppressedFollowUpStatuses.includes(currentStatus);
+  const lastEmailEvent = getLastEmailEvent(emailEvents);
+  const nextEmailDue = getNextEmailDue(emailEvents, currentStatus);
+  const sentEmailTypes = new Set(emailEvents.map((event) => event.email_type));
 
   return (
     <div className="min-h-screen">
@@ -580,7 +702,10 @@ export default function AssessmentDetailPage() {
 
             <button
               type="button"
-              onClick={loadLead}
+              onClick={() => {
+                loadLead();
+                loadEmailEvents();
+              }}
               className="rounded-2xl border border-slate-800 bg-slate-950 px-5 py-3 text-sm font-black text-slate-300 transition hover:border-blue-500 hover:text-white"
             >
               Refresh
@@ -1116,6 +1241,118 @@ export default function AssessmentDetailPage() {
                   </button>
                 </div>
               </div>
+            </article>
+
+            <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">
+                    Email Follow-Up Status
+                  </p>
+
+                  <h2 className="mt-3 text-2xl font-black text-white">
+                    Automated nurture sequence
+                  </h2>
+                </div>
+
+                <span
+                  className={`rounded-full border px-3 py-1 text-xs font-black uppercase tracking-[0.16em] ${
+                    followUpsSuppressed
+                      ? "border-slate-700 bg-slate-900 text-slate-400"
+                      : "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                  }`}
+                >
+                  {followUpsSuppressed ? "Suppressed" : "Active"}
+                </span>
+              </div>
+
+              <p className="mt-4 text-sm font-bold leading-6 text-slate-400">
+                {getFollowUpSuppressionReason(currentStatus)}
+              </p>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                  <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                    Last Email Sent
+                  </p>
+                  <p className="mt-2 text-sm font-black text-white">
+                    {lastEmailEvent
+                      ? getEmailTypeLabel(lastEmailEvent.email_type)
+                      : "No automated email logged"}
+                  </p>
+                  <p className="mt-1 text-xs font-bold text-slate-500">
+                    {lastEmailEvent ? formatDate(lastEmailEvent.sent_at) : "—"}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                  <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
+                    Next Email Due
+                  </p>
+                  <p className="mt-2 text-sm font-black text-white">
+                    {nextEmailDue}
+                  </p>
+                  <p className="mt-1 text-xs font-bold text-slate-500">
+                    Daily cron checks active leads once per day.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 space-y-3">
+                {followUpSequence.map((email) => {
+                  const isSent = sentEmailTypes.has(email.type);
+
+                  return (
+                    <div
+                      key={email.type}
+                      className="rounded-2xl border border-slate-800 bg-slate-900 p-4"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-sm font-black text-white">
+                            {email.label}
+                          </p>
+                          <p className="mt-1 text-xs font-bold leading-5 text-slate-500">
+                            {email.description}
+                          </p>
+                        </div>
+
+                        <span
+                          className={`shrink-0 rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${
+                            isSent
+                              ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
+                              : followUpsSuppressed
+                                ? "border-slate-700 bg-slate-950 text-slate-500"
+                                : "border-blue-500/40 bg-blue-500/10 text-blue-300"
+                          }`}
+                        >
+                          {isSent ? "Sent" : followUpsSuppressed ? "Off" : "Pending"}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {isLoadingEmailEvents && (
+                <p className="mt-4 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold text-slate-400">
+                  Loading email follow-up status...
+                </p>
+              )}
+
+              {emailEventsMessage && (
+                <p className="mt-4 rounded-2xl border border-orange-500/30 bg-orange-500/10 p-4 text-sm font-bold text-orange-300">
+                  {emailEventsMessage}
+                </p>
+              )}
+
+              <button
+                type="button"
+                onClick={loadEmailEvents}
+                className="mt-5 rounded-2xl border border-slate-800 bg-slate-900 px-5 py-3 text-sm font-black text-slate-300 transition hover:border-blue-500 hover:text-white"
+              >
+                Refresh Email Status
+              </button>
             </article>
 
             <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
