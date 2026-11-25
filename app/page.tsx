@@ -2,281 +2,72 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import DisclosureFooter from "@/components/DisclosureFooter";
 
-const process = [
-  {
-    step: "01",
-    title: "Discover",
-    description:
-      "We learn about your income, business, investments, goals, and concerns.",
-  },
-  {
-    step: "02",
-    title: "Analyze",
-    description:
-      "We review your situation for proactive tax planning opportunities.",
-  },
-  {
-    step: "03",
-    title: "Strategize",
-    description:
-      "We prioritize the strategies that may have the greatest impact.",
-  },
-  {
-    step: "04",
-    title: "Implement",
-    description:
-      "We help coordinate next steps with your CPA, attorney, and advisory team.",
-  },
-];
-
 const audiences = [
-  {
-    title: "Business Owners",
-    text: "Reduce taxes, improve cash flow, and build long-term wealth through proactive planning.",
-  },
-  {
-    title: "High-Income Families",
-    text: "Coordinate income, investments, charitable giving, and estate planning with tax strategy.",
-  },
-  {
-    title: "Investors",
-    text: "Plan around capital gains, real estate, concentrated stock, and portfolio tax efficiency.",
-  },
-  {
-    title: "Retirees",
-    text: "Review Roth conversions, RMDs, IRMAA, Social Security taxation, and legacy planning.",
-  },
+  ["01", "Business owners", "Coordinate business and personal tax decisions, entity structure, retirement plans and cash flow."],
+  ["02", "High-income households", "Explore income timing, equity compensation, charitable giving and retirement contributions."],
+  ["03", "Retirees & pre-retirees", "Evaluate Roth conversions, required distributions, Medicare premiums and lifetime tax exposure."],
+  ["04", "Major transactions", "Prepare for business sales, real estate transactions and concentrated investment gains before decisions are final."],
 ];
-
-const strategies = [
-  "S Corporation Planning",
-  "Retirement Plan Design",
-  "Roth Conversions",
-  "Capital Gains Planning",
-  "Charitable Strategies",
-  "Entity Structure Review",
-  "Real Estate Tax Planning",
-  "Estate Coordination",
+const steps = [
+  ["Discover", "Understand your goals, income, assets and upcoming decisions."],
+  ["Analyze", "Identify relevant opportunities and evaluate assumptions and tradeoffs."],
+  ["Plan", "Develop a prioritized strategy and coordinate with your existing professionals."],
+  ["Monitor", "Revisit decisions as your circumstances and tax laws change, under an agreed ongoing engagement."],
 ];
+const primary = "inline-flex justify-center rounded-md bg-[#d6bc87] px-6 py-4 font-semibold text-[#10243b] transition hover:bg-[#e8d3aa] focus-visible:outline-2 focus-visible:outline-offset-4";
+const secondary = "inline-flex justify-center rounded-md border border-white/30 px-6 py-4 font-semibold text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#030817] text-white">
+    <main className="min-h-screen bg-[#f8f5ef] text-[#10243b]">
       <Navbar />
-
-      <section className="mx-auto grid max-w-7xl items-center gap-14 px-6 py-24 lg:grid-cols-[1.05fr_0.95fr] lg:py-32">
-        <div>
-          <p className="mb-7 text-sm font-bold uppercase tracking-[0.32em] text-blue-300">
-            Proactive Tax Strategy
-          </p>
-
-          <h1 className="max-w-4xl text-6xl font-extrabold tracking-tight text-white md:text-7xl lg:text-8xl">
-            Stop Overpaying Taxes.
-          </h1>
-
-          <p className="mt-8 max-w-2xl text-xl leading-9 text-slate-300">
-            Tax preparation records history. Tax strategy changes it. Start with
-            a{" "}
-            <strong className="text-white">
-              Unity Tax Opportunity Assessment™
-            </strong>{" "}
-            and discover opportunities while there is still time to act.
-          </p>
-
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <Link
-              href="/tax-opportunity-scan"
-              className="rounded-full bg-blue-600 px-8 py-4 text-center text-base font-bold text-white shadow-lg shadow-blue-600/30 transition hover:bg-blue-500"
-            >
-              Start My Assessment
-            </Link>
-
-            <Link
-              href="/example-plans"
-              className="rounded-full border border-white/15 bg-white/5 px-8 py-4 text-center text-base font-bold text-white transition hover:bg-white/10"
-            >
-              See Sample Tax Plans
-            </Link>
-          </div>
-        </div>
-
-        <div className="rounded-[2rem] border border-white/10 bg-white p-8 text-[#030817] shadow-2xl">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-blue-600">
-            The Assessment
-          </p>
-
-          <h2 className="mt-5 text-3xl font-extrabold leading-tight">
-            Find the tax strategies you may be missing.
-          </h2>
-
-          <div className="mt-8 space-y-5">
-            {["Discover", "Analyze", "Strategize", "Implement", "Monitor"].map(
-              (item, index) => (
-                <div key={item} className="flex items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-sm font-extrabold text-blue-600">
-                    {index + 1}
-                  </div>
-                  <p className="font-bold text-slate-900">{item}</p>
-                </div>
-              )
-            )}
-          </div>
-
-          <div className="mt-8 rounded-3xl bg-slate-50 p-6">
-            <p className="text-sm leading-6 text-slate-600">
-              Most people do tax planning after the year is already over. The
-              Unity Tax Opportunity Assessment™ is designed to identify planning
-              opportunities before they become missed opportunities.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-y border-white/10 bg-white text-[#030817]">
-        <div className="mx-auto max-w-7xl px-6 py-24">
-          <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr]">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.32em] text-blue-600">
-                Why Unity
-              </p>
-              <h2 className="mt-6 text-5xl font-extrabold tracking-tight">
-                Most people file taxes. Few people plan them.
-              </h2>
-            </div>
-
-            <div className="space-y-7 text-lg leading-8 text-slate-600">
-              <p>
-                Many successful business owners and families only talk about
-                taxes after the year is already over. By then, many of the best
-                planning opportunities may already be gone.
-              </p>
-              <p>
-                Unity Tax Planning helps you think proactively, identify
-                strategies earlier, and coordinate tax decisions with your
-                broader financial life.
-              </p>
-              <p className="font-bold text-slate-900">
-                The biggest tax-saving opportunities are often available before
-                December 31 — not after April 15.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#030817] px-6 py-24">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.32em] text-blue-300">
-              Unity Strategy Framework™
-            </p>
-            <h2 className="mt-6 text-5xl font-extrabold tracking-tight text-white">
-              Strategy before filing. Coordination after planning.
-            </h2>
-          </div>
-
-          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {process.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-3xl border border-white/10 bg-white/5 p-7"
-              >
-                <p className="text-sm font-extrabold text-blue-300">
-                  {item.step}
-                </p>
-                <h3 className="mt-5 text-2xl font-extrabold text-white">
-                  {item.title}
-                </h3>
-                <p className="mt-4 text-sm leading-6 text-slate-300">
-                  {item.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-6 py-24 text-[#030817]">
-        <div className="mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.32em] text-blue-600">
-              Who We Help
-            </p>
-            <h2 className="mt-6 text-5xl font-extrabold tracking-tight">
-              Built for people with more at stake.
-            </h2>
-          </div>
-
-          <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {audiences.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-              >
-                <h3 className="text-xl font-extrabold text-slate-950">
-                  {item.title}
-                </h3>
-                <p className="mt-5 text-sm leading-6 text-slate-600">
-                  {item.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-slate-50 px-6 py-24 text-[#030817]">
-        <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="bg-[#10243b] text-white">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 lg:grid-cols-[1.2fr_0.8fr] lg:py-28">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.32em] text-blue-600">
-              Planning Opportunities
-            </p>
-            <h2 className="mt-6 text-5xl font-extrabold tracking-tight">
-              A better tax outcome starts with better questions.
-            </h2>
-            <p className="mt-7 text-lg leading-8 text-slate-600">
-              The assessment is designed to surface strategies worth reviewing
-              based on your income, business, investments, goals, and timeline.
-            </p>
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#d6bc87]">Proactive tax strategy</p>
+            <h1 className="mt-6 max-w-3xl font-serif text-5xl leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">Your taxes deserve a strategy. <span className="text-[#d6bc87]">Not just a return.</span></h1>
+            <p className="mt-7 max-w-xl text-lg leading-8 text-slate-200">Plan ahead with a coordinated approach to your business, investments, retirement and major financial decisions.</p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Link href="/tax-opportunity-scan" className={primary}>Explore my tax opportunities</Link>
+              <Link href="/pricing" className={secondary}>View services & pricing</Link>
+            </div>
+            <p className="mt-6 text-sm text-slate-300">Keep your CPA. Gain a tax planning partner.</p>
           </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {strategies.map((strategy) => (
-              <div
-                key={strategy}
-                className="rounded-2xl border border-slate-200 bg-white p-5 text-sm font-bold text-slate-900 shadow-sm"
-              >
-                {strategy}
-              </div>
-            ))}
-          </div>
+          <aside className="border border-[#d6bc87]/40 bg-[#192f49] p-8 sm:p-10">
+            <p className="text-xs uppercase tracking-[0.2em] text-[#d6bc87]">A year-round perspective</p>
+            <h2 className="mt-5 font-serif text-3xl">Make informed decisions before deadlines arrive.</h2>
+            <div className="mt-8 divide-y divide-white/15">
+              {["Understand your current tax picture", "Evaluate strategies and tradeoffs", "Coordinate implementation with your CPA", "Review changes throughout the year"].map((item,i) => <div key={item} className="flex gap-4 py-4"><span className="text-[#d6bc87]">0{i+1}</span><span className="text-slate-100">{item}</span></div>)}
+            </div>
+          </aside>
         </div>
       </section>
-
-      <section className="bg-[#030817] px-6 py-24">
-        <div className="mx-auto max-w-5xl text-center">
-          <p className="text-sm font-bold uppercase tracking-[0.32em] text-blue-300">
-            Start Here
-          </p>
-          <h2 className="mt-6 text-5xl font-extrabold tracking-tight text-white md:text-6xl">
-            You worked too hard to pay more tax than you legally have to.
-          </h2>
-          <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-slate-300">
-            Start your Unity Tax Opportunity Assessment™ and discover whether
-            proactive planning could make a meaningful difference.
-          </p>
-
-          <div className="mt-10">
-            <Link
-              href="/tax-opportunity-scan"
-              className="inline-flex rounded-full bg-blue-600 px-9 py-4 text-base font-bold text-white shadow-lg shadow-blue-600/30 transition hover:bg-blue-500"
-            >
-              Start My Assessment
-            </Link>
-          </div>
+      <section className="mx-auto max-w-7xl px-6 py-20">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#806330]">Who we help</p>
+        <h2 className="mt-4 max-w-3xl font-serif text-4xl sm:text-5xl">Complex finances deserve thoughtful planning.</h2>
+        <div className="mt-10 grid gap-px overflow-hidden border border-[#ded7ca] bg-[#ded7ca] sm:grid-cols-2 lg:grid-cols-4">
+          {audiences.map(([number,title,description]) => <article key={title} className="bg-white p-7"><p className="text-sm text-[#806330]">{number}</p><h3 className="mt-5 font-serif text-2xl">{title}</h3><p className="mt-4 leading-7 text-slate-600">{description}</p></article>)}
         </div>
       </section>
-
+      <section className="border-y border-[#ded7ca] bg-white">
+        <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-2">
+          <div><p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#806330]">Our approach</p><h2 className="mt-4 font-serif text-4xl sm:text-5xl">Strategy before filing. Coordination after planning.</h2><p className="mt-6 text-lg leading-8 text-slate-600">Tax preparation and proactive planning are complementary. We help identify decisions worth evaluating while there is still time to act.</p><Link href="/example-plans" className="mt-7 inline-block font-semibold underline underline-offset-4">Explore sample tax plans</Link></div>
+          <div className="divide-y divide-[#ded7ca]">{steps.map(([title,description],i)=><div key={title} className="flex gap-5 py-5"><span className="text-[#806330]">0{i+1}</span><div><h3 className="font-serif text-2xl">{title}</h3><p className="mt-2 leading-7 text-slate-600">{description}</p></div></div>)}</div>
+        </div>
+      </section>
+      <section className="mx-auto max-w-7xl px-6 py-20">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#806330]">Planning engagements</p>
+        <h2 className="mt-4 font-serif text-4xl sm:text-5xl">Start with the right level of planning.</h2>
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
+          {[["Focused review","From $995","Identify potential opportunities and receive a written summary."],["Comprehensive strategy","From $3,500","A deeper review of interconnected tax planning decisions."],["Advanced coordination","Custom scope","Complex transactions, entities and family planning needs."]].map(([title,price,description])=><article key={title} className="border border-[#ded7ca] bg-white p-8"><h3 className="font-serif text-2xl">{title}</h3><p className="mt-4 text-xl font-semibold">{price}</p><p className="mt-4 leading-7 text-slate-600">{description}</p><Link href="/pricing" className="mt-6 inline-block font-semibold underline underline-offset-4">View engagement details</Link></article>)}
+        </div>
+        <p className="mt-5 text-sm text-slate-600">Scope and fees are confirmed before engagement. Tax outcomes are not guaranteed.</p>
+      </section>
+      <section className="bg-[#10243b] px-6 py-20 text-center text-white">
+        <h2 className="mx-auto max-w-3xl font-serif text-4xl sm:text-5xl">Start planning before your next major decision.</h2>
+        <p className="mx-auto mt-5 max-w-xl leading-7 text-slate-200">Explore potential planning opportunities with the Unity Tax Opportunity Assessment.</p>
+        <div className="mt-8"><Link href="/tax-opportunity-scan" className={primary}>Start my assessment</Link></div>
+      </section>
       <DisclosureFooter />
     </main>
   );
