@@ -16,6 +16,26 @@ export default function InsightsPublisher() {
   const [draft, setDraft] = useState(initial);
   const [reviewed, setReviewed] = useState(false);
   const [preview, setPreview] = useState(false);
+  const [importError, setImportError] = useState("");
+  async function importDraft(file: File) {
+    try {
+      if (file.size > 2_000_000) throw new Error("Draft exceeds 2 MB.");
+      const data = JSON.parse(await file.text());
+      if (!data || typeof data !== "object" || !fields.every(([key]) => typeof data[key] === "string")) throw new Error("Invalid Unity draft format.");
+      setDraft(Object.fromEntries(fields.map(([key]) => [key, data[key]])) as Record<Field,string>);
+      setReviewed(false);
+      setPreview(false);
+      setImportError("");
+    } catch (error) {
+      setImportError(error instanceof Error ? error.message : "Unable to import draft.");
+    }
+  }
+  function saveWorkingDraft() {
+    const blob = new Blob([JSON.stringify({...draft, status: "draft"}, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "unity-working-draft.json"; a.click(); URL.revokeObjectURL(url);
+  }
   const ready = fields.every(([key]) => draft[key].trim()) && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(draft.slug) && reviewed;
   function exportDraft() {
     const blob = new Blob([JSON.stringify({...draft, status: "review-ready", exportedAt: new Date().toISOString()}, null, 2)], {type:"application/json"});
@@ -30,7 +50,10 @@ export default function InsightsPublisher() {
         <h2 className="font-serif text-2xl text-[#d6bc87]">Hazel to Unity Journal</h2>
         <p className="mt-2 text-sm text-slate-200">Use fictional scenarios only. Do not paste client names, identifiers or confidential tax records. Drafts stay in this tab until exported; this workspace does not publish or save to a server.</p>
       </div>
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
+        <button type="button" onClick={saveWorkingDraft} className="rounded-lg border border-[#d6bc87] px-4 py-2 text-[#d6bc87]">Save working draft</button>
+        <label className="cursor-pointer rounded-lg border border-[#d6bc87] px-4 py-2 text-[#d6bc87]">Import draft<input type="file" accept=".json,application/json" className="block max-w-full text-xs" onChange={e=>{const file=e.target.files?.[0]; if(file) void importDraft(file); e.target.value="";}} /></label>
+        {importError && <p role="alert" className="w-full text-sm text-red-300">{importError}</p>}
         <button type="button" onClick={()=>setPreview(false)} className="rounded-lg border border-[#d6bc87] px-4 py-2 text-[#d6bc87]">Edit draft</button>
         <button type="button" onClick={()=>setPreview(true)} className="rounded-lg bg-[#d6bc87] px-4 py-2 font-semibold text-[#10243b]">Preview article</button>
       </div>
