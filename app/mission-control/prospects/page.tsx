@@ -96,9 +96,9 @@ function getPriorityTone(score: number | null) {
 
   if (value >= 130) return "border-violet-500/40 bg-violet-500/10 text-violet-300";
   if (value >= 100) return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
-  if (value >= 70) return "border-blue-500/40 bg-blue-500/10 text-blue-300";
+  if (value >= 70) return "border-blue-500/40 bg-blue-500/10 text-[#d6bc87]";
   if (value >= 40) return "border-orange-500/40 bg-orange-500/10 text-orange-300";
-  return "border-slate-700 bg-slate-900 text-slate-300";
+  return "border-slate-700 bg-[#1b334d] text-slate-300";
 }
 
 function getStatusLabel(status: string | null) {
@@ -415,7 +415,7 @@ export default function ProspectsPage() {
         <section className="mb-6 overflow-hidden rounded-[2rem] border border-blue-500/30 bg-gradient-to-br from-blue-500/15 via-slate-950 to-slate-950 p-5 shadow-2xl shadow-blue-950/20 sm:p-7">
           <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr] xl:items-center">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase tracking-[0.22em] text-blue-200">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-400/10 px-3 py-2 text-xs font-black uppercase tracking-[0.22em] text-[#e5cf9e]">
                 <Sparkles className="h-4 w-4" />
                 AI Executive Recommendation
               </div>
@@ -441,7 +441,7 @@ export default function ProspectsPage() {
                 <button
                   type="button"
                   onClick={() => downloadCsv("unity-tax-prospects.csv", filteredProspects)}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-blue-500 hover:text-white"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#162d46] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-[#d6bc87] hover:text-white"
                 >
                   <Download className="h-4 w-4" />
                   Export View
@@ -451,7 +451,7 @@ export default function ProspectsPage() {
                   type="button"
                   onClick={refreshProspects}
                   disabled={isRefreshing}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-blue-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#162d46] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-[#d6bc87] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <RefreshCcw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
                   Refresh
@@ -460,28 +460,28 @@ export default function ProspectsPage() {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70 p-5">
+              <div className="rounded-[1.5rem] border border-slate-700/70 bg-[#162d46] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
                   Prospects
                 </p>
                 <p className="mt-3 text-3xl font-black text-white">{prospects.length}</p>
               </div>
 
-              <div className="rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70 p-5">
+              <div className="rounded-[1.5rem] border border-slate-700/70 bg-[#162d46] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
                   Priority Score
                 </p>
                 <p className="mt-3 text-3xl font-black text-white">{averageScore}</p>
               </div>
 
-              <div className="rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70 p-5">
+              <div className="rounded-[1.5rem] border border-slate-700/70 bg-[#162d46] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
                   Qualified
                 </p>
                 <p className="mt-3 text-3xl font-black text-emerald-300">{qualifiedCount}</p>
               </div>
 
-              <div className="rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70 p-5">
+              <div className="rounded-[1.5rem] border border-slate-700/70 bg-[#162d46] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
                   Projected Annual Revenue
                 </p>
@@ -494,8 +494,8 @@ export default function ProspectsPage() {
         </section>
 
         <section className="mb-6 grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-300">
+          <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
+            <p className="text-xs font-black uppercase tracking-[0.24em] text-[#d6bc87]">
               Prospect Pipeline
             </p>
             <h2 className="mt-3 text-2xl font-black text-white">CRM view from assessments</h2>
@@ -504,14 +504,14 @@ export default function ProspectsPage() {
             </p>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+              <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                 <p className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-slate-500">
                   Current View
                 </p>
                 <p className="mt-2 text-xl font-black text-white">{filteredProspects.length}</p>
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+              <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                 <p className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-slate-500">
                   View Value
                 </p>
@@ -520,7 +520,7 @@ export default function ProspectsPage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+              <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                 <p className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-slate-500">
                   Client Ready
                 </p>
@@ -529,10 +529,10 @@ export default function ProspectsPage() {
             </div>
           </div>
 
-          <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-300">
+                <p className="text-xs font-black uppercase tracking-[0.24em] text-[#d6bc87]">
                   Filters
                 </p>
                 <h2 className="mt-3 text-2xl font-black text-white">Find the next prospect</h2>
@@ -544,7 +544,7 @@ export default function ProspectsPage() {
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
                   placeholder="Search name, email, concern..."
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-11 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-11 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
                 />
               </div>
             </div>
@@ -558,7 +558,7 @@ export default function ProspectsPage() {
                   className={`rounded-2xl border px-4 py-3 text-sm font-black transition ${
                     filter === item.value
                       ? "border-blue-500 bg-blue-600 text-white"
-                      : "border-slate-800 bg-slate-900 text-slate-400 hover:border-blue-500 hover:text-white"
+                      : "border-white/10 bg-[#1b334d] text-slate-400 hover:border-[#d6bc87] hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -569,11 +569,11 @@ export default function ProspectsPage() {
         </section>
 
         {isLoading ? (
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 text-sm font-bold text-slate-400">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8 text-sm font-bold text-slate-400">
             Loading prospects...
           </div>
         ) : filteredProspects.length === 0 ? (
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8">
             <p className="text-xl font-black text-white">No prospects match this view.</p>
             <p className="mt-2 text-sm font-bold text-slate-400">
               Clear the search or change the filter to review all assessment records that have not been moved to Clients.
@@ -592,7 +592,7 @@ export default function ProspectsPage() {
               return (
                 <article
                   key={lead.id}
-                  className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 transition hover:border-blue-500/60 sm:p-6"
+                  className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 transition hover:border-[#d6bc87]/60 sm:p-6"
                 >
                   <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                     <div className="min-w-0">
@@ -605,7 +605,7 @@ export default function ProspectsPage() {
                         >
                           {getPriorityLabel(lead.lead_score)}
                         </span>
-                        <span className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-slate-300">
+                        <span className="rounded-full border border-slate-700 bg-[#1b334d] px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-slate-300">
                           {getStatusLabel(lead.status)}
                         </span>
                       </div>
@@ -615,21 +615,21 @@ export default function ProspectsPage() {
                       </p>
 
                       <div className="mt-5 grid gap-3 sm:grid-cols-4">
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                           <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
                             Score
                           </p>
                           <p className="mt-2 text-lg font-black text-white">{lead.lead_score ?? 0}</p>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                           <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
                             Revenue
                           </p>
                           <p className="mt-2 text-lg font-black text-white">{formatMoney(annualRevenue)}</p>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:col-span-2">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4 sm:col-span-2">
                           <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
                             Submitted
                           </p>
@@ -638,14 +638,14 @@ export default function ProspectsPage() {
                       </div>
 
                       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/60 p-4">
                           <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
                             Household Income
                           </p>
                           <p className="mt-2 text-sm font-black text-white">{lead.household_income || "—"}</p>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/60 p-4">
                           <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
                             Investable Assets
                           </p>
@@ -680,7 +680,7 @@ export default function ProspectsPage() {
                       <button
                         type="button"
                         onClick={() => copyText(getProspectBrief(lead), "Prospect brief copied.")}
-                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-blue-500 hover:text-white"
+                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-[#d6bc87] hover:text-white"
                       >
                         <Clipboard className="h-4 w-4" />
                         Copy Brief
@@ -690,7 +690,7 @@ export default function ProspectsPage() {
                         type="button"
                         onClick={() => updateProspectStatus(lead, "contacted")}
                         disabled={movingId === lead.id}
-                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-blue-500/40 bg-blue-500/10 px-5 py-3 text-sm font-black text-blue-200 transition hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-blue-500/40 bg-blue-500/10 px-5 py-3 text-sm font-black text-[#e5cf9e] transition hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         Mark Contacted
                       </button>
@@ -709,7 +709,7 @@ export default function ProspectsPage() {
                           type="button"
                           onClick={() => updateProspectStatus(lead, "archived")}
                           disabled={movingId === lead.id}
-                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-xs font-black text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-[#1b334d] px-4 py-3 text-xs font-black text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
                         >
                           Archive
                         </button>
@@ -724,7 +724,7 @@ export default function ProspectsPage() {
                               showToast("No email on file.", "error");
                             }
                           }}
-                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 p-3 text-slate-300 transition hover:border-blue-500 hover:text-white"
+                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-[#1b334d] p-3 text-slate-300 transition hover:border-[#d6bc87] hover:text-white"
                           aria-label={`Email ${name}`}
                         >
                           <Mail className="h-4 w-4" />
@@ -738,7 +738,7 @@ export default function ProspectsPage() {
                               showToast("No phone on file.", "error");
                             }
                           }}
-                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 p-3 text-slate-300 transition hover:border-blue-500 hover:text-white"
+                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-[#1b334d] p-3 text-slate-300 transition hover:border-[#d6bc87] hover:text-white"
                           aria-label={`Call ${name}`}
                         >
                           <Phone className="h-4 w-4" />
@@ -755,7 +755,7 @@ export default function ProspectsPage() {
         <section className="mt-6 grid gap-4 lg:grid-cols-3">
           <Link
             href="/mission-control/client-copilot"
-            className="group rounded-[1.5rem] border border-slate-800 bg-slate-950/70 p-5 transition hover:border-blue-500/60"
+            className="group rounded-[1.5rem] border border-white/10 bg-[#162d46] p-5 transition hover:border-[#d6bc87]/60"
           >
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -764,13 +764,13 @@ export default function ProspectsPage() {
                 </p>
                 <h3 className="mt-2 text-lg font-black text-white">Client Copilot</h3>
               </div>
-              <ArrowRight className="h-5 w-5 text-slate-500 transition group-hover:translate-x-1 group-hover:text-blue-300" />
+              <ArrowRight className="h-5 w-5 text-slate-500 transition group-hover:translate-x-1 group-hover:text-[#d6bc87]" />
             </div>
           </Link>
 
           <Link
             href="/mission-control/opportunity-engine"
-            className="group rounded-[1.5rem] border border-slate-800 bg-slate-950/70 p-5 transition hover:border-blue-500/60"
+            className="group rounded-[1.5rem] border border-white/10 bg-[#162d46] p-5 transition hover:border-[#d6bc87]/60"
           >
             <div className="flex items-center justify-between gap-4">
               <div>
@@ -779,13 +779,13 @@ export default function ProspectsPage() {
                 </p>
                 <h3 className="mt-2 text-lg font-black text-white">Opportunity Engine</h3>
               </div>
-              <BriefcaseBusiness className="h-5 w-5 text-slate-500 transition group-hover:text-blue-300" />
+              <BriefcaseBusiness className="h-5 w-5 text-slate-500 transition group-hover:text-[#d6bc87]" />
             </div>
           </Link>
 
           <Link
             href="/mission-control/clients"
-            className="group rounded-[1.5rem] border border-slate-800 bg-slate-950/70 p-5 transition hover:border-blue-500/60"
+            className="group rounded-[1.5rem] border border-white/10 bg-[#162d46] p-5 transition hover:border-[#d6bc87]/60"
           >
             <div className="flex items-center justify-between gap-4">
               <div>
