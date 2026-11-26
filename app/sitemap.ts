@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://unitytaxplanning.com";
+  const baseUrl = "https://www.unitytaxplanning.com";
   const lastModified = new Date();
 
   return [
+    { url: `${baseUrl}/example-plans`, changeFrequency: "monthly", priority: 0.8 },
     {
       url: baseUrl,
       lastModified,
