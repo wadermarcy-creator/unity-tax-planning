@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function DisclosureFooter() {
   const currentYear = new Date().getFullYear();
@@ -9,19 +10,7 @@ export default function DisclosureFooter() {
         <div className="mb-10 grid gap-8 border-b border-slate-800 pb-10 lg:grid-cols-[1fr_auto] lg:items-start">
           <div>
             <Link href="/" className="inline-flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#d6bc87] shadow-lg shadow-black/10">
-                <span className="text-xl font-black text-[#10243b]">U</span>
-              </div>
-
-              <div className="leading-tight">
-                <p className="text-xl font-black tracking-tight text-white">
-                  UNITY
-                </p>
-
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#d6bc87]">
-                  Tax Planning
-                </p>
-              </div>
+              <Image src="/unity-tax-logo.PNG" alt="Unity Tax Planning" width={1664} height={928} className="h-16 w-auto object-contain sm:h-20" />
             </Link>
 
             <p className="mt-5 max-w-2xl text-sm font-medium leading-7 text-slate-400">
