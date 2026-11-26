@@ -107,17 +107,17 @@ export default function HowItWorksPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white text-slate-950">
+    <main className="min-h-screen bg-[#f8f5ef] text-[#10243b]">
       <Navbar />
 
-      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
+      <section className="bg-[#10243b] px-4 py-20 text-white sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-5xl">
-            <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-blue-300 sm:text-base">
+            <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-[#d6bc87] sm:text-base">
               How It Works
             </p>
 
-            <h1 className="mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
+            <h1 className="font-serif mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
               A clear process for finding tax planning opportunities.
             </h1>
 
@@ -133,7 +133,7 @@ export default function HowItWorksPage() {
       <section className="px-4 py-20 sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-4xl">
-            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-600 sm:text-base">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#80602b] sm:text-base">
               The Process
             </p>
 
@@ -152,14 +152,14 @@ export default function HowItWorksPage() {
             {steps.map((step) => (
               <article
                 key={step.number}
-                className="rounded-[2rem] border-2 border-slate-300 bg-white p-8 shadow-lg transition hover:-translate-y-1 hover:border-blue-500 hover:shadow-2xl sm:p-9"
+                className="rounded-[2rem] border-2 border-slate-300 bg-white p-8 shadow-lg transition hover:-translate-y-1 hover:border-[#b99a60] hover:shadow-2xl sm:p-9"
               >
                 <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-black text-white">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#80602b] text-sm font-black text-white">
                     {step.number}
                   </div>
 
-                  <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-600">
+                  <p className="text-sm font-black uppercase tracking-[0.22em] text-[#80602b]">
                     Process Step
                   </p>
                 </div>
@@ -177,11 +177,11 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
+      <section className="bg-[#10243b] px-4 py-20 text-white sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <div>
-              <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-300 sm:text-base">
+              <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#d6bc87] sm:text-base">
                 What You May Need
               </p>
 
@@ -195,7 +195,7 @@ export default function HowItWorksPage() {
                 planning questions being evaluated.
               </p>
 
-              <div className="mt-8 rounded-[2rem] border-2 border-blue-500 bg-slate-900 p-7 shadow-xl shadow-blue-950/30">
+              <div className="mt-8 rounded-[2rem] border-2 border-[#b99a60] bg-[#19334e] p-7 shadow-xl shadow-black/10">
                 <p className="text-xl font-black text-white">
                   Sensitive documents are requested separately.
                 </p>
@@ -213,9 +213,9 @@ export default function HowItWorksPage() {
               {documents.map((document) => (
                 <div
                   key={document}
-                  className="rounded-2xl border-2 border-slate-700 bg-slate-900 p-5 text-lg font-black text-slate-200 shadow-xl shadow-black/20"
+                  className="rounded-2xl border-2 border-slate-700 bg-[#19334e] p-5 text-lg font-black text-slate-200 shadow-xl shadow-black/20"
                 >
-                  <span className="mr-3 text-blue-300">✓</span>
+                  <span className="mr-3 text-[#d6bc87]">✓</span>
                   {document}
                 </div>
               ))}
@@ -227,7 +227,7 @@ export default function HowItWorksPage() {
       <section className="px-4 py-20 sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-4xl">
-            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-600 sm:text-base">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#80602b] sm:text-base">
               What You May Receive
             </p>
 
@@ -245,7 +245,7 @@ export default function HowItWorksPage() {
             {deliverables.map((deliverable) => (
               <article
                 key={deliverable.title}
-                className="rounded-[2rem] border-2 border-slate-300 bg-white p-8 shadow-lg transition hover:border-blue-500 hover:shadow-xl sm:p-9"
+                className="rounded-[2rem] border-2 border-slate-300 bg-white p-8 shadow-lg transition hover:border-[#b99a60] hover:shadow-xl sm:p-9"
               >
                 <h3 className="mb-5 text-2xl font-black tracking-tight sm:text-3xl">
                   {deliverable.title}
@@ -263,7 +263,7 @@ export default function HowItWorksPage() {
       <section className="bg-slate-100 px-4 py-20 sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-4xl">
-            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-600 sm:text-base">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#80602b] sm:text-base">
               Professional Coordination
             </p>
 
@@ -280,7 +280,7 @@ export default function HowItWorksPage() {
 
           <div className="grid gap-6 lg:grid-cols-3">
             <article className="rounded-[2rem] border-2 border-slate-300 bg-white p-8 shadow-lg sm:p-9">
-              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-blue-600">
+              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-[#80602b]">
                 Your CPA
               </p>
 
@@ -294,8 +294,8 @@ export default function HowItWorksPage() {
               </p>
             </article>
 
-            <article className="rounded-[2rem] border-2 border-blue-500 bg-slate-950 p-8 text-white shadow-xl shadow-blue-950/20 sm:p-9">
-              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-blue-300">
+            <article className="rounded-[2rem] border-2 border-[#b99a60] bg-[#10243b] p-8 text-white shadow-xl shadow-black/10 sm:p-9">
+              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-[#d6bc87]">
                 Unity Tax Planning
               </p>
 
@@ -310,7 +310,7 @@ export default function HowItWorksPage() {
             </article>
 
             <article className="rounded-[2rem] border-2 border-slate-300 bg-white p-8 shadow-lg sm:p-9">
-              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-blue-600">
+              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-[#80602b]">
                 Your Attorney
               </p>
 
@@ -327,10 +327,10 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
+      <section className="bg-[#10243b] px-4 py-20 text-white sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-4xl">
-            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-300 sm:text-base">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#d6bc87] sm:text-base">
               What This Is Not
             </p>
 
@@ -340,7 +340,7 @@ export default function HowItWorksPage() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-3">
-            <article className="rounded-[2rem] border-2 border-slate-700 bg-slate-900 p-8 shadow-xl sm:p-9">
+            <article className="rounded-[2rem] border-2 border-slate-700 bg-[#19334e] p-8 shadow-xl sm:p-9">
               <h3 className="mb-5 text-2xl font-black">Not Tax Preparation</h3>
 
               <p className="text-lg font-medium leading-8 text-slate-300">
@@ -350,7 +350,7 @@ export default function HowItWorksPage() {
               </p>
             </article>
 
-            <article className="rounded-[2rem] border-2 border-blue-500 bg-slate-900 p-8 shadow-xl shadow-blue-950/30 sm:p-9">
+            <article className="rounded-[2rem] border-2 border-[#b99a60] bg-[#19334e] p-8 shadow-xl shadow-black/10 sm:p-9">
               <h3 className="mb-5 text-2xl font-black">Not Legal Advice</h3>
 
               <p className="text-lg font-medium leading-8 text-slate-300">
@@ -360,7 +360,7 @@ export default function HowItWorksPage() {
               </p>
             </article>
 
-            <article className="rounded-[2rem] border-2 border-slate-700 bg-slate-900 p-8 shadow-xl sm:p-9">
+            <article className="rounded-[2rem] border-2 border-slate-700 bg-[#19334e] p-8 shadow-xl sm:p-9">
               <h3 className="mb-5 text-2xl font-black">Not a Guarantee</h3>
 
               <p className="text-lg font-medium leading-8 text-slate-300">
@@ -374,7 +374,7 @@ export default function HowItWorksPage() {
           <div className="mt-10">
             <Link
               href="/faq"
-              className="inline-block w-full rounded-2xl border-2 border-slate-700 px-8 py-5 text-center text-lg font-black text-white hover:border-blue-400 hover:bg-slate-900 sm:w-auto"
+              className="inline-block w-full rounded-2xl border-2 border-slate-700 px-8 py-5 text-center text-lg font-black text-white hover:border-[#d6bc87] hover:bg-[#19334e] sm:w-auto"
             >
               Read Frequently Asked Questions
             </Link>
@@ -382,13 +382,13 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      <section className="bg-blue-600 px-4 py-20 text-white sm:px-6 md:py-28">
+      <section className="bg-[#80602b] px-4 py-20 text-white sm:px-6 md:py-28">
         <div className="mx-auto max-w-5xl text-center">
           <h2 className="mb-8 text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
             Ready to begin the process?
           </h2>
 
-          <p className="mx-auto mb-10 max-w-3xl text-xl font-medium leading-9 text-blue-100 sm:text-2xl">
+          <p className="mx-auto mb-10 max-w-3xl text-xl font-medium leading-9 text-[#f8f5ef] sm:text-2xl">
             Start with a short intake. If there is a fit, the next step is a
             conversation about scope, documents, timing, and pricing.
           </p>
@@ -396,14 +396,14 @@ export default function HowItWorksPage() {
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link
               href="/tax-opportunity-scan"
-              className="inline-block w-full rounded-2xl bg-white px-8 py-5 text-lg font-black text-blue-600 shadow-xl hover:bg-blue-50 sm:w-auto"
+              className="inline-block w-full rounded-2xl bg-white px-8 py-5 text-lg font-black text-[#80602b] shadow-xl hover:bg-[#f8f5ef] sm:w-auto"
             >
               Start My Tax Blind Spot Review
             </Link>
 
             <Link
               href="/pricing"
-              className="inline-block w-full rounded-2xl border-2 border-blue-300 px-8 py-5 text-lg font-black text-white hover:bg-blue-500 sm:w-auto"
+              className="inline-block w-full rounded-2xl border-2 border-[#d6bc87] px-8 py-5 text-lg font-black text-white hover:bg-[#98743b] sm:w-auto"
             >
               View Pricing
             </Link>
