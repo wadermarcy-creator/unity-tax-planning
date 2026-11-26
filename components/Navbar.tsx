@@ -7,6 +7,7 @@ import Image from "next/image";
 const navItems = [
   { label: "How It Works", href: "/how-it-works" },
   { label: "Samples", href: "/example-plans" },
+  { label: "Insights", href: "/insights" },
   { label: "Pricing", href: "/pricing" },
   { label: "FAQ", href: "/faq" },
 ];
@@ -21,7 +22,7 @@ export default function Navbar() {
               <Image src="/unity-tax-logo.PNG" alt="Unity Tax Planning" width={1664} height={928} className="h-16 w-auto object-contain sm:h-20" />
             </Link>
 
-        <nav className="hidden items-center gap-8 text-sm font-semibold text-slate-300 md:flex">
+        <nav className="hidden items-center gap-4 lg:gap-8 text-sm font-semibold text-slate-300 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.href}
