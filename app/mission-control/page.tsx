@@ -135,11 +135,11 @@ function calculateLeadScore(lead: LeadRecord) {
   return Math.min(score, 100);
 }
 
+// Illustrative first-year contract value, not booked or collected revenue.
 function getProjectedRevenue(score: number, income: number) {
-  if (score >= 90) return income >= 500000 ? 9500 : 7500;
-  if (score >= 80) return 6500;
-  if (score >= 70) return 4500;
-  return 2500;
+  if (score >= 90 && income >= 500000) return 999 * 12; // Custom setup fee excluded
+  if (score >= 80) return 1500 + 499 * 12;
+  return 500 + 199 * 12;
 }
 
 function getStoredStage(lead: LeadRecord) {
@@ -225,7 +225,7 @@ function createBriefText(opportunity: BriefOpportunity) {
     `Occupation: ${opportunity.occupation}`,
     `Stage: ${opportunity.stage}`,
     `Priority Score: ${opportunity.score}/100`,
-    `Projected Annual Revenue: ${formatCurrency(opportunity.projectedRevenue)}`,
+    `Estimated First-Year Contract Value: ${formatCurrency(opportunity.projectedRevenue)}`,
     `Recommended Action: ${opportunity.recommendation}`,
   ].join("\n");
 }
@@ -242,7 +242,7 @@ function exportCsv(filename: string, rows: BriefOpportunity[]) {
     "Occupation",
     "Stage",
     "Priority Score",
-    "Projected Annual Revenue",
+    "Estimated First-Year Contract Value",
     "Submitted",
     "Recommended Action",
   ];
@@ -403,7 +403,7 @@ export default function MissionControlMorningBriefPage() {
     [activeOpportunities],
   );
 
-  const expectedRevenue = Math.round(pipelineRevenue * 0.58);
+  const expectedRevenue = Math.round(activeOpportunities.reduce((sum, opportunity) => sum + opportunity.projectedRevenue * (({ "Won": 1, "Sent to Hazel": 1, "Proposal Sent": 0.65, "Meeting Scheduled": 0.45, "Qualified": 0.3 } as Record<string, number>)[opportunity.stage] ?? 0.15), 0));
   const archivedCount = opportunities.length - activeOpportunities.length;
   const priorityScore = topFocus?.score || 0;
   const nextAction = topFocus
@@ -440,7 +440,7 @@ export default function MissionControlMorningBriefPage() {
       `Active Opportunities: ${activeOpportunities.length}`,
       `Priority Leads: ${priorityOpportunities.length}`,
       `Priority Score: ${priorityScore}/100`,
-      `Projected Annual Revenue: ${formatCurrency(pipelineRevenue)}`,
+      `Estimated First-Year Contract Value: ${formatCurrency(pipelineRevenue)}`,
       `Expected Close Estimate: ${formatCurrency(expectedRevenue)}`,
       `Recommended Action: ${nextAction}`,
     ].join("\n");
@@ -503,7 +503,7 @@ export default function MissionControlMorningBriefPage() {
           />
 
           <UnityMetricCard
-            label="Projected Annual Revenue"
+            label="Estimated First-Year Contract Value"
             value={formatCurrency(pipelineRevenue)}
             detail="Revenue currently in motion"
             tone="emerald"
