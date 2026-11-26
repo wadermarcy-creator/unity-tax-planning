@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const navItems = [
   { label: "How It Works", href: "/how-it-works" },
@@ -17,19 +18,8 @@ export default function Navbar() {
     <header className="border-b border-white/10 bg-[#10243b]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#d6bc87] text-lg font-bold text-[#10243b] shadow-lg shadow-black/10">
-            U
-          </div>
-
-          <div>
-            <div className="text-xl font-extrabold tracking-tight text-white">
-              UNITY
-            </div>
-            <div className="text-xs font-bold tracking-[0.28em] text-[#d6bc87]">
-              TAX PLANNING
-            </div>
-          </div>
-        </Link>
+              <Image src="/unity-tax-logo.PNG" alt="Unity Tax Planning" width={1664} height={928} className="h-16 w-auto object-contain sm:h-20" />
+            </Link>
 
         <nav className="hidden items-center gap-8 text-sm font-semibold text-slate-300 md:flex">
           {navItems.map((item) => (
