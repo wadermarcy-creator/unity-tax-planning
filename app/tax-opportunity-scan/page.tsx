@@ -522,23 +522,23 @@ export default function TaxOpportunityScanPage() {
   }
 
   const inputClasses =
-    "w-full rounded-2xl border-2 border-slate-300 bg-white px-4 py-4 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
+    "w-full rounded-2xl border-2 border-slate-300 bg-white px-4 py-4 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#b99a60] focus:ring-4 focus:ring-[#eadfc9]";
 
   const checkboxClasses =
-    "flex cursor-pointer items-start gap-4 rounded-2xl border-2 border-slate-200 bg-white p-5 transition hover:border-blue-500 hover:bg-blue-50";
+    "flex cursor-pointer items-start gap-4 rounded-2xl border-2 border-slate-200 bg-white p-5 transition hover:border-[#b99a60] hover:bg-[#f8f5ef]";
 
   return (
-    <main className="min-h-screen bg-white text-slate-950">
+    <main className="min-h-screen bg-[#f8f5ef] text-[#10243b]">
       <Navbar />
 
-      <section className="bg-slate-950 px-4 pb-20 pt-16 text-white sm:px-6 md:pb-28 md:pt-24">
+      <section className="bg-[#10243b] px-4 pb-20 pt-16 text-white sm:px-6 md:pb-28 md:pt-24">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
           <div className="lg:sticky lg:top-32">
-            <p className="mb-5 text-sm font-black uppercase tracking-[0.26em] text-blue-300 sm:text-base">
+            <p className="mb-5 text-sm font-black uppercase tracking-[0.26em] text-[#d6bc87] sm:text-base">
               Unity Tax Opportunity Assessment™
             </p>
 
-            <h1 className="mb-7 text-5xl font-black tracking-tight sm:text-6xl lg:text-7xl">
+            <h1 className="font-serif mb-7 text-5xl font-black tracking-tight sm:text-6xl lg:text-7xl">
               Let&apos;s find out what deserves a closer look.
             </h1>
 
@@ -548,14 +548,14 @@ export default function TaxOpportunityScanPage() {
               Tax Opportunity Assessment™.
             </p>
 
-            <div className="rounded-[2rem] border-2 border-blue-500 bg-slate-900 p-7 shadow-2xl shadow-blue-950/30">
+            <div className="rounded-[2rem] border-2 border-[#b99a60] bg-[#19334e] p-7 shadow-2xl shadow-black/10">
               <p className="mb-5 text-xl font-black text-white">
                 What happens next
               </p>
 
               <div className="space-y-5">
                 <div className="flex gap-4">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-black">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#98743b] text-sm font-black">
                     1
                   </div>
 
@@ -571,7 +571,7 @@ export default function TaxOpportunityScanPage() {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-black">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#98743b] text-sm font-black">
                     2
                   </div>
 
@@ -587,7 +587,7 @@ export default function TaxOpportunityScanPage() {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-black">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#98743b] text-sm font-black">
                     3
                   </div>
 
@@ -601,7 +601,7 @@ export default function TaxOpportunityScanPage() {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-black">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#98743b] text-sm font-black">
                     4
                   </div>
 
@@ -629,7 +629,7 @@ export default function TaxOpportunityScanPage() {
               className="rounded-[2rem] bg-white p-6 text-slate-950 shadow-2xl shadow-black/30 sm:p-8 lg:p-10"
             >
               <div className="mb-10">
-                <p className="mb-3 text-sm font-black uppercase tracking-[0.22em] text-blue-600">
+                <p className="mb-3 text-sm font-black uppercase tracking-[0.22em] text-[#80602b]">
                   Step One
                 </p>
 
@@ -799,8 +799,8 @@ export default function TaxOpportunityScanPage() {
               )}
 
               {qualificationComplete && (
-                <div className="mt-8 rounded-[2rem] border-2 border-blue-500 bg-slate-950 p-7 text-white shadow-xl shadow-blue-950/20">
-                  <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
+                <div className="mt-8 rounded-[2rem] border-2 border-[#b99a60] bg-[#10243b] p-7 text-white shadow-xl shadow-black/10">
+                  <p className="text-sm font-black uppercase tracking-[0.22em] text-[#d6bc87]">
                     Preliminary Result
                   </p>
 
@@ -817,9 +817,9 @@ export default function TaxOpportunityScanPage() {
                     {getSuggestedOpportunities().map((opportunity) => (
                       <div
                         key={opportunity}
-                        className="rounded-2xl border border-slate-700 bg-slate-900 p-4 text-sm font-black text-white"
+                        className="rounded-2xl border border-slate-700 bg-[#19334e] p-4 text-sm font-black text-white"
                       >
-                        <span className="mr-2 text-blue-300">✓</span>
+                        <span className="mr-2 text-[#d6bc87]">✓</span>
                         {opportunity}
                       </div>
                     ))}
@@ -832,7 +832,7 @@ export default function TaxOpportunityScanPage() {
                 onClick={handleContinueToAssessment}
                 className={`mt-8 w-full rounded-2xl px-6 py-5 text-lg font-black text-white shadow-xl transition ${
                   qualificationComplete
-                    ? "bg-blue-600 hover:bg-blue-500"
+                    ? "bg-[#80602b] hover:bg-[#98743b]"
                     : "bg-slate-700 hover:bg-slate-600"
                 }`}
               >
@@ -863,12 +863,12 @@ export default function TaxOpportunityScanPage() {
                     setShowAssessment(false);
                     scrollToElement("tax-scan-qualification");
                   }}
-                  className="mb-6 rounded-full border-2 border-slate-300 px-5 py-3 text-sm font-black text-slate-700 hover:border-blue-500 hover:text-blue-600"
+                  className="mb-6 rounded-full border-2 border-slate-300 px-5 py-3 text-sm font-black text-slate-700 hover:border-[#b99a60] hover:text-[#80602b]"
                 >
                   ← Back to qualification
                 </button>
 
-                <p className="mb-3 text-sm font-black uppercase tracking-[0.22em] text-blue-600">
+                <p className="mb-3 text-sm font-black uppercase tracking-[0.22em] text-[#80602b]">
                   Full Assessment
                 </p>
 
@@ -899,12 +899,12 @@ export default function TaxOpportunityScanPage() {
 
               <section className="mb-10 border-b-2 border-slate-200 pb-10">
                 <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#10243b] text-sm font-black text-white">
                     1
                   </div>
 
                   <div>
-                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-[#80602b]">
                       About You
                     </p>
                     <h3 className="text-2xl font-black">
@@ -993,12 +993,12 @@ export default function TaxOpportunityScanPage() {
 
               <section className="mb-10 border-b-2 border-slate-200 pb-10">
                 <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#10243b] text-sm font-black text-white">
                     2
                   </div>
 
                   <div>
-                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-[#80602b]">
                       Financial Picture
                     </p>
                     <h3 className="text-2xl font-black">
@@ -1120,12 +1120,12 @@ export default function TaxOpportunityScanPage() {
 
               <section className="mb-10 border-b-2 border-slate-200 pb-10">
                 <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#10243b] text-sm font-black text-white">
                     3
                   </div>
 
                   <div>
-                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-[#80602b]">
                       Planning Topics
                     </p>
                     <h3 className="text-2xl font-black">
@@ -1301,12 +1301,12 @@ export default function TaxOpportunityScanPage() {
 
               <section className="mb-10 border-b-2 border-slate-200 pb-10">
                 <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#10243b] text-sm font-black text-white">
                     4
                   </div>
 
                   <div>
-                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-[#80602b]">
                       Current Team
                     </p>
                     <h3 className="text-2xl font-black">
@@ -1366,12 +1366,12 @@ export default function TaxOpportunityScanPage() {
 
               <section className="mb-10 border-b-2 border-slate-200 pb-10">
                 <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#10243b] text-sm font-black text-white">
                     5
                   </div>
 
                   <div>
-                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-[#80602b]">
                       Timing and Scope
                     </p>
                     <h3 className="text-2xl font-black">
@@ -1465,12 +1465,12 @@ export default function TaxOpportunityScanPage() {
 
               <section className="mb-10">
                 <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#10243b] text-sm font-black text-white">
                     6
                   </div>
 
                   <div>
-                    <p className="text-sm font-black uppercase tracking-[0.18em] text-blue-600">
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-[#80602b]">
                       Main Concern
                     </p>
                     <h3 className="text-2xl font-black">
@@ -1522,7 +1522,7 @@ export default function TaxOpportunityScanPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-6 w-full rounded-2xl bg-blue-600 px-6 py-5 text-lg font-black text-white shadow-xl transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-400"
+                className="mt-6 w-full rounded-2xl bg-[#80602b] px-6 py-5 text-lg font-black text-white shadow-xl transition hover:bg-[#98743b] disabled:cursor-not-allowed disabled:bg-slate-400"
               >
                 {isSubmitting
                   ? "Submitting Your Assessment..."
