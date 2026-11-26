@@ -355,7 +355,7 @@ function leadToCsvRow(lead: CopilotLead) {
 
 function StagePill({ stage, count }: { stage: string; count: number }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+    <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
       <div className="flex items-center justify-between gap-4">
         <UnityBadge tone={getStageTone(stage)}>{stage}</UnityBadge>
         <p className="text-2xl font-black text-white">{count}</p>
@@ -367,7 +367,7 @@ function StagePill({ stage, count }: { stage: string; count: number }) {
 function CompactAction({ href, disabled, children }: { href?: string; disabled?: boolean; children: ReactNode }) {
   if (disabled || !href) {
     return (
-      <span className="inline-flex cursor-not-allowed items-center justify-center rounded-2xl border border-slate-800 px-3 py-2 text-xs font-black text-slate-600">
+      <span className="inline-flex cursor-not-allowed items-center justify-center rounded-2xl border border-white/10 px-3 py-2 text-xs font-black text-slate-600">
         {children}
       </span>
     );
@@ -376,7 +376,7 @@ function CompactAction({ href, disabled, children }: { href?: string; disabled?:
   return (
     <a
       href={href}
-      className="inline-flex items-center justify-center rounded-2xl border border-slate-800 px-3 py-2 text-xs font-black text-slate-300 transition hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-white"
+      className="inline-flex items-center justify-center rounded-2xl border border-white/10 px-3 py-2 text-xs font-black text-slate-300 transition hover:border-[#d6bc87]/40 hover:bg-blue-500/10 hover:text-white"
     >
       {children}
     </a>
@@ -418,7 +418,7 @@ function LeadMiniCard({ lead, onCopyBrief }: { lead: CopilotLead; onCopyBrief: (
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 xl:min-w-[330px]">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+          <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
             <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Income</p>
             <p className="mt-2 text-xl font-black text-white">{formatCurrency(lead.income, "Unknown")}</p>
           </div>
@@ -452,14 +452,14 @@ function LeadMiniCard({ lead, onCopyBrief }: { lead: CopilotLead; onCopyBrief: (
         {lead.opportunities.slice(0, 4).map((opportunity) => (
           <span
             key={opportunity}
-            className="rounded-full border border-slate-800 bg-slate-900 px-3 py-1 text-xs font-bold text-slate-300"
+            className="rounded-full border border-white/10 bg-[#1b334d] px-3 py-1 text-xs font-bold text-slate-300"
           >
             {opportunity}
           </span>
         ))}
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2 border-t border-slate-800 pt-4">
+      <div className="mt-5 flex flex-wrap gap-2 border-t border-white/10 pt-4">
         <CompactAction href={hasEmail ? `mailto:${lead.email}` : undefined} disabled={!hasEmail}>
           Email
         </CompactAction>
@@ -488,7 +488,7 @@ function ActionCard({
   return (
     <UnityCard className="p-5">
       <div className="flex gap-4">
-        <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-3 text-blue-300">{icon}</div>
+        <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-3 text-[#d6bc87]">{icon}</div>
         <div>
           <p className="font-black text-white">{title}</p>
           <p className="mt-2 text-sm leading-6 text-slate-400">{description}</p>
@@ -682,7 +682,7 @@ export default function ClientCopilotPage() {
 
               <div className="mt-6">
                 {isLoading ? (
-                  <p className="rounded-2xl border border-slate-800 bg-slate-900 p-5 text-sm text-slate-400">
+                  <p className="rounded-2xl border border-white/10 bg-[#1b334d] p-5 text-sm text-slate-400">
                     Loading opportunities...
                   </p>
                 ) : topLead ? (
@@ -705,7 +705,7 @@ export default function ClientCopilotPage() {
 
               <div className="mt-6 space-y-5">
                 {isLoading ? (
-                  <p className="rounded-2xl border border-slate-800 bg-slate-900 p-5 text-sm text-slate-400">
+                  <p className="rounded-2xl border border-white/10 bg-[#1b334d] p-5 text-sm text-slate-400">
                     Loading priority queue...
                   </p>
                 ) : leads.length === 0 ? (
@@ -811,7 +811,7 @@ export default function ClientCopilotPage() {
                   { label: "Capital gains / equity compensation", icon: <TrendingUp className="h-5 w-5 text-emerald-300" /> },
                   { label: "Charitable and estate planning signals", icon: <Zap className="h-5 w-5 text-emerald-300" /> },
                 ].map((signal) => (
-                  <div key={signal.label} className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                  <div key={signal.label} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                     {signal.icon}
                     <p className="text-sm font-bold text-slate-300">{signal.label}</p>
                   </div>
