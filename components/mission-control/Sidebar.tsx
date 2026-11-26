@@ -66,6 +66,7 @@ const navSections = [
   {
     label: "Marketing",
     items: [
+      { label: "Insights Publisher", href: "/mission-control/insights", icon: FileText },
       {
         label: "Campaign Watch",
         href: "/mission-control/campaign-watch",
