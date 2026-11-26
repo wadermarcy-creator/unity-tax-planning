@@ -416,7 +416,7 @@ export default function ReportsPage() {
         <div className="mb-6 overflow-hidden rounded-[2rem] border border-blue-500/20 bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950/40 p-5 shadow-2xl shadow-slate-950/40 sm:p-7">
           <div className="grid gap-5 lg:grid-cols-[1.35fr_0.65fr] lg:items-center">
             <div>
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-2 text-xs font-black uppercase tracking-[0.22em] text-blue-200">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-3 py-2 text-xs font-black uppercase tracking-[0.22em] text-[#e5cf9e]">
                 <Sparkles className="h-4 w-4" />
                 AI Executive Recommendation
               </div>
@@ -433,19 +433,19 @@ export default function ReportsPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
-              <div className="rounded-3xl border border-slate-700 bg-slate-950/70 p-4">
+              <div className="rounded-3xl border border-slate-700 bg-[#162d46] p-4">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Records</p>
                 <p className="mt-2 text-2xl font-black text-white">{totalExportableRecords}</p>
               </div>
-              <div className="rounded-3xl border border-slate-700 bg-slate-950/70 p-4">
+              <div className="rounded-3xl border border-slate-700 bg-[#162d46] p-4">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Campaigns Live</p>
                 <p className="mt-2 text-2xl font-black text-white">{publishedCampaigns}/{totalCampaigns}</p>
               </div>
-              <div className="rounded-3xl border border-slate-700 bg-slate-950/70 p-4">
+              <div className="rounded-3xl border border-slate-700 bg-[#162d46] p-4">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Pages Live</p>
                 <p className="mt-2 text-2xl font-black text-white">{activeLandingPages}/{totalLandingPages}</p>
               </div>
-              <div className="rounded-3xl border border-slate-700 bg-slate-950/70 p-4">
+              <div className="rounded-3xl border border-slate-700 bg-[#162d46] p-4">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Priority</p>
                 <p className="mt-2 text-2xl font-black text-emerald-300">High</p>
               </div>
@@ -481,9 +481,9 @@ export default function ReportsPage() {
         </div>
 
         <div className="mb-6 grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-          <section className="rounded-[2rem] border border-slate-800 bg-slate-950 p-5 shadow-2xl shadow-slate-950/30 sm:p-6">
+          <section className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-2xl shadow-slate-950/30 sm:p-6">
             <div className="mb-5">
-              <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-300">
+              <p className="text-xs font-black uppercase tracking-[0.24em] text-[#d6bc87]">
                 Visual Report Health
               </p>
               <h3 className="mt-2 text-2xl font-black text-white">
@@ -549,7 +549,7 @@ export default function ReportsPage() {
             <button
               type="button"
               onClick={exportAllDatasets}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-slate-500 hover:bg-slate-900"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#162d46] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-slate-500 hover:bg-[#1b334d]"
             >
               <Database className="h-4 w-4" />
               Export All Data
@@ -558,7 +558,7 @@ export default function ReportsPage() {
             <button
               type="button"
               onClick={copyExecutiveSummary}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-slate-500 hover:bg-slate-900"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#162d46] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-slate-500 hover:bg-[#1b334d]"
             >
               <CheckCircle2 className="h-4 w-4" />
               Copy Summary
@@ -569,7 +569,7 @@ export default function ReportsPage() {
             type="button"
             onClick={loadReports}
             disabled={isRefreshing}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-blue-500/30 bg-blue-500/10 px-5 py-3 text-sm font-black text-blue-200 transition hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-blue-500/30 bg-blue-500/10 px-5 py-3 text-sm font-black text-[#e5cf9e] transition hover:bg-blue-500/20 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
             Refresh Reports
@@ -594,14 +594,14 @@ export default function ReportsPage() {
                   className={`w-full rounded-[1.5rem] border p-4 text-left transition ${
                     isActive
                       ? "border-blue-500/50 bg-blue-500/10 shadow-lg shadow-blue-950/20"
-                      : "border-slate-800 bg-slate-950 hover:border-slate-600 hover:bg-slate-900"
+                      : "border-white/10 bg-[#162d46] hover:border-slate-600 hover:bg-[#1b334d]"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
                       <div
                         className={`rounded-2xl p-3 ${
-                          isActive ? "bg-blue-600 text-white" : "bg-slate-900 text-slate-400"
+                          isActive ? "bg-blue-600 text-white" : "bg-[#1b334d] text-slate-400"
                         }`}
                       >
                         <Icon className="h-5 w-5" />
@@ -615,7 +615,7 @@ export default function ReportsPage() {
                       </div>
                     </div>
 
-                    <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-black text-slate-300">
+                    <span className="rounded-full bg-[#1b334d] px-3 py-1 text-xs font-black text-slate-300">
                       {dataset.isLoading ? "…" : dataset.rows.length}
                     </span>
                   </div>
@@ -631,11 +631,11 @@ export default function ReportsPage() {
             })}
           </div>
 
-          <section className="overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-950 shadow-2xl shadow-slate-950/30">
-            <div className="border-b border-slate-800 p-5 sm:p-6">
+          <section className="overflow-hidden rounded-[2rem] border border-white/10 bg-[#162d46] shadow-2xl shadow-slate-950/30">
+            <div className="border-b border-white/10 p-5 sm:p-6">
               <div className="grid gap-4 lg:grid-cols-[1fr_18rem] lg:items-start">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-300">
+                  <p className="text-xs font-black uppercase tracking-[0.24em] text-[#d6bc87]">
                     {activeConfig.label}
                   </p>
                   <h3 className="mt-2 text-2xl font-black text-white">Exportable Data</h3>
@@ -652,7 +652,7 @@ export default function ReportsPage() {
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.target.value)}
                     placeholder="Search report..."
-                    className="w-full rounded-2xl border border-slate-800 bg-slate-900 py-3 pl-11 pr-4 text-sm font-bold text-white outline-none transition placeholder:text-slate-500 focus:border-blue-500"
+                    className="w-full rounded-2xl border border-white/10 bg-[#1b334d] py-3 pl-11 pr-4 text-sm font-bold text-white outline-none transition placeholder:text-slate-500 focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -660,8 +660,8 @@ export default function ReportsPage() {
 
             <div className="p-4 sm:p-6">
               {activeDataset.isLoading ? (
-                <div className="rounded-[1.5rem] border border-slate-800 bg-slate-900 p-8 text-center">
-                  <RefreshCw className="mx-auto h-8 w-8 animate-spin text-blue-300" />
+                <div className="rounded-[1.5rem] border border-white/10 bg-[#1b334d] p-8 text-center">
+                  <RefreshCw className="mx-auto h-8 w-8 animate-spin text-[#d6bc87]" />
                   <p className="mt-4 text-sm font-black text-white">Loading report data...</p>
                   <p className="mt-2 text-sm font-semibold text-slate-400">
                     Mission Control is checking Supabase for exportable records.
@@ -683,7 +683,7 @@ export default function ReportsPage() {
                   </div>
                 </div>
               ) : filteredRows.length === 0 ? (
-                <div className="rounded-[1.5rem] border border-slate-800 bg-slate-900 p-8 text-center">
+                <div className="rounded-[1.5rem] border border-white/10 bg-[#1b334d] p-8 text-center">
                   <Database className="mx-auto h-8 w-8 text-slate-500" />
                   <p className="mt-4 text-sm font-black text-white">No records found</p>
                   <p className="mt-2 text-sm font-semibold text-slate-400">
@@ -695,7 +695,7 @@ export default function ReportsPage() {
                   {filteredRows.slice(0, 25).map((row, index) => (
                     <div
                       key={`${activeConfig.key}-${index}`}
-                      className="rounded-[1.35rem] border border-slate-800 bg-slate-900/70 p-4 transition hover:border-slate-600"
+                      className="rounded-[1.35rem] border border-white/10 bg-[#1b334d]/70 p-4 transition hover:border-slate-600"
                     >
                       <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-start">
                         <div>
@@ -709,11 +709,11 @@ export default function ReportsPage() {
 
                         <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                           {getStringValue(row, "status") && (
-                            <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1 text-xs font-black capitalize text-slate-300">
+                            <span className="rounded-full border border-slate-700 bg-[#162d46] px-3 py-1 text-xs font-black capitalize text-slate-300">
                               {getStringValue(row, "status")}
                             </span>
                           )}
-                          <span className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1 text-xs font-black text-slate-300">
+                          <span className="rounded-full border border-slate-700 bg-[#162d46] px-3 py-1 text-xs font-black text-slate-300">
                             {getRowDate(row)}
                           </span>
                         </div>
@@ -728,7 +728,7 @@ export default function ReportsPage() {
                   ))}
 
                   {filteredRows.length > 25 && (
-                    <p className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-center text-xs font-bold text-slate-400">
+                    <p className="rounded-2xl border border-white/10 bg-[#1b334d] p-4 text-center text-xs font-bold text-slate-400">
                       Showing first 25 rows in Mission Control. CSV export includes all {filteredRows.length} filtered rows.
                     </p>
                   )}
@@ -740,7 +740,7 @@ export default function ReportsPage() {
       </div>
 
       {toast && (
-        <div className="fixed bottom-5 left-4 right-4 z-50 mx-auto max-w-md rounded-3xl border border-blue-500/30 bg-slate-950 p-4 shadow-2xl shadow-slate-950/60 sm:left-auto sm:right-5">
+        <div className="fixed bottom-5 left-4 right-4 z-50 mx-auto max-w-md rounded-3xl border border-blue-500/30 bg-[#162d46] p-4 shadow-2xl shadow-slate-950/60 sm:left-auto sm:right-5">
           <div className="flex gap-3">
             <div className="rounded-2xl bg-blue-600 p-2 text-white">
               <CheckCircle2 className="h-5 w-5" />
@@ -774,7 +774,7 @@ function ReportProgressRing({
   const offset = circumference - (safePercent / 100) * circumference;
 
   return (
-    <div className="rounded-[1.5rem] border border-slate-800 bg-slate-900/70 p-5 text-center">
+    <div className="rounded-[1.5rem] border border-white/10 bg-[#1b334d]/70 p-5 text-center">
       <div className="relative mx-auto h-28 w-28">
         <svg viewBox="0 0 120 120" className="h-28 w-28 -rotate-90">
           <circle
@@ -812,7 +812,7 @@ function ReportProgressRing({
         </div>
       </div>
 
-      <p className="mt-4 text-xs font-black uppercase tracking-[0.2em] text-blue-300">
+      <p className="mt-4 text-xs font-black uppercase tracking-[0.2em] text-[#d6bc87]">
         {label}
       </p>
       <p className="mt-2 text-xl font-black text-white">{value}</p>
@@ -840,9 +840,9 @@ function ReportDonutCard({
   let runningOffset = 0;
 
   return (
-    <section className="rounded-[2rem] border border-slate-800 bg-slate-950 p-5 shadow-2xl shadow-slate-950/30 sm:p-6">
+    <section className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-2xl shadow-slate-950/30 sm:p-6">
       <div>
-        <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-300">
+        <p className="text-xs font-black uppercase tracking-[0.24em] text-[#d6bc87]">
           Donut Chart
         </p>
         <h3 className="mt-2 text-2xl font-black text-white">{title}</h3>
@@ -897,14 +897,14 @@ function ReportDonutCard({
 
         <div className="space-y-3">
           {total === 0 ? (
-            <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold leading-6 text-slate-400">
+            <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4 text-sm font-bold leading-6 text-slate-400">
               No chart data yet. Generate campaigns, publish pages, or submit test assessments to activate this visual.
             </div>
           ) : (
             segments
               .filter((segment) => segment.value > 0)
               .map((segment) => (
-                <div key={segment.label} className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                <div key={segment.label} className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">
                       <span
@@ -947,13 +947,13 @@ function MetricCard({
   icon: typeof BarChart3;
 }) {
   return (
-    <div className="rounded-[1.5rem] border border-slate-800 bg-slate-950 p-5 shadow-lg shadow-slate-950/20">
+    <div className="rounded-[1.5rem] border border-white/10 bg-[#162d46] p-5 shadow-lg shadow-slate-950/20">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">{label}</p>
           <p className="mt-3 text-2xl font-black text-white">{value}</p>
         </div>
-        <div className="rounded-2xl bg-slate-900 p-3 text-blue-300">
+        <div className="rounded-2xl bg-[#1b334d] p-3 text-[#d6bc87]">
           <Icon className="h-5 w-5" />
         </div>
       </div>
@@ -964,7 +964,7 @@ function MetricCard({
 
 function MiniField({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-950 p-3">
+    <div className="rounded-2xl border border-white/10 bg-[#162d46] p-3">
       <p className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-slate-600">{label}</p>
       <p className="mt-1 truncate text-xs font-bold text-slate-300">{value}</p>
     </div>
