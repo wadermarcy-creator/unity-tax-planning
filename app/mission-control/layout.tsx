@@ -39,7 +39,7 @@ export default function MissionControlLayout({
 
   if (isCheckingAuth) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#050816] text-white">
+      <main className="flex min-h-screen items-center justify-center bg-[#10243b] text-white">
         <p className="text-sm font-black uppercase tracking-[0.24em] text-slate-500">
           Checking Access...
         </p>
@@ -52,7 +52,7 @@ export default function MissionControlLayout({
   }
 
   return (
-    <main className="min-h-screen bg-[#050816] text-white">
+    <main className="min-h-screen bg-[#10243b] text-white">
       <div className="flex min-h-screen">
         <Sidebar />
 
