@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+export const metadata: Metadata = {"title":"Tax Advisory Memberships & Pricing","description":"Compare year-round tax planning and tax preparation memberships starting at $199 per month, plus upfront strategy fees.","alternates":{"canonical":"/pricing"},"openGraph":{"title":"Tax Advisory Memberships & Pricing","description":"Compare year-round tax planning and tax preparation memberships starting at $199 per month, plus upfront strategy fees.","url":"/pricing"}};
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import DisclosureFooter from "@/components/DisclosureFooter";
