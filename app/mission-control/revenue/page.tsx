@@ -351,7 +351,7 @@ function ProgressRing({
   const offset = circumference - (safePercent / 100) * circumference;
 
   return (
-    <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-5 shadow-lg shadow-black/20">
+    <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-5 shadow-lg shadow-black/20">
       <div className="flex items-center gap-5">
         <div className="relative h-28 w-28 shrink-0">
           <svg viewBox="0 0 120 120" className="h-28 w-28 -rotate-90">
@@ -391,14 +391,14 @@ function ProgressRing({
         </div>
 
         <div className="min-w-0">
-          <p className="text-xs font-black uppercase tracking-[0.22em] text-blue-300">
+          <p className="text-xs font-black uppercase tracking-[0.22em] text-[#d6bc87]">
             {label}
           </p>
           <p className="mt-2 text-2xl font-black text-white">{value}</p>
           <p className="mt-2 text-sm font-semibold leading-6 text-slate-400">
             {description}
           </p>
-          <p className="mt-3 rounded-2xl border border-slate-800 bg-slate-900 px-3 py-2 text-xs font-bold text-slate-400">
+          <p className="mt-3 rounded-2xl border border-white/10 bg-[#1b334d] px-3 py-2 text-xs font-bold text-slate-400">
             {footer}
           </p>
         </div>
@@ -481,7 +481,7 @@ function DonutChartCard({
             segments.map((segment) => (
               <div
                 key={segment.label}
-                className="rounded-2xl border border-slate-800 bg-slate-900 p-4"
+                className="rounded-2xl border border-white/10 bg-[#1b334d] p-4"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex min-w-0 items-center gap-3">
@@ -539,7 +539,7 @@ function RankedRevenueBars({ rows }: { rows: GroupedMetric[] }) {
             const width = maxValue > 0 ? getPercent(row.expectedRevenue, maxValue) : 0;
 
             return (
-              <div key={row.key} className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+              <div key={row.key} className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-black text-white">
@@ -597,8 +597,8 @@ function MetricTable({
         </UnityButton>
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-slate-800">
-        <div className="hidden grid-cols-[1.4fr_0.6fr_0.7fr_0.7fr_1fr_1fr] gap-4 bg-slate-900 px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-slate-500 md:grid">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
+        <div className="hidden grid-cols-[1.4fr_0.6fr_0.7fr_0.7fr_1fr_1fr] gap-4 bg-[#1b334d] px-5 py-4 text-xs font-black uppercase tracking-[0.14em] text-slate-500 md:grid">
           <span>Name</span>
           <span>Leads</span>
           <span>Qualified</span>
@@ -618,7 +618,7 @@ function MetricTable({
           <div>
             {rows.slice(0, 8).map((row) => (
               <div key={row.key}>
-                <div className="hidden grid-cols-[1.4fr_0.6fr_0.7fr_0.7fr_1fr_1fr] gap-4 border-t border-slate-800 px-5 py-4 text-sm md:grid">
+                <div className="hidden grid-cols-[1.4fr_0.6fr_0.7fr_0.7fr_1fr_1fr] gap-4 border-t border-white/10 px-5 py-4 text-sm md:grid">
                   <div className="min-w-0">
                     <p className="truncate font-black text-white">{row.key}</p>
                     <p className="mt-1 text-xs text-slate-500">
@@ -626,7 +626,7 @@ function MetricTable({
                     </p>
                   </div>
                   <p className="font-bold text-slate-300">{row.leads}</p>
-                  <p className="font-bold text-blue-300">{row.qualified}</p>
+                  <p className="font-bold text-[#d6bc87]">{row.qualified}</p>
                   <p className="font-bold text-emerald-300">{row.won}</p>
                   <p className="font-black text-white">
                     {formatCurrency(row.expectedRevenue)}
@@ -636,7 +636,7 @@ function MetricTable({
                   </p>
                 </div>
 
-                <div className="border-t border-slate-800 p-5 md:hidden">
+                <div className="border-t border-white/10 p-5 md:hidden">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <p className="truncate font-black text-white">{row.key}</p>
@@ -645,13 +645,13 @@ function MetricTable({
                       </p>
                     </div>
 
-                    <div className="rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-black text-blue-200">
+                    <div className="rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-black text-[#e5cf9e]">
                       {row.leads} leads
                     </div>
                   </div>
 
                   <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
-                    <div className="rounded-2xl bg-slate-900 p-4">
+                    <div className="rounded-2xl bg-[#1b334d] p-4">
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                         Expected
                       </p>
@@ -660,7 +660,7 @@ function MetricTable({
                       </p>
                     </div>
 
-                    <div className="rounded-2xl bg-slate-900 p-4">
+                    <div className="rounded-2xl bg-[#1b334d] p-4">
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                         Projected
                       </p>
@@ -669,16 +669,16 @@ function MetricTable({
                       </p>
                     </div>
 
-                    <div className="rounded-2xl bg-slate-900 p-4">
+                    <div className="rounded-2xl bg-[#1b334d] p-4">
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                         Qualified
                       </p>
-                      <p className="mt-2 font-black text-blue-300">
+                      <p className="mt-2 font-black text-[#d6bc87]">
                         {row.qualified}
                       </p>
                     </div>
 
-                    <div className="rounded-2xl bg-slate-900 p-4">
+                    <div className="rounded-2xl bg-[#1b334d] p-4">
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                         Won
                       </p>
@@ -1073,7 +1073,7 @@ export default function RevenueIntelligencePage() {
                 href="/mission-control/assessments"
                 className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-4 text-left transition hover:bg-blue-500/15"
               >
-                <p className="flex items-center gap-2 text-sm font-black text-blue-200">
+                <p className="flex items-center gap-2 text-sm font-black text-[#e5cf9e]">
                   Open Assessments
                   <ArrowRight className="h-4 w-4" />
                 </p>
@@ -1200,7 +1200,7 @@ export default function RevenueIntelligencePage() {
                     actionQueue.map((lead) => (
                       <div
                         key={lead.id}
-                        className="rounded-2xl border border-slate-800 bg-slate-900 p-4"
+                        className="rounded-2xl border border-white/10 bg-[#1b334d] p-4"
                       >
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0">
@@ -1230,8 +1230,8 @@ export default function RevenueIntelligencePage() {
                 />
 
                 <div className="mt-6 grid gap-4 md:grid-cols-3">
-                  <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-                    <MousePointerClick className="h-6 w-6 text-blue-300" />
+                  <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-5">
+                    <MousePointerClick className="h-6 w-6 text-[#d6bc87]" />
                     <p className="mt-4 font-black text-white">
                       Click-to-lead attribution
                     </p>
@@ -1240,7 +1240,7 @@ export default function RevenueIntelligencePage() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                  <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-5">
                     <BarChart3 className="h-6 w-6 text-violet-300" />
                     <p className="mt-4 font-black text-white">
                       Spend-to-revenue reporting
@@ -1250,7 +1250,7 @@ export default function RevenueIntelligencePage() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                  <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-5">
                     <Sparkles className="h-6 w-6 text-emerald-300" />
                     <p className="mt-4 font-black text-white">
                       AI budget recommendations
