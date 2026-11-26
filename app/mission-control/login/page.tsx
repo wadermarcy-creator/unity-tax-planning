@@ -32,9 +32,9 @@ export default function MissionControlLoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#050816] px-6 text-white">
+    <main className="flex min-h-screen items-center justify-center bg-[#10243b] px-6 text-white">
       <section className="w-full max-w-md rounded-[2rem] border border-slate-800 bg-slate-950 p-8 shadow-2xl shadow-black/30">
-        <p className="text-sm font-black uppercase tracking-[0.28em] text-blue-300">
+        <p className="text-sm font-black uppercase tracking-[0.28em] text-[#d6bc87]">
           Unity
         </p>
 
@@ -71,7 +71,7 @@ export default function MissionControlLoginPage() {
             type="button"
             onClick={signIn}
             disabled={isLoading}
-            className="w-full rounded-2xl bg-blue-600 px-6 py-5 text-base font-black text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-slate-700"
+            className="w-full rounded-2xl bg-[#d6bc87] px-6 py-5 text-base font-black text-white shadow-lg shadow-blue-950/30 transition hover:bg-[#e5cf9e] disabled:cursor-not-allowed disabled:bg-slate-700"
           >
             {isLoading ? "Signing In..." : "Sign In"}
           </button>
