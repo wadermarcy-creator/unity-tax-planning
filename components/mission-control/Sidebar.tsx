@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   BarChart3,
@@ -118,19 +119,15 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden min-h-screen w-72 shrink-0 border-r border-slate-800 bg-slate-950 px-4 py-6 lg:block">
+    <aside className="hidden min-h-screen w-72 shrink-0 border-r border-white/10 bg-[#10243b] px-4 py-6 lg:block">
       <Link
         href="/mission-control"
-        className="mb-6 block rounded-[1.5rem] border border-blue-500/30 bg-blue-500/10 p-5 transition hover:border-blue-400/60 hover:bg-blue-500/15"
+        className="mb-6 block rounded-[1.5rem] border border-[#d6bc87]/30 bg-white/5 p-5 transition hover:border-[#d6bc87]/60 hover:bg-white/10"
       >
-        <p className="text-xs font-black uppercase tracking-[0.3em] text-blue-300">
-          Unity
-        </p>
+        <Image src="/unity-tax-logo.PNG" alt="Unity Tax Planning" width={1664} height={928} className="mb-3 h-16 w-auto object-contain" />
 
-        <h1 className="mt-2 text-2xl font-black leading-none text-white">
-          Mission
-          <br />
-          Control
+        <h1 className="mt-2 font-serif text-2xl font-normal leading-none text-white">
+          Mission Control
         </h1>
 
         <p className="mt-3 text-xs font-bold leading-5 text-slate-400">
@@ -141,7 +138,7 @@ export default function Sidebar() {
       <nav className="space-y-6">
         {navSections.map((section) => (
           <div key={section.label}>
-            <p className="mb-2 px-3 text-[0.68rem] font-black uppercase tracking-[0.24em] text-slate-600">
+            <p className="mb-2 px-3 text-[0.68rem] font-black uppercase tracking-[0.24em] text-[#d6bc87]">
               {section.label}
             </p>
 
@@ -161,8 +158,8 @@ export default function Sidebar() {
                     href={item.href}
                     className={`flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black transition ${
                       isActive
-                        ? "bg-blue-600 text-white shadow-lg shadow-blue-950/30"
-                        : "text-slate-400 hover:bg-slate-900 hover:text-white"
+                        ? "bg-[#d6bc87] text-[#10243b] shadow-sm"
+                        : "text-slate-300 hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
