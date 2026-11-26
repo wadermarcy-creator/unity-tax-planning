@@ -98,17 +98,17 @@ export default function PricingPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white text-slate-950">
+    <main className="min-h-screen bg-[#f8f5ef] text-[#10243b]">
       <Navbar />
 
-      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
+      <section className="bg-[#10243b] px-4 py-20 text-white sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-5xl">
-            <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-blue-300 sm:text-base">
+            <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-[#d6bc87] sm:text-base">
               Pricing
             </p>
 
-            <h1 className="mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
+            <h1 className="font-serif mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
               Tax planning should be clear before you begin.
             </h1>
 
@@ -124,7 +124,7 @@ export default function PricingPage() {
       <section className="px-4 py-20 sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-4xl">
-            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-600 sm:text-base">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#80602b] sm:text-base">
               Engagement Options
             </p>
 
@@ -139,12 +139,12 @@ export default function PricingPage() {
                 key={plan.name}
                 className={`rounded-[2rem] border-2 p-8 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl sm:p-9 ${
                   plan.featured
-                    ? "border-blue-500 bg-slate-950 text-white shadow-blue-950/30"
+                    ? "border-[#b99a60] bg-[#10243b] text-white shadow-black/10"
                     : "border-slate-300 bg-white text-slate-950"
                 }`}
               >
                 {plan.featured && (
-                  <p className="mb-5 inline-block rounded-full bg-blue-500 px-4 py-2 text-sm font-black uppercase tracking-[0.18em] text-white">
+                  <p className="mb-5 inline-block rounded-full bg-[#98743b] px-4 py-2 text-sm font-black uppercase tracking-[0.18em] text-white">
                     Most Popular
                   </p>
                 )}
@@ -155,7 +155,7 @@ export default function PricingPage() {
 
                 <p
                   className={`mb-6 text-2xl font-black ${
-                    plan.featured ? "text-blue-300" : "text-blue-600"
+                    plan.featured ? "text-[#d6bc87]" : "text-[#80602b]"
                   }`}
                 >
                   {plan.price}
@@ -182,7 +182,7 @@ export default function PricingPage() {
                           plan.featured ? "text-slate-300" : "text-slate-700"
                         }`}
                       >
-                        <span className="font-black text-blue-500">✓</span>
+                        <span className="font-black text-[#98743b]">✓</span>
                         <span>{item}</span>
                       </li>
                     ))}
@@ -202,7 +202,7 @@ export default function PricingPage() {
                           plan.featured ? "text-slate-300" : "text-slate-700"
                         }`}
                       >
-                        <span className="font-black text-blue-500">✓</span>
+                        <span className="font-black text-[#98743b]">✓</span>
                         <span>{item}</span>
                       </li>
                     ))}
@@ -213,8 +213,8 @@ export default function PricingPage() {
                   href={plan.href}
                   className={`block rounded-2xl px-6 py-4 text-center text-base font-black ${
                     plan.featured
-                      ? "bg-blue-500 text-white hover:bg-blue-400"
-                      : "bg-slate-950 text-white hover:bg-slate-800"
+                      ? "bg-[#98743b] text-white hover:bg-[#d6bc87]"
+                      : "bg-[#10243b] text-white hover:bg-slate-800"
                   }`}
                 >
                   {plan.cta}
@@ -231,10 +231,10 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
+      <section className="bg-[#10243b] px-4 py-20 text-white sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-4xl">
-            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-300 sm:text-base">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#d6bc87] sm:text-base">
               Why Planning Costs More Than Tax Prep
             </p>
 
@@ -249,8 +249,8 @@ export default function PricingPage() {
             </p>
           </div>
 
-          <div className="overflow-hidden rounded-[2rem] border-2 border-slate-700 bg-slate-900 shadow-2xl shadow-black/30">
-            <div className="grid grid-cols-3 bg-blue-600 text-white">
+          <div className="overflow-hidden rounded-[2rem] border-2 border-slate-700 bg-[#19334e] shadow-2xl shadow-black/30">
+            <div className="grid grid-cols-3 bg-[#80602b] text-white">
               <div className="p-4 text-xs font-black uppercase tracking-[0.16em] sm:p-6 sm:text-sm">
                 Service
               </div>
@@ -277,7 +277,7 @@ export default function PricingPage() {
                   {taxPrep}
                 </div>
 
-                <div className="p-4 text-center text-xl font-black text-blue-300 sm:p-6">
+                <div className="p-4 text-center text-xl font-black text-[#d6bc87] sm:p-6">
                   {taxPlanning}
                 </div>
               </div>
@@ -295,7 +295,7 @@ export default function PricingPage() {
       <section className="px-4 py-20 sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-4xl">
-            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-600 sm:text-base">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#80602b] sm:text-base">
               Common Questions
             </p>
 
@@ -357,7 +357,7 @@ export default function PricingPage() {
           <div className="mt-10">
             <Link
               href="/faq"
-              className="inline-block w-full rounded-2xl border-2 border-slate-300 bg-white px-8 py-5 text-center text-lg font-black text-slate-950 shadow-lg hover:border-blue-500 hover:text-blue-600 sm:w-auto"
+              className="inline-block w-full rounded-2xl border-2 border-slate-300 bg-white px-8 py-5 text-center text-lg font-black text-slate-950 shadow-lg hover:border-[#b99a60] hover:text-[#80602b] sm:w-auto"
             >
               View All Frequently Asked Questions
             </Link>
@@ -365,13 +365,13 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="bg-blue-600 px-4 py-20 text-white sm:px-6 md:py-28">
+      <section className="bg-[#80602b] px-4 py-20 text-white sm:px-6 md:py-28">
         <div className="mx-auto max-w-5xl text-center">
           <h2 className="mb-8 text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
             Start with the right level of review.
           </h2>
 
-          <p className="mx-auto mb-10 max-w-3xl text-xl font-medium leading-9 text-blue-100 sm:text-2xl">
+          <p className="mx-auto mb-10 max-w-3xl text-xl font-medium leading-9 text-[#f8f5ef] sm:text-2xl">
             Begin with the intake form. If your situation requires a different
             level of planning, we will discuss that before any engagement
             begins.
@@ -380,14 +380,14 @@ export default function PricingPage() {
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link
               href="/tax-opportunity-scan"
-              className="inline-block w-full rounded-2xl bg-white px-8 py-5 text-lg font-black text-blue-600 shadow-xl hover:bg-blue-50 sm:w-auto"
+              className="inline-block w-full rounded-2xl bg-white px-8 py-5 text-lg font-black text-[#80602b] shadow-xl hover:bg-[#f8f5ef] sm:w-auto"
             >
               Start My Tax Blind Spot Review
             </Link>
 
             <Link
               href="/how-it-works"
-              className="inline-block w-full rounded-2xl border-2 border-blue-300 px-8 py-5 text-lg font-black text-white hover:bg-blue-500 sm:w-auto"
+              className="inline-block w-full rounded-2xl border-2 border-[#d6bc87] px-8 py-5 text-lg font-black text-white hover:bg-[#98743b] sm:w-auto"
             >
               See How It Works
             </Link>
