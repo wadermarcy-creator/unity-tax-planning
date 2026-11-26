@@ -4,13 +4,13 @@ export default function DisclosureFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-slate-800 bg-slate-950 px-4 py-14 text-slate-400 sm:px-6">
+    <footer className="border-t border-slate-800 bg-[#10243b] px-4 py-14 text-slate-400 sm:px-6">
       <div className="mx-auto max-w-7xl">
         <div className="mb-10 grid gap-8 border-b border-slate-800 pb-10 lg:grid-cols-[1fr_auto] lg:items-start">
           <div>
             <Link href="/" className="inline-flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-400 to-blue-700 shadow-lg shadow-blue-950/40">
-                <span className="text-xl font-black text-white">U</span>
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#d6bc87] shadow-lg shadow-black/10">
+                <span className="text-xl font-black text-[#10243b]">U</span>
               </div>
 
               <div className="leading-tight">
@@ -18,7 +18,7 @@ export default function DisclosureFooter() {
                   UNITY
                 </p>
 
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-300">
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#d6bc87]">
                   Tax Planning
                 </p>
               </div>
@@ -61,7 +61,7 @@ export default function DisclosureFooter() {
 
             <Link
               href="/tax-opportunity-scan"
-              className="text-blue-300 transition hover:text-blue-200"
+              className="text-[#d6bc87] transition hover:text-white"
             >
               Start a Review
             </Link>
