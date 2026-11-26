@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+export const metadata: Metadata = {"title":"Proactive Tax Planning & Tax Preparation","description":"Year-round tax strategy and annual tax preparation memberships for business owners, high-income households and retirees.","alternates":{"canonical":"/"},"openGraph":{"title":"Proactive Tax Planning & Tax Preparation","description":"Year-round tax strategy and annual tax preparation memberships for business owners, high-income households and retirees.","url":"/"}};
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import DisclosureFooter from "@/components/DisclosureFooter";
