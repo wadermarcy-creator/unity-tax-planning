@@ -220,13 +220,13 @@ function getEntryHealth(entry: WatchEntry) {
   if (getLines(entry.searchTermsToBlock).length > 0) {
     return {
       label: "Needs Negatives",
-      tone: "border-blue-500/40 bg-blue-500/10 text-blue-300",
+      tone: "border-blue-500/40 bg-blue-500/10 text-[#d6bc87]",
     };
   }
 
   return {
     label: "Learning",
-    tone: "border-slate-700 bg-slate-900 text-slate-300",
+    tone: "border-slate-700 bg-[#1b334d] text-slate-300",
   };
 }
 
@@ -476,7 +476,7 @@ export default function CampaignWatchPage() {
                 <button
                   type="button"
                   onClick={exportEntries}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#162d46] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
                 >
                   <Download className="h-4 w-4" />
                   Export Watch Log
@@ -486,7 +486,7 @@ export default function CampaignWatchPage() {
                   href="https://ads.google.com/aw/overview"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#162d46] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
                 >
                   <ExternalLink className="h-4 w-4" />
                   Open Google Ads
@@ -528,7 +528,7 @@ export default function CampaignWatchPage() {
         </section>
 
         <section className="mb-6 grid gap-4 xl:grid-cols-[1fr_0.85fr]">
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.24em] text-emerald-300">
@@ -556,7 +556,7 @@ export default function CampaignWatchPage() {
                   type="date"
                   value={form.date}
                   onChange={(event) => updateForm("date", event.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
                 />
               </Field>
 
@@ -564,7 +564,7 @@ export default function CampaignWatchPage() {
                 <input
                   value={form.campaignName}
                   onChange={(event) => updateForm("campaignName", event.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
                 />
               </Field>
 
@@ -573,7 +573,7 @@ export default function CampaignWatchPage() {
                   inputMode="decimal"
                   value={form.spend}
                   onChange={(event) => updateForm("spend", event.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
                   placeholder="15.00"
                 />
               </Field>
@@ -583,7 +583,7 @@ export default function CampaignWatchPage() {
                   inputMode="numeric"
                   value={form.clicks}
                   onChange={(event) => updateForm("clicks", event.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
                   placeholder="0"
                 />
               </Field>
@@ -593,7 +593,7 @@ export default function CampaignWatchPage() {
                   inputMode="numeric"
                   value={form.impressions}
                   onChange={(event) => updateForm("impressions", event.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
                   placeholder="0"
                 />
               </Field>
@@ -603,7 +603,7 @@ export default function CampaignWatchPage() {
                   inputMode="numeric"
                   value={form.assessments}
                   onChange={(event) => updateForm("assessments", event.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
                   placeholder="0"
                 />
               </Field>
@@ -614,7 +614,7 @@ export default function CampaignWatchPage() {
                 <textarea
                   value={form.searchTermsToBlock}
                   onChange={(event) => updateForm("searchTermsToBlock", event.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-bold leading-6 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 min-h-36"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-bold leading-6 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 min-h-36"
                   placeholder={"free tax help\ntax refund\nbookkeeping jobs"}
                 />
               </Field>
@@ -623,7 +623,7 @@ export default function CampaignWatchPage() {
                 <textarea
                   value={form.actionNeeded}
                   onChange={(event) => updateForm("actionNeeded", event.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-bold leading-6 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 min-h-36"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-bold leading-6 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 min-h-36"
                 />
               </Field>
             </div>
@@ -633,7 +633,7 @@ export default function CampaignWatchPage() {
                 <textarea
                   value={form.notes}
                   onChange={(event) => updateForm("notes", event.target.value)}
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-bold leading-6 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 min-h-28"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-bold leading-6 text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500 min-h-28"
                   placeholder="What happened today? Was traffic relevant? Any lead quality concerns?"
                 />
               </Field>
@@ -649,7 +649,7 @@ export default function CampaignWatchPage() {
             </button>
           </div>
 
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <p className="text-xs font-black uppercase tracking-[0.24em] text-orange-300">
               Negative Keyword Bank
             </p>
@@ -678,7 +678,7 @@ export default function CampaignWatchPage() {
               Copy Negative Keywords
             </button>
 
-            <div className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+            <div className="mt-5 rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
               <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">
                 Launch rule
               </p>
@@ -690,10 +690,10 @@ export default function CampaignWatchPage() {
         </section>
 
         <section className="mb-6 grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-300">
+                <p className="text-xs font-black uppercase tracking-[0.24em] text-[#d6bc87]">
                   Watch Log
                 </p>
                 <h2 className="mt-3 text-2xl font-black text-white">Daily paid traffic record</h2>
@@ -705,7 +705,7 @@ export default function CampaignWatchPage() {
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
                   placeholder="Search date, campaign, notes..."
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-11 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-11 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
                 />
               </div>
             </div>
@@ -717,7 +717,7 @@ export default function CampaignWatchPage() {
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <p className="text-xs font-black uppercase tracking-[0.24em] text-violet-300">
               Decision Rules
             </p>
@@ -741,7 +741,7 @@ export default function CampaignWatchPage() {
         </section>
 
         {filteredEntries.length === 0 ? (
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 text-center shadow-xl shadow-black/20">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8 text-center shadow-xl shadow-black/20">
             <BarChart3 className="mx-auto h-10 w-10 text-slate-500" />
             <p className="mt-4 text-xl font-black text-white">No campaign watch entries yet.</p>
             <p className="mx-auto mt-2 max-w-2xl text-sm font-bold leading-6 text-slate-400">
@@ -760,7 +760,7 @@ export default function CampaignWatchPage() {
               return (
                 <article
                   key={entry.id}
-                  className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 transition hover:border-blue-500/60 sm:p-6"
+                  className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 transition hover:border-[#d6bc87]/60 sm:p-6"
                 >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div>
@@ -805,7 +805,7 @@ export default function CampaignWatchPage() {
                         {terms.map((term) => (
                           <span
                             key={`${entry.id}-${term}`}
-                            className="rounded-full border border-orange-500/30 bg-slate-950 px-3 py-1 text-xs font-black text-orange-100"
+                            className="rounded-full border border-orange-500/30 bg-[#162d46] px-3 py-1 text-xs font-black text-orange-100"
                           >
                             {term}
                           </span>
@@ -816,7 +816,7 @@ export default function CampaignWatchPage() {
 
                   {entry.actionNeeded && (
                     <div className="mt-5 rounded-2xl border border-blue-500/20 bg-blue-500/10 p-4">
-                      <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-200">
+                      <p className="text-xs font-black uppercase tracking-[0.2em] text-[#e5cf9e]">
                         Action needed
                       </p>
                       <p className="mt-2 text-sm font-bold leading-6 text-blue-50">{entry.actionNeeded}</p>
@@ -859,13 +859,13 @@ function MetricCard({
   icon: typeof BarChart3;
 }) {
   return (
-    <div className="rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70 p-5">
+    <div className="rounded-[1.5rem] border border-slate-700/70 bg-[#162d46] p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">{label}</p>
           <p className="mt-3 text-3xl font-black text-white">{value}</p>
         </div>
-        <div className="rounded-2xl bg-slate-900 p-3 text-emerald-300">
+        <div className="rounded-2xl bg-[#1b334d] p-3 text-emerald-300">
           <Icon className="h-5 w-5" />
         </div>
       </div>
@@ -876,7 +876,7 @@ function MetricCard({
 
 function MiniMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+    <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
       <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
         {label}
       </p>
@@ -887,7 +887,7 @@ function MiniMetric({ label, value }: { label: string; value: string }) {
 
 function RuleCard({ title, description }: { title: string; description: string }) {
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+    <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
       <p className="text-sm font-black text-white">{title}</p>
       <p className="mt-2 text-xs font-bold leading-5 text-slate-400">{description}</p>
     </div>
