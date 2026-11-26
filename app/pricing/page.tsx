@@ -109,7 +109,7 @@ export default function PricingPage() {
             </p>
 
             <h1 className="font-serif mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
-              Tax planning should be clear before you begin.
+              Your year-round tax advisory partner.
             </h1>
 
             <p className="max-w-3xl text-xl font-medium leading-9 text-slate-300 sm:text-2xl">
@@ -120,16 +120,20 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
+      <section id="memberships" className="bg-[#f8f5ef] px-6 py-20 text-[#10243b]"><div className="mx-auto max-w-7xl"><p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#80602b]">Ongoing tax advisory</p><h2 className="mt-4 font-serif text-4xl sm:text-5xl">Tax planning is not a once-a-year decision.</h2><p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">Choose the ongoing advisory relationship that fits your financial life. Each relationship begins with an initial tax strategy engagement, followed by year-round guidance.</p><div className="mt-10 grid gap-5 lg:grid-cols-3"><article className="flex flex-col border border-[#ded7ca] bg-white p-8"><h3 className="font-serif text-3xl">Essential</h3><p className="mt-5 text-4xl font-semibold text-[#10243b]">$199<span className="text-base font-normal text-slate-600"> / month</span></p><div className="mt-4 border-y border-[#ded7ca] py-4"><p className="text-xs font-semibold uppercase tracking-wider text-[#80602b]">Initial tax strategy engagement</p><p className="mt-2 text-xl font-semibold">From $995</p></div><ul className="mt-6 space-y-3 text-slate-700"><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Annual tax strategy review</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Semiannual planning meetings</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Tax law updates</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Email support</li></ul><Link href="/tax-opportunity-scan" className="mt-8 block rounded-md bg-[#10243b] px-5 py-3 text-center font-semibold text-white">Discuss Essential</Link></article>
+<article className="flex flex-col border border-[#ded7ca] bg-white p-8"><h3 className="font-serif text-3xl">Advanced</h3><p className="mt-5 text-4xl font-semibold text-[#10243b]">$499<span className="text-base font-normal text-slate-600"> / month</span></p><div className="mt-4 border-y border-[#ded7ca] py-4"><p className="text-xs font-semibold uppercase tracking-wider text-[#80602b]">Initial tax strategy engagement</p><p className="mt-2 text-xl font-semibold">From $3,500</p></div><ul className="mt-6 space-y-3 text-slate-700"><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Quarterly planning meetings</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Tax projections</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Strategy implementation coordination</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>CPA coordination</li></ul><Link href="/tax-opportunity-scan" className="mt-8 block rounded-md bg-[#10243b] px-5 py-3 text-center font-semibold text-white">Discuss Advanced</Link></article>
+<article className="flex flex-col border border-[#ded7ca] bg-white p-8"><h3 className="font-serif text-3xl">Private Advisory</h3><p className="mt-5 text-4xl font-semibold text-[#10243b]">$999<span className="text-base font-normal text-slate-600"> / month</span></p><div className="mt-4 border-y border-[#ded7ca] py-4"><p className="text-xs font-semibold uppercase tracking-wider text-[#80602b]">Initial tax strategy engagement</p><p className="mt-2 text-xl font-semibold">Custom scope</p></div><ul className="mt-6 space-y-3 text-slate-700"><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Complex business and personal tax planning</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Monthly strategy meetings</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Transaction planning</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Priority access</li></ul><Link href="/tax-opportunity-scan" className="mt-8 block rounded-md bg-[#10243b] px-5 py-3 text-center font-semibold text-white">Discuss Private Advisory</Link></article></div><p className="mt-6 max-w-4xl text-sm leading-7 text-slate-600">Proposed initial fees are shown separately from monthly advisory fees. Final membership scope, initial planning fees, billing terms and coordination with existing Unity Financial Planning Group services are confirmed in writing before engagement. Tax preparation and investment advisory services are not included unless separately agreed. Tax savings are not guaranteed.</p></div></section>
+
 
       <section className="px-4 py-20 sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-4xl">
             <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#80602b] sm:text-base">
-              One-time planning engagements
+              Standalone planning engagements
             </p>
 
             <h2 className="text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
-              Choose the level of review that fits your situation.
+              Prefer a one-time engagement?
             </h2>
           </div>
 
@@ -231,9 +235,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-<section id="memberships" className="bg-[#f8f5ef] px-6 py-20 text-[#10243b]"><div className="mx-auto max-w-7xl"><p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#80602b]">Ongoing tax advisory</p><h2 className="mt-4 font-serif text-4xl sm:text-5xl">A tax strategy for every season.</h2><p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">A one-time engagement establishes your strategy. Ongoing advisory helps monitor, refine and coordinate it as your circumstances change.</p><div className="mt-10 grid gap-5 lg:grid-cols-3"><article className="flex flex-col border border-[#ded7ca] bg-white p-8"><h3 className="font-serif text-3xl">Essential</h3><p className="mt-5 text-4xl font-semibold text-[#10243b]">$199<span className="text-base font-normal text-slate-600"> / month</span></p><ul className="mt-6 space-y-3 text-slate-700"><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Annual tax strategy review</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Semiannual planning meetings</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Tax law updates</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Email support</li></ul><Link href="/tax-opportunity-scan" className="mt-8 block rounded-md bg-[#10243b] px-5 py-3 text-center font-semibold text-white">Discuss Essential</Link></article>
-<article className="flex flex-col border border-[#ded7ca] bg-white p-8"><h3 className="font-serif text-3xl">Advanced</h3><p className="mt-5 text-4xl font-semibold text-[#10243b]">$499<span className="text-base font-normal text-slate-600"> / month</span></p><ul className="mt-6 space-y-3 text-slate-700"><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Quarterly planning meetings</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Tax projections</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Strategy implementation coordination</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>CPA coordination</li></ul><Link href="/tax-opportunity-scan" className="mt-8 block rounded-md bg-[#10243b] px-5 py-3 text-center font-semibold text-white">Discuss Advanced</Link></article>
-<article className="flex flex-col border border-[#ded7ca] bg-white p-8"><h3 className="font-serif text-3xl">Private Advisory</h3><p className="mt-5 text-4xl font-semibold text-[#10243b]">$999<span className="text-base font-normal text-slate-600"> / month</span></p><ul className="mt-6 space-y-3 text-slate-700"><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Complex business and personal tax planning</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Monthly strategy meetings</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Transaction planning</li><li className="flex gap-3"><span className="text-[#80602b]">✓</span>Priority access</li></ul><Link href="/tax-opportunity-scan" className="mt-8 block rounded-md bg-[#10243b] px-5 py-3 text-center font-semibold text-white">Discuss Private Advisory</Link></article></div><p className="mt-6 max-w-4xl text-sm leading-7 text-slate-600">Membership scope, any initial planning fees, billing terms and coordination with existing Unity Financial Planning Group services are confirmed in writing before engagement. Tax preparation and investment advisory services are not included unless separately agreed. Tax savings are not guaranteed.</p></div></section>
+
       <section className="bg-[#10243b] px-4 py-20 text-white sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-4xl">
@@ -385,7 +387,7 @@ export default function PricingPage() {
               href="/tax-opportunity-scan"
               className="inline-block w-full rounded-2xl bg-white px-8 py-5 text-lg font-black text-[#80602b] shadow-xl hover:bg-[#f8f5ef] sm:w-auto"
             >
-              Start My Tax Blind Spot Review
+              Start My Free Assessment
             </Link>
 
             <Link
