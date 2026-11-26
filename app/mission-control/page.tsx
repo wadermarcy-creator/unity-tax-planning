@@ -563,7 +563,7 @@ export default function MissionControlMorningBriefPage() {
 
               <div className="mt-6">
                 {isLoading ? (
-                  <p className="rounded-2xl border border-slate-800 bg-slate-900 p-5 text-sm text-slate-400">
+                  <p className="rounded-2xl border border-white/10 bg-[#1b334d] p-5 text-sm text-slate-400">
                     Building morning brief...
                   </p>
                 ) : topFocus ? (
@@ -593,7 +593,7 @@ export default function MissionControlMorningBriefPage() {
                   />
                 ) : (
                   priorityOpportunities.map((opportunity) => (
-                    <div key={opportunity.id} className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                    <div key={opportunity.id} className="rounded-2xl border border-white/10 bg-[#1b334d] p-5">
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                           <div className="flex flex-wrap items-center gap-3">
@@ -632,10 +632,10 @@ export default function MissionControlMorningBriefPage() {
               />
 
               <div className="mt-6 grid gap-4">
-                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-5">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-[0.16em] text-blue-300">
+                      <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d6bc87]">
                         Qualified
                       </p>
                       <p className="mt-2 text-sm text-slate-400">Ready for advisor review.</p>
@@ -644,7 +644,7 @@ export default function MissionControlMorningBriefPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-5">
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-violet-300">
@@ -656,7 +656,7 @@ export default function MissionControlMorningBriefPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-5">
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-yellow-300">
@@ -668,7 +668,7 @@ export default function MissionControlMorningBriefPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+                <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-5">
                   <div className="flex items-center justify-between gap-4">
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-emerald-300">
@@ -732,7 +732,7 @@ export default function MissionControlMorningBriefPage() {
                   "Publish or test one campaign asset",
                   "Export reports before end of day",
                 ].map((item) => (
-                  <div key={item} className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                  <div key={item} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                     <CheckCircle2 className="h-5 w-5 text-emerald-300" />
                     <p className="text-sm font-bold text-slate-300">{item}</p>
                   </div>
