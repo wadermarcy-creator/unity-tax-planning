@@ -441,7 +441,7 @@ export default function CampaignsPage() {
               </div>
 
               <div className="grid gap-3 sm:grid-cols-3 xl:min-w-[520px]">
-                <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+                <div className="rounded-2xl border border-white/10 bg-[#162d46]/80 p-4">
                   <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                     Priority Score
                   </p>
@@ -450,7 +450,7 @@ export default function CampaignsPage() {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+                <div className="rounded-2xl border border-white/10 bg-[#162d46]/80 p-4">
                   <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                     Projected Revenue
                   </p>
@@ -459,7 +459,7 @@ export default function CampaignsPage() {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+                <div className="rounded-2xl border border-white/10 bg-[#162d46]/80 p-4">
                   <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                     Priority
                   </p>
@@ -471,7 +471,7 @@ export default function CampaignsPage() {
             </div>
 
             <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_0.9fr]">
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+              <div className="rounded-2xl border border-white/10 bg-[#162d46]/80 p-4">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                   AI Executive Recommendation
                 </p>
@@ -481,7 +481,7 @@ export default function CampaignsPage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+              <div className="rounded-2xl border border-white/10 bg-[#162d46]/80 p-4">
                 <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                   Ad Angle
                 </p>
@@ -522,7 +522,7 @@ export default function CampaignsPage() {
         </div>
 
         {message && (
-          <p className="mb-8 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold text-slate-300">
+          <p className="mb-8 rounded-2xl border border-white/10 bg-[#1b334d] p-4 text-sm font-bold text-slate-300">
             {message}
           </p>
         )}
