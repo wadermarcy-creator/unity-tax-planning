@@ -188,11 +188,11 @@ function calculateLeadScore(lead: LeadRecord) {
   return Math.min(score, 100);
 }
 
+// Illustrative first-year contract value, not booked or collected revenue.
 function getProjectedRevenue(score: number, income: number) {
-  if (score >= 90) return income >= 500000 ? 9500 : 7500;
-  if (score >= 80) return 6500;
-  if (score >= 70) return 4500;
-  return 2500;
+  if (score >= 90 && income >= 500000) return 999 * 12; // Custom setup fee excluded
+  if (score >= 80) return 1500 + 499 * 12;
+  return 500 + 199 * 12;
 }
 
 function getStoredStage(lead: LeadRecord) {
@@ -846,7 +846,7 @@ export default function RevenueIntelligencePage() {
     const brief = [
       "Unity Tax Revenue Intelligence Brief",
       `Priority Score: ${priorityScore}/100`,
-      `Projected Annual Revenue: ${formatCurrency(projectedRevenue)}`,
+      `Estimated First-Year Contract Value: ${formatCurrency(projectedRevenue)}`,
       `Expected Revenue: ${formatCurrency(expectedRevenue)}`,
       `Qualified Leads: ${qualifiedLeads}`,
       `Recommendation: ${executiveRecommendation}`,
@@ -955,7 +955,7 @@ export default function RevenueIntelligencePage() {
 
         <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           <UnityMetricCard
-            label="Projected Annual Revenue"
+            label="Estimated First-Year Contract Value"
             value={formatCurrency(projectedRevenue)}
             detail="Active pipeline forecast"
             tone="emerald"
@@ -1000,7 +1000,7 @@ export default function RevenueIntelligencePage() {
                 label="Goal Progress"
                 value={formatCurrency(projectedRevenue)}
                 percent={revenueGoalProgress}
-                description={`Projected annual revenue against the ${formatCurrency(
+                description={`Estimated first-year contract value against the ${formatCurrency(
                   ANNUAL_REVENUE_GOAL,
                 )} launch target.`}
                 footer={`${formatCurrency(
