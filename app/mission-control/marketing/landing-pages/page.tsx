@@ -336,7 +336,7 @@ export default function LandingPagesCMSPage() {
       />
 
       {toast && (
-        <div className="fixed right-4 top-4 z-50 max-w-sm animate-pulse rounded-2xl border border-slate-700 bg-slate-950 p-4 shadow-2xl shadow-black/40 lg:right-8">
+        <div className="fixed right-4 top-4 z-50 max-w-sm animate-pulse rounded-2xl border border-slate-700 bg-[#162d46] p-4 shadow-2xl shadow-black/40 lg:right-8">
           <p className={`text-sm font-black ${toastClasses[toast.kind]}`}>
             {toast.message}
           </p>
@@ -344,10 +344,10 @@ export default function LandingPagesCMSPage() {
       )}
 
       <div className="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
-        <section className="mb-6 overflow-hidden rounded-[2rem] border border-blue-500/30 bg-slate-950 shadow-2xl shadow-blue-950/20">
+        <section className="mb-6 overflow-hidden rounded-[2rem] border border-blue-500/30 bg-[#162d46] shadow-2xl shadow-blue-950/20">
           <div className="grid gap-6 p-5 sm:p-7 xl:grid-cols-[1.2fr_0.8fr]">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.24em] text-blue-200">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-2 text-xs font-black uppercase tracking-[0.24em] text-[#e5cf9e]">
                 <Sparkles className="h-4 w-4" />
                 Marketing Engine
               </div>
@@ -376,7 +376,7 @@ export default function LandingPagesCMSPage() {
                 <button
                   type="button"
                   onClick={() => handleExport(pages, "unity-tax-landing-pages.csv")}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
                 >
                   <Download className="h-4 w-4" />
                   Export All Pages
@@ -385,7 +385,7 @@ export default function LandingPagesCMSPage() {
                 <button
                   type="button"
                   onClick={loadPages}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
                 >
                   {isLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -397,23 +397,23 @@ export default function LandingPagesCMSPage() {
               </div>
             </div>
 
-            <div className="rounded-[1.75rem] border border-slate-800 bg-slate-900/70 p-5">
+            <div className="rounded-[1.75rem] border border-white/10 bg-[#1b334d]/70 p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.24em] text-blue-300">
+                  <p className="text-xs font-black uppercase tracking-[0.24em] text-[#d6bc87]">
                     AI Executive Recommendation
                   </p>
                   <p className="mt-3 text-sm font-bold leading-6 text-slate-300">
                     {aiRecommendation}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-blue-400/30 bg-blue-500/10 p-3 text-blue-200">
+                <div className="rounded-2xl border border-blue-400/30 bg-blue-500/10 p-3 text-[#e5cf9e]">
                   <Target className="h-5 w-5" />
                 </div>
               </div>
 
               <div className="mt-5 grid grid-cols-2 gap-3">
-                <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
+                <div className="rounded-2xl border border-white/10 bg-[#162d46] p-4">
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">
                     Priority Score
                   </p>
@@ -423,7 +423,7 @@ export default function LandingPagesCMSPage() {
                   <p className="mt-1 text-xs font-bold text-slate-500">/100</p>
                 </div>
 
-                <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
+                <div className="rounded-2xl border border-white/10 bg-[#162d46] p-4">
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">
                     Active Pages
                   </p>
@@ -440,7 +440,7 @@ export default function LandingPagesCMSPage() {
         </section>
 
         <div className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-[1.5rem] border border-slate-800 bg-slate-950 p-5 shadow-xl shadow-black/10">
+          <div className="rounded-[1.5rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/10">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
                 Total Pages
@@ -470,10 +470,10 @@ export default function LandingPagesCMSPage() {
 
           <div className="rounded-[1.5rem] border border-blue-400/20 bg-blue-500/10 p-5 shadow-xl shadow-black/10">
             <div className="flex items-center justify-between gap-3">
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-blue-200">
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#e5cf9e]">
                 Projected Annual Revenue
               </p>
-              <TrendingUp className="h-5 w-5 text-blue-200" />
+              <TrendingUp className="h-5 w-5 text-[#e5cf9e]" />
             </div>
             <p className="mt-3 text-3xl font-black text-white">
               {formatCurrency(projectedAnnualRevenue)}
@@ -483,7 +483,7 @@ export default function LandingPagesCMSPage() {
             </p>
           </div>
 
-          <div className="rounded-[1.5rem] border border-slate-800 bg-slate-950 p-5 shadow-xl shadow-black/10">
+          <div className="rounded-[1.5rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/10">
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
                 One-Click Actions
@@ -499,7 +499,7 @@ export default function LandingPagesCMSPage() {
                     "Featured landing page URL copied.",
                   )
                 }
-                className="inline-flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                className="inline-flex items-center justify-between rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-black text-white transition hover:bg-slate-800"
               >
                 Copy Featured URL
                 <Clipboard className="h-4 w-4" />
@@ -508,7 +508,7 @@ export default function LandingPagesCMSPage() {
               <button
                 type="button"
                 onClick={() => handlePreviewActivePage(mostRecentActivePage)}
-                className="inline-flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                className="inline-flex items-center justify-between rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-black text-white transition hover:bg-slate-800"
               >
                 Preview Featured
                 <Eye className="h-4 w-4" />
@@ -518,14 +518,14 @@ export default function LandingPagesCMSPage() {
         </div>
 
         {mostRecentActivePage && (
-          <section className="mb-8 rounded-[1.75rem] border border-slate-800 bg-slate-950 p-5 shadow-xl shadow-black/10 sm:p-6">
+          <section className="mb-8 rounded-[1.75rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/10 sm:p-6">
             <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-emerald-200">
                     Featured Landing Page
                   </span>
-                  <span className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-slate-400">
+                  <span className="rounded-full border border-slate-700 bg-[#1b334d] px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-slate-400">
                     {getBoolean(mostRecentActivePage, "is_active")
                       ? "Active"
                       : "Draft"}
@@ -544,11 +544,11 @@ export default function LandingPagesCMSPage() {
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2 text-xs font-black uppercase tracking-[0.18em] text-slate-500">
-                  <span className="rounded-full border border-slate-800 bg-slate-900 px-3 py-1">
+                  <span className="rounded-full border border-white/10 bg-[#1b334d] px-3 py-1">
                     {getString(mostRecentActivePage, "audience") ||
                       "Audience not set"}
                   </span>
-                  <span className="rounded-full border border-slate-800 bg-slate-900 px-3 py-1">
+                  <span className="rounded-full border border-white/10 bg-[#1b334d] px-3 py-1">
                     /landing/{getString(mostRecentActivePage, "slug") || "draft"}
                   </span>
                 </div>
@@ -572,7 +572,7 @@ export default function LandingPagesCMSPage() {
                 <button
                   type="button"
                   onClick={() => handlePreviewActivePage(mostRecentActivePage)}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-3 text-sm font-black text-white transition hover:bg-slate-800"
                 >
                   Preview Page
                   <ArrowRight className="h-4 w-4" />
@@ -590,7 +590,7 @@ export default function LandingPagesCMSPage() {
         />
 
         {message && (
-          <p className="mb-8 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold text-slate-300">
+          <p className="mb-8 rounded-2xl border border-white/10 bg-[#1b334d] p-4 text-sm font-bold text-slate-300">
             {message}
           </p>
         )}
@@ -607,7 +607,7 @@ export default function LandingPagesCMSPage() {
           />
 
           <div className="space-y-4">
-            <div className="rounded-[1.5rem] border border-slate-800 bg-slate-950 p-4 sm:p-5">
+            <div className="rounded-[1.5rem] border border-white/10 bg-[#162d46] p-4 sm:p-5">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
@@ -628,7 +628,7 @@ export default function LandingPagesCMSPage() {
                         "unity-tax-active-landing-pages.csv",
                       )
                     }
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-4 py-3 text-sm font-black text-white transition hover:bg-slate-800"
                   >
                     <Download className="h-4 w-4" />
                     Export Active
@@ -642,7 +642,7 @@ export default function LandingPagesCMSPage() {
                         "unity-tax-draft-landing-pages.csv",
                       )
                     }
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm font-black text-white transition hover:bg-slate-800"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-4 py-3 text-sm font-black text-white transition hover:bg-slate-800"
                   >
                     <Download className="h-4 w-4" />
                     Export Drafts
