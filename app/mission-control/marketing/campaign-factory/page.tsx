@@ -28,8 +28,8 @@ type Toast = {
 
 const priorityStyles: Record<CampaignIdea["priority"], string> = {
   High: "border-emerald-400/30 bg-emerald-400/10 text-emerald-200",
-  Medium: "border-blue-400/30 bg-blue-400/10 text-blue-200",
-  Low: "border-slate-600 bg-slate-900 text-slate-300",
+  Medium: "border-blue-400/30 bg-blue-400/10 text-[#e5cf9e]",
+  Low: "border-slate-600 bg-[#1b334d] text-slate-300",
 };
 
 const priorityScoreBase: Record<CampaignIdea["priority"], number> = {
@@ -380,10 +380,10 @@ export default function CampaignFactoryPage() {
           </div>
         </section>
 
-        <section className="mb-6 rounded-[2rem] border border-slate-800 bg-slate-950/75 p-5 shadow-xl shadow-black/20 sm:p-6">
+        <section className="mb-6 rounded-[2rem] border border-white/10 bg-[#162d46]/75 p-5 shadow-xl shadow-black/20 sm:p-6">
           <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-blue-300 sm:text-sm">
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#d6bc87] sm:text-sm">
                 Market Packs
               </p>
 
@@ -393,10 +393,10 @@ export default function CampaignFactoryPage() {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-black text-slate-300">
+              <span className="rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-black text-slate-300">
                 {MARKET_PACKS.length} packs
               </span>
-              <span className="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-black text-slate-300">
+              <span className="rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-black text-slate-300">
                 {selectedPack?.industries.length || 0} audiences
               </span>
             </div>
@@ -414,7 +414,7 @@ export default function CampaignFactoryPage() {
                   className={`group rounded-[1.5rem] border p-5 text-left transition hover:-translate-y-0.5 ${
                     isSelected
                       ? "border-blue-400/50 bg-blue-500/10 shadow-lg shadow-blue-950/20"
-                      : "border-slate-800 bg-slate-900/80 hover:border-blue-500/50 hover:bg-slate-900"
+                      : "border-white/10 bg-[#1b334d]/80 hover:border-[#d6bc87]/50 hover:bg-[#1b334d]"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-4">
@@ -422,8 +422,8 @@ export default function CampaignFactoryPage() {
                     <span
                       className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em] ${
                         isSelected
-                          ? "border-blue-400/40 bg-blue-400/10 text-blue-200"
-                          : "border-slate-700 bg-slate-950 text-slate-400 group-hover:border-blue-500/50 group-hover:text-blue-200"
+                          ? "border-blue-400/40 bg-blue-400/10 text-[#e5cf9e]"
+                          : "border-slate-700 bg-[#162d46] text-slate-400 group-hover:border-[#d6bc87]/50 group-hover:text-[#e5cf9e]"
                       }`}
                     >
                       {isSelected ? "Selected" : "Select"}
@@ -444,7 +444,7 @@ export default function CampaignFactoryPage() {
           </div>
 
           {selectedPack && (
-            <div className="mt-6 rounded-[1.5rem] border border-slate-800 bg-slate-900/90 p-5">
+            <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-[#1b334d]/90 p-5">
               <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
@@ -469,7 +469,7 @@ export default function CampaignFactoryPage() {
                 {selectedPack.industries.map((industry) => (
                   <span
                     key={industry}
-                    className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-slate-300"
+                    className="rounded-full border border-slate-700 bg-[#162d46] px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-slate-300"
                   >
                     {industry}
                   </span>
@@ -479,7 +479,7 @@ export default function CampaignFactoryPage() {
           )}
         </section>
 
-        <section className="mb-6 rounded-[2rem] border border-slate-800 bg-slate-950/75 p-5 shadow-xl shadow-black/20 sm:p-6">
+        <section className="mb-6 rounded-[2rem] border border-white/10 bg-[#162d46]/75 p-5 shadow-xl shadow-black/20 sm:p-6">
           <div className="mb-5 flex flex-col gap-2">
             <p className="text-xs font-black uppercase tracking-[0.22em] text-violet-300 sm:text-sm">
               Build Settings
@@ -498,7 +498,7 @@ export default function CampaignFactoryPage() {
               <input
                 value={category}
                 onChange={(event) => setCategory(event.target.value)}
-                className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 font-bold text-white outline-none placeholder:text-slate-600 focus:border-violet-500"
+                className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-5 py-4 font-bold text-white outline-none placeholder:text-slate-600 focus:border-violet-500"
                 placeholder="Healthcare"
               />
             </div>
@@ -511,7 +511,7 @@ export default function CampaignFactoryPage() {
               <input
                 value={location}
                 onChange={(event) => setLocation(event.target.value)}
-                className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 font-bold text-white outline-none placeholder:text-slate-600 focus:border-violet-500"
+                className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-5 py-4 font-bold text-white outline-none placeholder:text-slate-600 focus:border-violet-500"
                 placeholder="United States"
               />
             </div>
@@ -527,7 +527,7 @@ export default function CampaignFactoryPage() {
                 max={30}
                 value={count}
                 onChange={(event) => setCount(Number(event.target.value))}
-                className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 font-bold text-white outline-none placeholder:text-slate-600 focus:border-violet-500"
+                className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-5 py-4 font-bold text-white outline-none placeholder:text-slate-600 focus:border-violet-500"
               />
             </div>
 
@@ -542,14 +542,14 @@ export default function CampaignFactoryPage() {
           </div>
 
           {message && (
-            <p className="mt-5 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-bold text-slate-300">
+            <p className="mt-5 rounded-2xl border border-white/10 bg-[#1b334d] p-4 text-sm font-bold text-slate-300">
               {message}
             </p>
           )}
         </section>
 
         {!data ? (
-          <section className="rounded-[2rem] border border-slate-800 bg-slate-950/75 p-6 shadow-xl shadow-black/20 sm:p-8">
+          <section className="rounded-[2rem] border border-white/10 bg-[#162d46]/75 p-6 shadow-xl shadow-black/20 sm:p-8">
             <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500 sm:text-sm">
@@ -568,8 +568,8 @@ export default function CampaignFactoryPage() {
                 </p>
               </div>
 
-              <div className="rounded-[1.5rem] border border-dashed border-slate-700 bg-slate-900/70 p-5">
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-blue-300">
+              <div className="rounded-[1.5rem] border border-dashed border-slate-700 bg-[#1b334d]/70 p-5">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#d6bc87]">
                   Launch Workflow
                 </p>
                 <div className="mt-4 space-y-3">
@@ -582,7 +582,7 @@ export default function CampaignFactoryPage() {
                   ].map((step, index) => (
                     <div
                       key={step}
-                      className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-950 px-4 py-3"
+                      className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#162d46] px-4 py-3"
                     >
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-500/15 text-xs font-black text-violet-200">
                         {index + 1}
@@ -619,7 +619,7 @@ export default function CampaignFactoryPage() {
                   </div>
 
                   <div className="grid gap-3 sm:grid-cols-3 xl:min-w-[520px]">
-                    <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+                    <div className="rounded-2xl border border-white/10 bg-[#162d46]/80 p-4">
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                         Priority Score
                       </p>
@@ -628,7 +628,7 @@ export default function CampaignFactoryPage() {
                       </p>
                     </div>
 
-                    <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+                    <div className="rounded-2xl border border-white/10 bg-[#162d46]/80 p-4">
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                         Projected Annual Revenue
                       </p>
@@ -637,7 +637,7 @@ export default function CampaignFactoryPage() {
                       </p>
                     </div>
 
-                    <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+                    <div className="rounded-2xl border border-white/10 bg-[#162d46]/80 p-4">
                       <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                         High Priority
                       </p>
@@ -690,7 +690,7 @@ export default function CampaignFactoryPage() {
 
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.22em] text-blue-300 sm:text-sm">
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-[#d6bc87] sm:text-sm">
                   Generated Ideas
                 </p>
 
@@ -700,10 +700,10 @@ export default function CampaignFactoryPage() {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <span className="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-black text-slate-300">
+                <span className="rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-black text-slate-300">
                   {data.campaigns.length} ideas
                 </span>
-                <span className="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm font-black text-slate-300">
+                <span className="rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-sm font-black text-slate-300">
                   {campaignQueue.length} queued
                 </span>
               </div>
@@ -720,7 +720,7 @@ export default function CampaignFactoryPage() {
                   return (
                     <article
                       key={`${campaign.slug}-${index}`}
-                      className="group rounded-[2rem] border border-slate-800 bg-slate-950/75 p-5 shadow-xl shadow-black/20 transition hover:-translate-y-0.5 hover:border-blue-500/40 sm:p-6"
+                      className="group rounded-[2rem] border border-white/10 bg-[#162d46]/75 p-5 shadow-xl shadow-black/20 transition hover:-translate-y-0.5 hover:border-[#d6bc87]/40 sm:p-6"
                     >
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div className="min-w-0">
@@ -730,7 +730,7 @@ export default function CampaignFactoryPage() {
                             >
                               {campaign.priority} Priority
                             </span>
-                            <span className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-slate-300">
+                            <span className="rounded-full border border-slate-700 bg-[#1b334d] px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-slate-300">
                               Score {priorityScore}
                             </span>
                           </div>
@@ -739,7 +739,7 @@ export default function CampaignFactoryPage() {
                             {campaign.campaign_name}
                           </h3>
 
-                          <p className="mt-3 text-sm font-bold text-blue-300">
+                          <p className="mt-3 text-sm font-bold text-[#d6bc87]">
                             Audience: {campaign.audience}
                           </p>
 
@@ -749,7 +749,7 @@ export default function CampaignFactoryPage() {
                         </div>
                       </div>
 
-                      <div className="mt-5 rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                      <div className="mt-5 rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                         <div className="mb-3 flex items-center justify-between gap-3">
                           <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                             Priority Score
@@ -767,7 +767,7 @@ export default function CampaignFactoryPage() {
                       </div>
 
                       <div className="mt-4 grid gap-3 md:grid-cols-2">
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                           <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                             Projected Annual Revenue
                           </p>
@@ -776,7 +776,7 @@ export default function CampaignFactoryPage() {
                           </p>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                           <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                             Ad Angle
                           </p>
@@ -811,7 +811,7 @@ export default function CampaignFactoryPage() {
                           type="button"
                           onClick={() => addToQueue(campaign)}
                           disabled={isQueued}
-                          className="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-4 text-sm font-black text-emerald-100 transition hover:bg-emerald-500/20 disabled:cursor-not-allowed disabled:border-slate-700 disabled:bg-slate-900 disabled:text-slate-500"
+                          className="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-4 text-sm font-black text-emerald-100 transition hover:bg-emerald-500/20 disabled:cursor-not-allowed disabled:border-slate-700 disabled:bg-[#1b334d] disabled:text-slate-500"
                         >
                           {isQueued ? "Queued" : "Queue"}
                         </button>
@@ -819,7 +819,7 @@ export default function CampaignFactoryPage() {
                         <button
                           type="button"
                           onClick={() => copyCampaignBrief(campaign)}
-                          className="rounded-2xl border border-slate-700 px-4 py-4 text-sm font-black text-slate-300 transition hover:border-blue-500 hover:text-white"
+                          className="rounded-2xl border border-slate-700 px-4 py-4 text-sm font-black text-slate-300 transition hover:border-[#d6bc87] hover:text-white"
                         >
                           Copy
                         </button>
@@ -838,7 +838,7 @@ export default function CampaignFactoryPage() {
                 })}
               </div>
 
-              <aside className="rounded-[2rem] border border-slate-800 bg-slate-950/80 p-5 shadow-xl shadow-black/20 xl:sticky xl:top-6 xl:self-start sm:p-6">
+              <aside className="rounded-[2rem] border border-white/10 bg-[#162d46]/80 p-5 shadow-xl shadow-black/20 xl:sticky xl:top-6 xl:self-start sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-xs font-black uppercase tracking-[0.22em] text-violet-300">
@@ -848,7 +848,7 @@ export default function CampaignFactoryPage() {
                       Launch order
                     </h3>
                   </div>
-                  <span className="rounded-2xl border border-slate-800 bg-slate-900 px-3 py-2 text-sm font-black text-slate-300">
+                  <span className="rounded-2xl border border-white/10 bg-[#1b334d] px-3 py-2 text-sm font-black text-slate-300">
                     {campaignQueue.length}
                   </span>
                 </div>
@@ -860,7 +860,7 @@ export default function CampaignFactoryPage() {
 
                 <div className="mt-5 space-y-3">
                   {campaignQueue.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/70 p-5 text-center">
+                    <div className="rounded-2xl border border-dashed border-slate-700 bg-[#1b334d]/70 p-5 text-center">
                       <p className="text-sm font-black text-slate-300">
                         No campaigns queued yet.
                       </p>
@@ -873,7 +873,7 @@ export default function CampaignFactoryPage() {
                     campaignQueue.map((campaign, index) => (
                       <div
                         key={`${campaign.slug}-queue`}
-                        className="rounded-2xl border border-slate-800 bg-slate-900 p-4"
+                        className="rounded-2xl border border-white/10 bg-[#1b334d] p-4"
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div>
@@ -893,7 +893,7 @@ export default function CampaignFactoryPage() {
                           </button>
                         </div>
 
-                        <p className="mt-3 text-xs font-bold leading-5 text-blue-300">
+                        <p className="mt-3 text-xs font-bold leading-5 text-[#d6bc87]">
                           {campaign.audience}
                         </p>
                       </div>
@@ -939,7 +939,7 @@ export default function CampaignFactoryPage() {
                       showToast("Campaign Queue cleared.", "warning");
                     }}
                     disabled={!campaignQueue.length}
-                    className="rounded-2xl border border-slate-800 px-5 py-4 text-sm font-black text-slate-500 transition hover:border-rose-400/50 hover:text-rose-200 disabled:cursor-not-allowed disabled:hover:border-slate-800 disabled:hover:text-slate-500"
+                    className="rounded-2xl border border-white/10 px-5 py-4 text-sm font-black text-slate-500 transition hover:border-rose-400/50 hover:text-rose-200 disabled:cursor-not-allowed disabled:hover:border-white/10 disabled:hover:text-slate-500"
                   >
                     Clear Queue
                   </button>
