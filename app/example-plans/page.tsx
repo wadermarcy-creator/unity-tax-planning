@@ -43,16 +43,16 @@ const plans = [
 
 export default function ExamplePlansPage() {
   return (
-    <main className="min-h-screen bg-white text-slate-950">
+    <main className="min-h-screen bg-[#f8f5ef] text-[#10243b]">
       <Navbar />
 
-      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
+      <section className="bg-[#10243b] px-4 py-20 text-white sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
-          <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-blue-300 sm:text-base">
+          <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-[#d6bc87] sm:text-base">
             Sample Plans
           </p>
 
-          <h1 className="max-w-5xl text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
+          <h1 className="font-serif max-w-5xl text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
             See what proactive tax strategy can look like.
           </h1>
 
@@ -65,14 +65,14 @@ export default function ExamplePlansPage() {
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <Link
               href="/tax-opportunity-scan"
-              className="inline-block rounded-2xl bg-blue-600 px-8 py-5 text-center text-lg font-black text-white shadow-xl shadow-blue-950/40 hover:bg-blue-500"
+              className="inline-block rounded-2xl bg-[#80602b] px-8 py-5 text-center text-lg font-black text-white shadow-xl shadow-black/10 hover:bg-[#98743b]"
             >
               Start My Assessment
             </Link>
 
             <Link
               href="/pricing"
-              className="inline-block rounded-2xl border-2 border-slate-700 px-8 py-5 text-center text-lg font-black text-white hover:border-blue-400 hover:bg-slate-900"
+              className="inline-block rounded-2xl border-2 border-slate-700 px-8 py-5 text-center text-lg font-black text-white hover:border-[#d6bc87] hover:bg-[#19334e]"
             >
               View Pricing
             </Link>
@@ -83,7 +83,7 @@ export default function ExamplePlansPage() {
       <section className="px-4 py-20 sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14 max-w-4xl">
-            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-600 sm:text-base">
+            <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#80602b] sm:text-base">
               Example Scenarios
             </p>
 
@@ -102,9 +102,9 @@ export default function ExamplePlansPage() {
             {plans.map((plan) => (
               <article
                 key={plan.slug}
-                className="rounded-[2rem] border-2 border-slate-300 bg-white p-8 shadow-lg transition hover:-translate-y-1 hover:border-blue-500 hover:shadow-2xl sm:p-9"
+                className="rounded-[2rem] border-2 border-slate-300 bg-white p-8 shadow-lg transition hover:-translate-y-1 hover:border-[#b99a60] hover:shadow-2xl sm:p-9"
               >
-                <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-blue-600">
+                <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-[#80602b]">
                   Sample Plan
                 </p>
 
@@ -118,7 +118,7 @@ export default function ExamplePlansPage() {
 
                 <Link
                   href={`/example-plans/${plan.slug}`}
-                  className="mt-8 inline-block rounded-2xl bg-blue-600 px-6 py-4 text-base font-black text-white shadow-xl shadow-blue-950/20 hover:bg-blue-500"
+                  className="mt-8 inline-block rounded-2xl bg-[#80602b] px-6 py-4 text-base font-black text-white shadow-xl shadow-black/10 hover:bg-[#98743b]"
                 >
                   View Sample Plan
                 </Link>
@@ -128,9 +128,9 @@ export default function ExamplePlansPage() {
         </div>
       </section>
 
-      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-28">
+      <section className="bg-[#10243b] px-4 py-20 text-white sm:px-6 md:py-28">
         <div className="mx-auto max-w-5xl text-center">
-          <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-blue-300 sm:text-base">
+          <p className="mb-4 text-sm font-black uppercase tracking-[0.24em] text-[#d6bc87] sm:text-base">
             Start Here
           </p>
 
@@ -145,7 +145,7 @@ export default function ExamplePlansPage() {
 
           <Link
             href="/tax-opportunity-scan"
-            className="inline-block rounded-2xl bg-blue-600 px-8 py-5 text-lg font-black text-white shadow-xl shadow-blue-950/40 hover:bg-blue-500"
+            className="inline-block rounded-2xl bg-[#80602b] px-8 py-5 text-lg font-black text-white shadow-xl shadow-black/10 hover:bg-[#98743b]"
           >
             Start My Assessment
           </Link>
