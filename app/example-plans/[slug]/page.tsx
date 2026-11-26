@@ -74,7 +74,7 @@ export default async function ExamplePlanPage({ params }: PageProps) {
     .slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-white text-slate-950">
+    <main className="min-h-screen bg-[#f8f5ef] text-[#10243b]">
       <Navbar />
 
       <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
@@ -84,7 +84,7 @@ export default async function ExamplePlanPage({ params }: PageProps) {
               {example.eyebrow}
             </p>
 
-            <h1 className="mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-7xl">
+            <h1 className="font-serif mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-7xl">
               {example.title}
             </h1>
 
