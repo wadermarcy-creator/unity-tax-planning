@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+export const metadata: Metadata = {"title":"Hypothetical Tax Planning Examples","description":"Explore educational tax planning scenarios for business owners, retirement, capital gains and charitable giving.","alternates":{"canonical":"/example-plans"},"openGraph":{"title":"Hypothetical Tax Planning Examples","description":"Explore educational tax planning scenarios for business owners, retirement, capital gains and charitable giving.","url":"/example-plans"}};
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import DisclosureFooter from "@/components/DisclosureFooter";
