@@ -7,11 +7,11 @@ const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || "GTM-PK2XK537";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.unitytaxplanning.com"),
-  title: "Unity Tax Planning",
-  description: "Proactive tax planning for business owners, high-income families, retirees and major financial decisions.",
+  title: { default: "Proactive Tax Planning & Tax Preparation | Unity Tax Planning", template: "%s | Unity Tax Planning" },
+  description: "Year-round tax planning and annual tax preparation for business owners, high-income families and retirees. Explore proactive tax advisory memberships.",
   openGraph: {
     title: "Unity Tax Planning",
-    description: "Proactive tax planning for business owners, high-income families, retirees and major financial decisions.",
+    description: "Year-round tax planning and annual tax preparation for business owners, high-income families and retirees. Explore proactive tax advisory memberships.",
     url: "https://www.unitytaxplanning.com",
     siteName: "Unity Tax Planning",
     type: "website",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Unity Tax Planning",
-    description: "Proactive tax planning for business owners, high-income families, retirees and major financial decisions.",
+    description: "Year-round tax planning and annual tax preparation for business owners, high-income families and retirees. Explore proactive tax advisory memberships.",
   },
 };
 
