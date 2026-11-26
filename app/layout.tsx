@@ -8,10 +8,10 @@ const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || "GTM-PK2XK537";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.unitytaxplanning.com"),
   title: "Unity Tax Planning",
-  description: "Mission Control for proactive tax planning.",
+  description: "Proactive tax planning for business owners, high-income families, retirees and major financial decisions.",
   openGraph: {
     title: "Unity Tax Planning",
-    description: "Mission Control for proactive tax planning.",
+    description: "Proactive tax planning for business owners, high-income families, retirees and major financial decisions.",
     url: "https://www.unitytaxplanning.com",
     siteName: "Unity Tax Planning",
     type: "website",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Unity Tax Planning",
-    description: "Mission Control for proactive tax planning.",
+    description: "Proactive tax planning for business owners, high-income families, retirees and major financial decisions.",
   },
 };
 
