@@ -153,17 +153,17 @@ export default function FAQPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white text-slate-950">
+    <main className="min-h-screen bg-[#f8f5ef] text-[#10243b]">
       <Navbar />
 
-      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-32">
+      <section className="bg-[#10243b] px-4 py-20 text-white sm:px-6 md:py-32">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-5xl">
-            <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-blue-300 sm:text-base">
+            <p className="mb-6 text-sm font-black uppercase tracking-[0.28em] text-[#d6bc87] sm:text-base">
               Frequently Asked Questions
             </p>
 
-            <h1 className="mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
+            <h1 className="font-serif mb-8 text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
               Understand the process before you begin.
             </h1>
 
@@ -181,7 +181,7 @@ export default function FAQPage() {
           <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr]">
             <aside className="lg:sticky lg:top-36 lg:self-start">
               <div className="rounded-[2rem] border-2 border-slate-300 bg-slate-100 p-7 shadow-lg">
-                <p className="mb-4 text-sm font-black uppercase tracking-[0.22em] text-blue-600">
+                <p className="mb-4 text-sm font-black uppercase tracking-[0.22em] text-[#80602b]">
                   Quick Navigation
                 </p>
 
@@ -190,7 +190,7 @@ export default function FAQPage() {
                     <a
                       key={section.title}
                       href={`#faq-section-${index + 1}`}
-                      className="block rounded-xl border border-slate-300 bg-white px-4 py-3 font-black text-slate-800 transition hover:border-blue-500 hover:text-blue-600"
+                      className="block rounded-xl border border-slate-300 bg-white px-4 py-3 font-black text-slate-800 transition hover:border-[#b99a60] hover:text-[#80602b]"
                     >
                       {section.title}
                     </a>
@@ -198,7 +198,7 @@ export default function FAQPage() {
                 </div>
               </div>
 
-              <div className="mt-6 rounded-[2rem] border-2 border-blue-500 bg-slate-950 p-7 text-white shadow-xl shadow-blue-950/20">
+              <div className="mt-6 rounded-[2rem] border-2 border-[#b99a60] bg-[#10243b] p-7 text-white shadow-xl shadow-black/10">
                 <p className="text-xl font-black">
                   Still not sure where to start?
                 </p>
@@ -211,7 +211,7 @@ export default function FAQPage() {
 
                 <Link
                   href="/tax-opportunity-scan"
-                  className="mt-6 block rounded-2xl bg-blue-500 px-5 py-4 text-center font-black text-white hover:bg-blue-400"
+                  className="mt-6 block rounded-2xl bg-[#98743b] px-5 py-4 text-center font-black text-white hover:bg-[#d6bc87]"
                 >
                   Start My Assessment
                 </Link>
@@ -226,7 +226,7 @@ export default function FAQPage() {
                   className="scroll-mt-40"
                 >
                   <div className="mb-7">
-                    <p className="mb-3 text-sm font-black uppercase tracking-[0.22em] text-blue-600">
+                    <p className="mb-3 text-sm font-black uppercase tracking-[0.22em] text-[#80602b]">
                       Section {String(sectionIndex + 1).padStart(2, "0")}
                     </p>
 
@@ -243,14 +243,14 @@ export default function FAQPage() {
                     {section.questions.map((faq) => (
                       <details
                         key={faq.question}
-                        className="group rounded-[2rem] border-2 border-slate-300 bg-white p-6 shadow-md transition open:border-blue-500 open:shadow-xl sm:p-8"
+                        className="group rounded-[2rem] border-2 border-slate-300 bg-white p-6 shadow-md transition open:border-[#b99a60] open:shadow-xl sm:p-8"
                       >
                         <summary className="flex cursor-pointer list-none items-center justify-between gap-5">
                           <h3 className="text-xl font-black tracking-tight sm:text-2xl">
                             {faq.question}
                           </h3>
 
-                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-950 text-xl font-black text-white transition group-open:rotate-45 group-open:bg-blue-600">
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#10243b] text-xl font-black text-white transition group-open:rotate-45 group-open:bg-[#80602b]">
                             +
                           </span>
                         </summary>
@@ -268,11 +268,11 @@ export default function FAQPage() {
         </div>
       </section>
 
-      <section className="bg-slate-950 px-4 py-20 text-white sm:px-6 md:py-28">
+      <section className="bg-[#10243b] px-4 py-20 text-white sm:px-6 md:py-28">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-8 lg:grid-cols-3">
-            <div className="rounded-[2rem] border-2 border-slate-700 bg-slate-900 p-8 shadow-xl">
-              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-blue-300">
+            <div className="rounded-[2rem] border-2 border-slate-700 bg-[#19334e] p-8 shadow-xl">
+              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-[#d6bc87]">
                 Review the Process
               </p>
 
@@ -285,14 +285,14 @@ export default function FAQPage() {
 
               <Link
                 href="/how-it-works"
-                className="mt-6 inline-block font-black text-blue-300 hover:text-white"
+                className="mt-6 inline-block font-black text-[#d6bc87] hover:text-white"
               >
                 How It Works →
               </Link>
             </div>
 
-            <div className="rounded-[2rem] border-2 border-blue-500 bg-slate-900 p-8 shadow-xl shadow-blue-950/30">
-              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-blue-300">
+            <div className="rounded-[2rem] border-2 border-[#b99a60] bg-[#19334e] p-8 shadow-xl shadow-black/10">
+              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-[#d6bc87]">
                 Review Pricing
               </p>
 
@@ -305,14 +305,14 @@ export default function FAQPage() {
 
               <Link
                 href="/pricing"
-                className="mt-6 inline-block font-black text-blue-300 hover:text-white"
+                className="mt-6 inline-block font-black text-[#d6bc87] hover:text-white"
               >
                 View Pricing →
               </Link>
             </div>
 
-            <div className="rounded-[2rem] border-2 border-slate-700 bg-slate-900 p-8 shadow-xl">
-              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-blue-300">
+            <div className="rounded-[2rem] border-2 border-slate-700 bg-[#19334e] p-8 shadow-xl">
+              <p className="mb-4 text-sm font-black uppercase tracking-[0.2em] text-[#d6bc87]">
                 View Examples
               </p>
 
@@ -325,7 +325,7 @@ export default function FAQPage() {
 
               <Link
                 href="/example-plans"
-                className="mt-6 inline-block font-black text-blue-300 hover:text-white"
+                className="mt-6 inline-block font-black text-[#d6bc87] hover:text-white"
               >
                 View Samples →
               </Link>
@@ -334,13 +334,13 @@ export default function FAQPage() {
         </div>
       </section>
 
-      <section className="bg-blue-600 px-4 py-20 text-white sm:px-6 md:py-28">
+      <section className="bg-[#80602b] px-4 py-20 text-white sm:px-6 md:py-28">
         <div className="mx-auto max-w-5xl text-center">
           <h2 className="mb-8 text-4xl font-black tracking-tight sm:text-5xl md:text-7xl">
             Ready to see what your tax plan may be missing?
           </h2>
 
-          <p className="mx-auto mb-10 max-w-3xl text-xl font-medium leading-9 text-blue-100 sm:text-2xl">
+          <p className="mx-auto mb-10 max-w-3xl text-xl font-medium leading-9 text-[#f8f5ef] sm:text-2xl">
             Start with a short intake. If there is a fit, the next step is a
             deeper review of your documents and a written planning summary.
           </p>
@@ -348,14 +348,14 @@ export default function FAQPage() {
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link
               href="/tax-opportunity-scan"
-              className="inline-block w-full rounded-2xl bg-white px-8 py-5 text-lg font-black text-blue-600 shadow-xl hover:bg-blue-50 sm:w-auto"
+              className="inline-block w-full rounded-2xl bg-white px-8 py-5 text-lg font-black text-[#80602b] shadow-xl hover:bg-[#f8f5ef] sm:w-auto"
             >
               Start My Assessment
             </Link>
 
             <Link
               href="/pricing"
-              className="inline-block w-full rounded-2xl border-2 border-blue-300 px-8 py-5 text-lg font-black text-white hover:bg-blue-500 sm:w-auto"
+              className="inline-block w-full rounded-2xl border-2 border-[#d6bc87] px-8 py-5 text-lg font-black text-white hover:bg-[#98743b] sm:w-auto"
             >
               View Pricing
             </Link>
