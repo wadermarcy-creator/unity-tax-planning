@@ -113,9 +113,9 @@ function getPriorityTone(score: number | null) {
 
   if (value >= 130) return "border-violet-500/40 bg-violet-500/10 text-violet-300";
   if (value >= 100) return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
-  if (value >= 70) return "border-blue-500/40 bg-blue-500/10 text-blue-300";
+  if (value >= 70) return "border-blue-500/40 bg-blue-500/10 text-[#d6bc87]";
   if (value >= 40) return "border-orange-500/40 bg-orange-500/10 text-orange-300";
-  return "border-slate-700 bg-slate-900 text-slate-300";
+  return "border-slate-700 bg-[#1b334d] text-slate-300";
 }
 
 function getReturnStatus(lead: Lead) {
@@ -465,7 +465,7 @@ export default function ClientsPage() {
                 <button
                   type="button"
                   onClick={() => downloadCsv("unity-tax-active-clients.csv", filteredClients)}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#162d46] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
                 >
                   <Download className="h-4 w-4" />
                   Export Clients
@@ -475,7 +475,7 @@ export default function ClientsPage() {
                   type="button"
                   onClick={refreshClients}
                   disabled={isRefreshing}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#162d46] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <RefreshCcw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
                   {isRefreshing ? "Refreshing" : "Refresh"}
@@ -484,28 +484,28 @@ export default function ClientsPage() {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70 p-5">
+              <div className="rounded-[1.5rem] border border-slate-700/70 bg-[#162d46] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
                   Active Clients
                 </p>
                 <p className="mt-3 text-3xl font-black text-white">{clients.length}</p>
               </div>
 
-              <div className="rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70 p-5">
+              <div className="rounded-[1.5rem] border border-slate-700/70 bg-[#162d46] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
                   Priority Score
                 </p>
                 <p className="mt-3 text-3xl font-black text-white">{averageScore}</p>
               </div>
 
-              <div className="rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70 p-5">
+              <div className="rounded-[1.5rem] border border-slate-700/70 bg-[#162d46] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
                   High Priority
                 </p>
                 <p className="mt-3 text-3xl font-black text-emerald-300">{highValueCount}</p>
               </div>
 
-              <div className="rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70 p-5">
+              <div className="rounded-[1.5rem] border border-slate-700/70 bg-[#162d46] p-5">
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-slate-500">
                   Projected Revenue
                 </p>
@@ -518,7 +518,7 @@ export default function ClientsPage() {
         </section>
 
         <section className="mb-6 grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <p className="text-xs font-black uppercase tracking-[0.24em] text-emerald-300">
               Client Command
             </p>
@@ -528,14 +528,14 @@ export default function ClientsPage() {
             </p>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+              <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                 <p className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-slate-500">
                   Current View
                 </p>
                 <p className="mt-2 text-xl font-black text-white">{filteredClients.length}</p>
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+              <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                 <p className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-slate-500">
                   View Revenue
                 </p>
@@ -544,7 +544,7 @@ export default function ClientsPage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+              <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                 <p className="text-[0.65rem] font-black uppercase tracking-[0.2em] text-slate-500">
                   Source
                 </p>
@@ -553,7 +553,7 @@ export default function ClientsPage() {
             </div>
           </div>
 
-          <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.24em] text-emerald-300">
@@ -568,7 +568,7 @@ export default function ClientsPage() {
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
                   placeholder="Search name, email, concern..."
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 px-11 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-emerald-500"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] px-11 py-3 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-emerald-500"
                 />
               </div>
             </div>
@@ -576,7 +576,7 @@ export default function ClientsPage() {
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 href="/mission-control/prospects"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to Prospects
@@ -584,7 +584,7 @@ export default function ClientsPage() {
 
               <Link
                 href="/mission-control/assessments"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
               >
                 <FileText className="h-4 w-4" />
                 Assessment Center
@@ -592,7 +592,7 @@ export default function ClientsPage() {
 
               <Link
                 href="/mission-control/revenue"
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
               >
                 <TrendingUp className="h-4 w-4" />
                 Revenue View
@@ -602,11 +602,11 @@ export default function ClientsPage() {
         </section>
 
         {isLoading ? (
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 text-sm font-bold text-slate-400">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8 text-sm font-bold text-slate-400">
             Loading clients...
           </div>
         ) : filteredClients.length === 0 ? (
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-xl font-black text-white">No active clients match this view.</p>
@@ -638,7 +638,7 @@ export default function ClientsPage() {
               return (
                 <article
                   key={lead.id}
-                  className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 transition hover:border-emerald-500/60 sm:p-6"
+                  className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 transition hover:border-emerald-500/60 sm:p-6"
                 >
                   <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                     <div className="min-w-0">
@@ -661,21 +661,21 @@ export default function ClientsPage() {
                       </p>
 
                       <div className="mt-5 grid gap-3 sm:grid-cols-4">
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                           <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
                             Score
                           </p>
                           <p className="mt-2 text-lg font-black text-white">{lead.lead_score ?? 0}</p>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                           <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
                             Revenue
                           </p>
                           <p className="mt-2 text-lg font-black text-white">{formatMoney(annualRevenue)}</p>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:col-span-2">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4 sm:col-span-2">
                           <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
                             Original Assessment
                           </p>
@@ -684,14 +684,14 @@ export default function ClientsPage() {
                       </div>
 
                       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/60 p-4">
                           <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
                             Household Income
                           </p>
                           <p className="mt-2 text-sm font-black text-white">{lead.household_income || "—"}</p>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/60 p-4">
                           <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-500">
                             Investable Assets
                           </p>
@@ -699,7 +699,7 @@ export default function ClientsPage() {
                         </div>
                       </div>
 
-                      <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                      <div className="mt-4 rounded-2xl border border-white/10 bg-[#1b334d]/60 p-4">
                         <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-emerald-300">
                           First Planning Focus
                         </p>
@@ -707,7 +707,7 @@ export default function ClientsPage() {
                           {focusAreas.map((focus) => (
                             <span
                               key={focus}
-                              className="rounded-full border border-slate-700 bg-slate-950 px-3 py-1 text-xs font-black text-slate-300"
+                              className="rounded-full border border-slate-700 bg-[#162d46] px-3 py-1 text-xs font-black text-slate-300"
                             >
                               {focus}
                             </span>
@@ -735,7 +735,7 @@ export default function ClientsPage() {
                       <button
                         type="button"
                         onClick={() => copyText(getClientBrief(lead), "Client summary copied.")}
-                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
+                        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
                       >
                         <Clipboard className="h-4 w-4" />
                         Copy Summary
@@ -769,7 +769,7 @@ export default function ClientsPage() {
                               showToast("No email on file.", "error");
                             }
                           }}
-                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 p-3 text-slate-300 transition hover:border-emerald-500 hover:text-white"
+                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-[#1b334d] p-3 text-slate-300 transition hover:border-emerald-500 hover:text-white"
                           aria-label={`Email ${name}`}
                         >
                           <Mail className="h-4 w-4" />
@@ -783,7 +783,7 @@ export default function ClientsPage() {
                               showToast("No phone on file.", "error");
                             }
                           }}
-                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 p-3 text-slate-300 transition hover:border-emerald-500 hover:text-white"
+                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-[#1b334d] p-3 text-slate-300 transition hover:border-emerald-500 hover:text-white"
                           aria-label={`Call ${name}`}
                         >
                           <Phone className="h-4 w-4" />
@@ -805,7 +805,7 @@ export default function ClientsPage() {
                           type="button"
                           onClick={() => archiveClient(lead)}
                           disabled={movingId === lead.id}
-                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 p-3 text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+                          className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-[#1b334d] p-3 text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
                           aria-label={`Archive ${name}`}
                         >
                           <Archive className="h-4 w-4" />
@@ -819,7 +819,7 @@ export default function ClientsPage() {
           </div>
         )}
 
-        <section className="mt-6 rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+        <section className="mt-6 rounded-[1.75rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs font-black uppercase tracking-[0.2em] text-emerald-300">
@@ -833,7 +833,7 @@ export default function ClientsPage() {
 
             <Link
               href="/mission-control/prospects"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-emerald-500 hover:text-white"
             >
               <Users className="h-4 w-4" />
               View Prospects
