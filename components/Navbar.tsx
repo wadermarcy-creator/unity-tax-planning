@@ -14,10 +14,10 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="border-b border-white/10 bg-[#080d1d]">
+    <header className="border-b border-white/10 bg-[#10243b]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-lg font-bold text-white shadow-lg shadow-blue-600/30">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#d6bc87] text-lg font-bold text-[#10243b] shadow-lg shadow-black/10">
             U
           </div>
 
@@ -25,7 +25,7 @@ export default function Navbar() {
             <div className="text-xl font-extrabold tracking-tight text-white">
               UNITY
             </div>
-            <div className="text-xs font-bold tracking-[0.28em] text-blue-300">
+            <div className="text-xs font-bold tracking-[0.28em] text-[#d6bc87]">
               TAX PLANNING
             </div>
           </div>
@@ -45,7 +45,7 @@ export default function Navbar() {
 
         <Link
           href="/tax-opportunity-scan"
-          className="hidden rounded-full bg-white px-6 py-3 text-sm font-bold text-[#030817] shadow-sm transition hover:bg-blue-100 md:inline-flex"
+          className="hidden rounded-full bg-[#d6bc87] px-6 py-3 text-sm font-bold text-[#030817] shadow-sm transition hover:bg-[#f8f5ef] md:inline-flex"
         >
           Start My Assessment
         </Link>
@@ -66,7 +66,7 @@ export default function Navbar() {
       </div>
 
       {isOpen && (
-        <div className="border-t border-white/10 bg-[#080d1d] px-6 py-5 md:hidden">
+        <div className="border-t border-white/10 bg-[#10243b] px-6 py-5 md:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col gap-3">
             {navItems.map((item) => (
               <Link
@@ -82,7 +82,7 @@ export default function Navbar() {
             <Link
               href="/tax-opportunity-scan"
               onClick={() => setIsOpen(false)}
-              className="rounded-2xl bg-blue-600 px-5 py-4 text-center text-base font-black text-white shadow-lg shadow-blue-600/30 transition hover:bg-blue-500"
+              className="rounded-lg bg-[#d6bc87] px-5 py-4 text-center text-base font-black text-[#10243b] shadow-lg shadow-black/10 transition hover:bg-[#e5d2ab]"
             >
               Start My Assessment
             </Link>
