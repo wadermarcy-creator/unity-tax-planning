@@ -56,9 +56,9 @@ function getOpportunityTone(score: number | null) {
 
   if (value >= 130) return "border-violet-500/40 bg-violet-500/10 text-violet-300";
   if (value >= 100) return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
-  if (value >= 70) return "border-blue-500/40 bg-blue-500/10 text-blue-300";
+  if (value >= 70) return "border-blue-500/40 bg-blue-500/10 text-[#d6bc87]";
   if (value >= 40) return "border-orange-500/40 bg-orange-500/10 text-orange-300";
-  return "border-slate-700 bg-slate-900 text-slate-300";
+  return "border-slate-700 bg-[#1b334d] text-slate-300";
 }
 
 function getStatusLabel(status: string | null) {
@@ -408,11 +408,11 @@ export default function AssessmentsPage() {
           <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
             <div className="max-w-4xl">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.22em] text-blue-200">
+                <span className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.22em] text-[#e5cf9e]">
                   <Brain className="h-4 w-4" />
                   AI Executive Recommendation
                 </span>
-                <span className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-slate-300">
+                <span className="rounded-full border border-slate-700 bg-[#162d46] px-3 py-1 text-xs font-black uppercase tracking-[0.18em] text-slate-300">
                   Launch Triage
                 </span>
               </div>
@@ -449,7 +449,7 @@ export default function AssessmentsPage() {
                 type="button"
                 onClick={() => loadLeads({ silent: true })}
                 disabled={isRefreshing}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-950/70 px-5 py-4 text-sm font-black text-slate-200 transition hover:border-blue-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2 xl:col-span-1"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#162d46] px-5 py-4 text-sm font-black text-slate-200 transition hover:border-blue-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:col-span-2 xl:col-span-1"
               >
                 <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
                 {isRefreshing ? "Refreshing" : "Refresh"}
@@ -483,7 +483,7 @@ export default function AssessmentsPage() {
             </p>
           </div>
 
-          <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">
               Total Assessments
             </p>
@@ -493,7 +493,7 @@ export default function AssessmentsPage() {
             </p>
           </div>
 
-          <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">
               Qualified
             </p>
@@ -505,10 +505,10 @@ export default function AssessmentsPage() {
         </section>
 
         <section className="mb-6 grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.22em] text-blue-300">
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-[#d6bc87]">
                   Assessment Filters
                 </p>
                 <h2 className="mt-2 text-2xl font-black text-white">Review queue</h2>
@@ -520,7 +520,7 @@ export default function AssessmentsPage() {
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Search name, concern, income..."
-                  className="w-full rounded-2xl border border-slate-800 bg-slate-900 py-3 pl-11 pr-4 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
+                  className="w-full rounded-2xl border border-white/10 bg-[#1b334d] py-3 pl-11 pr-4 text-sm font-bold text-white outline-none transition placeholder:text-slate-600 focus:border-blue-500"
                 />
               </div>
             </div>
@@ -551,7 +551,7 @@ export default function AssessmentsPage() {
                   className={`rounded-2xl border px-4 py-3 text-sm font-black transition sm:px-5 ${
                     filter === item.value
                       ? "border-blue-500 bg-blue-600 text-white shadow-lg shadow-blue-950/30"
-                      : "border-slate-800 bg-slate-950 text-slate-400 hover:border-blue-500 hover:text-white"
+                      : "border-white/10 bg-[#162d46] text-slate-400 hover:border-[#d6bc87] hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -561,7 +561,7 @@ export default function AssessmentsPage() {
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.22em] text-emerald-300">
               <Sparkles className="h-4 w-4" />
               Filtered View Value
@@ -576,7 +576,7 @@ export default function AssessmentsPage() {
         </section>
 
         {rankedLeads.length > 0 && (
-          <section className="mb-6 rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+          <section className="mb-6 rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
             <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.22em] text-orange-300">
@@ -591,7 +591,7 @@ export default function AssessmentsPage() {
 
             <div className="grid gap-3 lg:grid-cols-3">
               {rankedLeads.slice(0, 3).map((lead) => (
-                <div key={lead.id} className="rounded-[1.5rem] border border-slate-800 bg-slate-900/70 p-4">
+                <div key={lead.id} className="rounded-[1.5rem] border border-white/10 bg-[#1b334d]/70 p-4">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-lg font-black text-white">{getFullName(lead)}</p>
@@ -612,7 +612,7 @@ export default function AssessmentsPage() {
                     <button
                       type="button"
                       onClick={() => copyLeadBrief(lead)}
-                      className="rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm font-black text-slate-200 transition hover:border-blue-500 hover:text-white"
+                      className="rounded-2xl border border-slate-700 bg-[#162d46] px-4 py-3 text-sm font-black text-slate-200 transition hover:border-[#d6bc87] hover:text-white"
                     >
                       Copy Brief
                     </button>
@@ -636,11 +636,11 @@ export default function AssessmentsPage() {
         )}
 
         {isLoading ? (
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 text-sm font-bold text-slate-400">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8 text-sm font-bold text-slate-400">
             Loading assessments...
           </div>
         ) : filteredLeads.length === 0 ? (
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8">
             <p className="text-xl font-black text-white">No assessments match this view.</p>
             <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-slate-400">
               Clear the search or switch back to All. If this is a new launch, submit a test Tax Opportunity Scan to confirm the public form is feeding Mission Control.
@@ -651,7 +651,7 @@ export default function AssessmentsPage() {
             {filteredLeads.map((lead) => (
               <article
                 key={lead.id}
-                className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 transition hover:border-blue-500/60 sm:p-6"
+                className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 transition hover:border-[#d6bc87]/60 sm:p-6"
               >
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                   <div className="min-w-0 flex-1">
@@ -676,7 +676,7 @@ export default function AssessmentsPage() {
                     </div>
 
                     <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                      <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                         <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                           Score
                         </p>
@@ -685,7 +685,7 @@ export default function AssessmentsPage() {
                         </p>
                       </div>
 
-                      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                      <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                         <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                           Revenue
                         </p>
@@ -694,7 +694,7 @@ export default function AssessmentsPage() {
                         </p>
                       </div>
 
-                      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                      <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                         <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                           Income
                         </p>
@@ -703,7 +703,7 @@ export default function AssessmentsPage() {
                         </p>
                       </div>
 
-                      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                      <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                         <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                           Assets
                         </p>
@@ -717,8 +717,8 @@ export default function AssessmentsPage() {
                       {lead.biggest_tax_concern || "No concern summary provided."}
                     </p>
 
-                    <div className="mt-5 rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
-                      <p className="text-xs font-black uppercase tracking-[0.18em] text-blue-300">
+                    <div className="mt-5 rounded-2xl border border-white/10 bg-[#1b334d]/70 p-4">
+                      <p className="text-xs font-black uppercase tracking-[0.18em] text-[#d6bc87]">
                         Next Best Action
                       </p>
                       <p className="mt-2 text-sm font-semibold leading-6 text-slate-300">
@@ -728,7 +728,7 @@ export default function AssessmentsPage() {
                   </div>
 
                   <div className="flex shrink-0 flex-col gap-3 lg:w-48">
-                    <p className="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-center text-xs font-black uppercase tracking-[0.16em] text-slate-400">
+                    <p className="rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-center text-xs font-black uppercase tracking-[0.16em] text-slate-400">
                       {formatDate(lead.created_at)}
                     </p>
 
@@ -743,7 +743,7 @@ export default function AssessmentsPage() {
                     <button
                       type="button"
                       onClick={() => copyLeadBrief(lead)}
-                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-3 text-sm font-black text-slate-200 transition hover:border-blue-500 hover:text-white"
+                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-3 text-sm font-black text-slate-200 transition hover:border-[#d6bc87] hover:text-white"
                     >
                       <ClipboardCopy className="h-4 w-4" />
                       Copy
@@ -753,13 +753,13 @@ export default function AssessmentsPage() {
                       {lead.email ? (
                         <a
                           href={`mailto:${lead.email}`}
-                          className="inline-flex items-center justify-center rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-slate-300 transition hover:border-blue-500 hover:text-white"
+                          className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-slate-300 transition hover:border-[#d6bc87] hover:text-white"
                           aria-label={`Email ${getFullName(lead)}`}
                         >
                           <Mail className="h-4 w-4" />
                         </a>
                       ) : (
-                        <span className="inline-flex items-center justify-center rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-slate-700">
+                        <span className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-slate-700">
                           <Mail className="h-4 w-4" />
                         </span>
                       )}
@@ -767,13 +767,13 @@ export default function AssessmentsPage() {
                       {lead.phone ? (
                         <a
                           href={`tel:${lead.phone}`}
-                          className="inline-flex items-center justify-center rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-slate-300 transition hover:border-blue-500 hover:text-white"
+                          className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-slate-300 transition hover:border-[#d6bc87] hover:text-white"
                           aria-label={`Call ${getFullName(lead)}`}
                         >
                           <Phone className="h-4 w-4" />
                         </a>
                       ) : (
-                        <span className="inline-flex items-center justify-center rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-slate-700">
+                        <span className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-[#1b334d] px-4 py-3 text-slate-700">
                           <Phone className="h-4 w-4" />
                         </span>
                       )}
@@ -788,9 +788,9 @@ export default function AssessmentsPage() {
         <section className="mt-6 grid gap-4 lg:grid-cols-3">
           <Link
             href="/mission-control/client-copilot"
-            className="rounded-[1.5rem] border border-slate-800 bg-slate-950/70 p-5 transition hover:border-blue-500/60"
+            className="rounded-[1.5rem] border border-white/10 bg-[#162d46] p-5 transition hover:border-[#d6bc87]/60"
           >
-            <UserRound className="h-5 w-5 text-blue-300" />
+            <UserRound className="h-5 w-5 text-[#d6bc87]" />
             <p className="mt-3 text-lg font-black text-white">Client Copilot</p>
             <p className="mt-2 text-sm font-semibold leading-6 text-slate-400">
               Use assessment context to prepare prospect follow-up.
@@ -799,7 +799,7 @@ export default function AssessmentsPage() {
 
           <Link
             href="/mission-control/opportunity-engine"
-            className="rounded-[1.5rem] border border-slate-800 bg-slate-950/70 p-5 transition hover:border-blue-500/60"
+            className="rounded-[1.5rem] border border-white/10 bg-[#162d46] p-5 transition hover:border-[#d6bc87]/60"
           >
             <Target className="h-5 w-5 text-emerald-300" />
             <p className="mt-3 text-lg font-black text-white">Opportunity Engine</p>
@@ -810,7 +810,7 @@ export default function AssessmentsPage() {
 
           <Link
             href="/mission-control/strategy-builder"
-            className="rounded-[1.5rem] border border-slate-800 bg-slate-950/70 p-5 transition hover:border-blue-500/60"
+            className="rounded-[1.5rem] border border-white/10 bg-[#162d46] p-5 transition hover:border-[#d6bc87]/60"
           >
             <FileText className="h-5 w-5 text-violet-300" />
             <p className="mt-3 text-lg font-black text-white">Strategy Builder</p>
@@ -822,7 +822,7 @@ export default function AssessmentsPage() {
       </div>
 
       {toast && (
-        <div className="fixed bottom-5 left-4 right-4 z-50 mx-auto max-w-md rounded-2xl border border-blue-400/40 bg-slate-950 px-5 py-4 text-center text-sm font-black text-white shadow-2xl shadow-black/40">
+        <div className="fixed bottom-5 left-4 right-4 z-50 mx-auto max-w-md rounded-2xl border border-blue-400/40 bg-[#162d46] px-5 py-4 text-center text-sm font-black text-white shadow-2xl shadow-black/40">
           {toast}
         </div>
       )}
