@@ -304,7 +304,7 @@ export default function PipelinePage() {
         </div>
 
         {isLoading ? (
-          <p className="mt-5 rounded-2xl border border-slate-800 bg-slate-950/70 p-6 text-sm font-bold text-slate-400">
+          <p className="mt-5 rounded-2xl border border-white/10 bg-[#162d46] p-6 text-sm font-bold text-slate-400">
             Loading pipeline...
           </p>
         ) : (
