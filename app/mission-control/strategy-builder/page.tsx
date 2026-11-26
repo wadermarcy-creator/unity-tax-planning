@@ -505,19 +505,19 @@ export default function StrategyBuilderPage() {
 
       <div className="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
         {toast && (
-          <div className="fixed right-4 top-4 z-50 flex max-w-sm items-center gap-3 rounded-2xl border border-emerald-400/30 bg-slate-950 px-4 py-3 text-sm font-black text-white shadow-2xl shadow-black/40">
+          <div className="fixed right-4 top-4 z-50 flex max-w-sm items-center gap-3 rounded-2xl border border-emerald-400/30 bg-[#162d46] px-4 py-3 text-sm font-black text-white shadow-2xl shadow-black/40">
             <Check className="h-5 w-5 text-emerald-300" />
             {toast.message}
           </div>
         )}
 
         {isLoading ? (
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 text-slate-400">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8 text-slate-400">
             Loading strategy builder...
           </div>
         ) : leads.length === 0 ? (
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 shadow-xl shadow-black/20">
-            <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8 shadow-xl shadow-black/20">
+            <p className="text-sm font-black uppercase tracking-[0.22em] text-[#d6bc87]">
               Strategy Builder
             </p>
             <h1 className="mt-3 text-3xl font-black text-white">No assessments available yet.</h1>
@@ -534,7 +534,7 @@ export default function StrategyBuilderPage() {
               <button
                 type="button"
                 onClick={() => loadLeads(true)}
-                className="rounded-2xl border border-slate-700 bg-slate-900 px-5 py-4 text-sm font-black text-white hover:bg-slate-800"
+                className="rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-4 text-sm font-black text-white hover:bg-slate-800"
               >
                 Refresh
               </button>
@@ -545,7 +545,7 @@ export default function StrategyBuilderPage() {
             <section className="mb-6 overflow-hidden rounded-[2rem] border border-blue-500/30 bg-blue-500/10 p-5 shadow-2xl shadow-blue-950/20 sm:p-7">
               <div className="grid gap-6 xl:grid-cols-[1fr_0.8fr] xl:items-end">
                 <div>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-blue-200">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-[#e5cf9e]">
                     <Sparkles className="h-4 w-4" />
                     Unity Tax Strategy Builder™
                   </div>
@@ -559,7 +559,7 @@ export default function StrategyBuilderPage() {
                   </p>
                 </div>
 
-                <div className="rounded-[1.5rem] border border-slate-700/70 bg-slate-950/80 p-4">
+                <div className="rounded-[1.5rem] border border-slate-700/70 bg-[#162d46]/80 p-4">
                   <label className="mb-2 block text-xs font-black uppercase tracking-[0.18em] text-slate-400">
                     Select Prospect
                   </label>
@@ -567,7 +567,7 @@ export default function StrategyBuilderPage() {
                   <select
                     value={selectedLeadId}
                     onChange={(event) => setSelectedLeadId(event.target.value)}
-                    className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-4 text-sm font-black text-white outline-none focus:border-blue-400 sm:px-5"
+                    className="w-full rounded-2xl border border-slate-700 bg-[#162d46] px-4 py-4 text-sm font-black text-white outline-none focus:border-blue-400 sm:px-5"
                   >
                     {leads.map((lead) => (
                       <option key={lead.id} value={lead.id}>
@@ -577,11 +577,11 @@ export default function StrategyBuilderPage() {
                   </select>
 
                   <div className="mt-4 grid grid-cols-2 gap-3 text-xs font-black text-slate-400">
-                    <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-3">
+                    <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-3">
                       <p className="uppercase tracking-[0.16em] text-slate-500">Loaded</p>
                       <p className="mt-1 text-lg text-white">{leads.length}</p>
                     </div>
-                    <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-3">
+                    <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-3">
                       <p className="uppercase tracking-[0.16em] text-slate-500">Selected</p>
                       <p className="mt-1 text-lg text-white">{selectedOpportunities.length}</p>
                     </div>
@@ -608,10 +608,10 @@ export default function StrategyBuilderPage() {
 
                   <article className="rounded-[1.75rem] border border-blue-400/30 bg-blue-400/10 p-5 shadow-xl shadow-black/20">
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-200">
+                      <p className="text-xs font-black uppercase tracking-[0.2em] text-[#e5cf9e]">
                         Projected Annual Revenue
                       </p>
-                      <TrendingUp className="h-5 w-5 text-blue-200" />
+                      <TrendingUp className="h-5 w-5 text-[#e5cf9e]" />
                     </div>
                     <p className="mt-4 text-4xl font-black text-white">
                       {formatCurrency(projectedAnnualRevenue)}
@@ -637,7 +637,7 @@ export default function StrategyBuilderPage() {
                   </article>
                 </section>
 
-                <section className="mb-6 rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+                <section className="mb-6 rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
                   <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                     <div className="max-w-4xl">
                       <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-violet-200">
@@ -662,7 +662,7 @@ export default function StrategyBuilderPage() {
                         type="button"
                         onClick={queueStrategy}
                         disabled={actionButtonsDisabled}
-                        className="rounded-2xl border border-slate-700 bg-slate-900 px-5 py-4 text-sm font-black text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-4 text-sm font-black text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Add to Strategy Queue
                       </button>
@@ -672,13 +672,13 @@ export default function StrategyBuilderPage() {
 
                 <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
                   <section className="space-y-6">
-                    <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+                    <article className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
                       <div className="flex items-start gap-4">
                         <div className="rounded-2xl border border-blue-400/30 bg-blue-400/10 p-3">
-                          <UserRound className="h-6 w-6 text-blue-200" />
+                          <UserRound className="h-6 w-6 text-[#e5cf9e]" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-black uppercase tracking-[0.22em] text-blue-300">
+                          <p className="text-sm font-black uppercase tracking-[0.22em] text-[#d6bc87]">
                             Prospect
                           </p>
                           <h2 className="mt-2 truncate text-2xl font-black text-white sm:text-3xl">
@@ -691,7 +691,7 @@ export default function StrategyBuilderPage() {
                       </div>
 
                       <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                           <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                             Score
                           </p>
@@ -700,7 +700,7 @@ export default function StrategyBuilderPage() {
                           </p>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                           <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                             Income
                           </p>
@@ -709,7 +709,7 @@ export default function StrategyBuilderPage() {
                           </p>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                           <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                             Assets
                           </p>
@@ -742,7 +742,7 @@ export default function StrategyBuilderPage() {
                         {selectedLead.email ? (
                           <a
                             href={`mailto:${selectedLead.email}`}
-                            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-4 text-sm font-black text-white hover:bg-slate-800"
+                            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-4 text-sm font-black text-white hover:bg-slate-800"
                           >
                             Email Prospect
                             <Mail className="h-4 w-4" />
@@ -751,7 +751,7 @@ export default function StrategyBuilderPage() {
                           <button
                             type="button"
                             onClick={copyExecutiveBrief}
-                            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-5 py-4 text-sm font-black text-white hover:bg-slate-800"
+                            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-5 py-4 text-sm font-black text-white hover:bg-slate-800"
                           >
                             Copy Profile
                             <Clipboard className="h-4 w-4" />
@@ -760,7 +760,7 @@ export default function StrategyBuilderPage() {
                       </div>
                     </article>
 
-                    <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+                    <article className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
                       <p className="text-sm font-black uppercase tracking-[0.22em] text-emerald-300">
                         Select Opportunities
                       </p>
@@ -780,7 +780,7 @@ export default function StrategyBuilderPage() {
                               className={`w-full rounded-2xl border p-4 text-left transition sm:p-5 ${
                                 isSelected
                                   ? "border-emerald-500 bg-emerald-500/10 shadow-lg shadow-emerald-950/20"
-                                  : "border-slate-800 bg-slate-900 hover:border-blue-500"
+                                  : "border-white/10 bg-[#1b334d] hover:border-[#d6bc87]"
                               }`}
                             >
                               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -814,7 +814,7 @@ export default function StrategyBuilderPage() {
                       </div>
                     </article>
 
-                    <article className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+                    <article className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
                       <div className="flex items-center justify-between gap-4">
                         <div>
                           <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">
@@ -828,7 +828,7 @@ export default function StrategyBuilderPage() {
                           <button
                             type="button"
                             onClick={clearQueue}
-                            className="rounded-full border border-slate-700 px-3 py-2 text-xs font-black text-slate-300 hover:bg-slate-900"
+                            className="rounded-full border border-slate-700 px-3 py-2 text-xs font-black text-slate-300 hover:bg-[#1b334d]"
                           >
                             Clear
                           </button>
@@ -837,14 +837,14 @@ export default function StrategyBuilderPage() {
 
                       <div className="mt-5 space-y-3">
                         {strategyQueue.length === 0 ? (
-                          <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/60 p-4 text-sm font-bold text-slate-500">
+                          <div className="rounded-2xl border border-dashed border-slate-700 bg-[#1b334d]/60 p-4 text-sm font-bold text-slate-500">
                             No strategies queued yet.
                           </div>
                         ) : (
                           strategyQueue.map((item) => (
                             <div
                               key={item.id}
-                              className="rounded-2xl border border-slate-800 bg-slate-900 p-4"
+                              className="rounded-2xl border border-white/10 bg-[#1b334d] p-4"
                             >
                               <div className="flex items-start justify-between gap-3">
                                 <div>
@@ -864,7 +864,7 @@ export default function StrategyBuilderPage() {
                     </article>
                   </section>
 
-                  <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6">
+                  <section className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6">
                     <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                       <div>
                         <p className="text-sm font-black uppercase tracking-[0.22em] text-violet-300">
@@ -889,7 +889,7 @@ export default function StrategyBuilderPage() {
                           type="button"
                           onClick={exportStrategy}
                           disabled={actionButtonsDisabled}
-                          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-4 py-4 text-sm font-black text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-4 py-4 text-sm font-black text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           <Download className="h-4 w-4" />
                           Export
@@ -898,7 +898,7 @@ export default function StrategyBuilderPage() {
                           type="button"
                           onClick={() => loadLeads(true)}
                           disabled={isRefreshing}
-                          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-slate-900 px-4 py-4 text-sm font-black text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-700 bg-[#1b334d] px-4 py-4 text-sm font-black text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           <RefreshCcw className="h-4 w-4" />
                           Refresh
@@ -907,21 +907,21 @@ export default function StrategyBuilderPage() {
                     </div>
 
                     <div className="mb-4 grid gap-3 sm:grid-cols-3">
-                      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
-                        <FileText className="h-5 w-5 text-blue-200" />
+                      <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
+                        <FileText className="h-5 w-5 text-[#e5cf9e]" />
                         <p className="mt-3 text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                           Format
                         </p>
                         <p className="mt-1 text-sm font-black text-white">Internal outline</p>
                       </div>
-                      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                      <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                         <ShieldCheck className="h-5 w-5 text-emerald-200" />
                         <p className="mt-3 text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                           Compliance
                         </p>
                         <p className="mt-1 text-sm font-black text-white">Preliminary only</p>
                       </div>
-                      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
+                      <div className="rounded-2xl border border-white/10 bg-[#1b334d] p-4">
                         <Target className="h-5 w-5 text-violet-200" />
                         <p className="mt-3 text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                           Focus
@@ -932,7 +932,7 @@ export default function StrategyBuilderPage() {
                       </div>
                     </div>
 
-                    <div className="max-h-[820px] overflow-auto whitespace-pre-wrap rounded-2xl border border-slate-800 bg-slate-900 p-4 text-sm font-medium leading-7 text-slate-300 sm:p-6">
+                    <div className="max-h-[820px] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-[#1b334d] p-4 text-sm font-medium leading-7 text-slate-300 sm:p-6">
                       {strategyText}
                     </div>
                   </section>
