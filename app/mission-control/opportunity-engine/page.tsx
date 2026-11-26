@@ -283,9 +283,9 @@ function getProjectedAnnualRevenue(lead: Lead, opportunities: Opportunity[]) {
 
 function getScoreTone(score: number) {
   if (score >= 85) return "text-emerald-300 border-emerald-500/30 bg-emerald-500/10";
-  if (score >= 70) return "text-blue-300 border-blue-500/30 bg-blue-500/10";
+  if (score >= 70) return "text-[#d6bc87] border-blue-500/30 bg-blue-500/10";
   if (score >= 55) return "text-amber-300 border-amber-500/30 bg-amber-500/10";
-  return "text-slate-300 border-slate-700 bg-slate-900";
+  return "text-slate-300 border-slate-700 bg-[#1b334d]";
 }
 
 function getExecutiveRecommendation(
@@ -563,7 +563,7 @@ export default function OpportunityEnginePage() {
       />
 
       {toast && (
-        <div className="fixed right-4 top-4 z-50 max-w-sm rounded-2xl border border-slate-700 bg-slate-950 p-4 shadow-2xl shadow-black/40">
+        <div className="fixed right-4 top-4 z-50 max-w-sm rounded-2xl border border-slate-700 bg-[#162d46] p-4 shadow-2xl shadow-black/40">
           <div className="flex items-start gap-3">
             <div
               className={`mt-0.5 rounded-full p-1 ${
@@ -580,7 +580,7 @@ export default function OpportunityEnginePage() {
             <button
               type="button"
               onClick={() => setToast(null)}
-              className="ml-auto rounded-full p-1 text-slate-500 hover:bg-slate-900 hover:text-white"
+              className="ml-auto rounded-full p-1 text-slate-500 hover:bg-[#1b334d] hover:text-white"
               aria-label="Dismiss notification"
             >
               <X className="h-4 w-4" />
@@ -591,9 +591,9 @@ export default function OpportunityEnginePage() {
 
       <div className="px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
         {isLoading ? (
-          <div className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 text-slate-400 shadow-xl shadow-black/20">
+          <div className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8 text-slate-400 shadow-xl shadow-black/20">
             <div className="flex items-center gap-3">
-              <Loader2 className="h-5 w-5 animate-spin text-blue-300" />
+              <Loader2 className="h-5 w-5 animate-spin text-[#d6bc87]" />
               <p className="font-bold">Loading opportunity engine...</p>
             </div>
           </div>
@@ -627,8 +627,8 @@ export default function OpportunityEnginePage() {
             </div>
           </section>
         ) : leads.length === 0 ? (
-          <section className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-8 shadow-xl shadow-black/20">
-            <p className="text-sm font-black uppercase tracking-[0.24em] text-blue-300">
+          <section className="rounded-[2rem] border border-white/10 bg-[#162d46] p-8 shadow-xl shadow-black/20">
+            <p className="text-sm font-black uppercase tracking-[0.24em] text-[#d6bc87]">
               No Assessments Yet
             </p>
             <h1 className="mt-4 text-3xl font-black tracking-tight text-white">
@@ -687,7 +687,7 @@ export default function OpportunityEnginePage() {
                   </div>
                 </div>
 
-                <div className="border-t border-violet-400/20 bg-slate-950/50 p-6 sm:p-8 xl:border-l xl:border-t-0">
+                <div className="border-t border-violet-400/20 bg-[#162d46]/50 p-6 sm:p-8 xl:border-l xl:border-t-0">
                   <label className="mb-3 block text-xs font-black uppercase tracking-[0.18em] text-slate-400">
                     Select Assessment
                   </label>
@@ -695,7 +695,7 @@ export default function OpportunityEnginePage() {
                   <select
                     value={selectedLeadId}
                     onChange={(event) => setSelectedLeadId(event.target.value)}
-                    className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-5 py-4 text-sm font-black text-white outline-none focus:border-violet-400"
+                    className="w-full rounded-2xl border border-slate-700 bg-[#162d46] px-5 py-4 text-sm font-black text-white outline-none focus:border-violet-400"
                   >
                     {leads.map((lead) => (
                       <option key={lead.id} value={lead.id}>
@@ -743,7 +743,7 @@ export default function OpportunityEnginePage() {
                   <div className="rounded-[2rem] border border-blue-500/30 bg-blue-500/10 p-6 shadow-xl shadow-blue-950/20 sm:p-7">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                       <div>
-                        <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-400/10 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-blue-200">
+                        <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-400/10 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-[#e5cf9e]">
                           <Brain className="h-4 w-4" />
                           AI Executive Recommendation
                         </div>
@@ -792,7 +792,7 @@ export default function OpportunityEnginePage() {
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-                    <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+                    <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-6 shadow-xl shadow-black/20">
                       <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-emerald-300">
                         <TrendingUp className="h-4 w-4" />
                         Projected Annual Revenue
@@ -805,7 +805,7 @@ export default function OpportunityEnginePage() {
                       </p>
                     </div>
 
-                    <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+                    <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-6 shadow-xl shadow-black/20">
                       <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-violet-300">
                         <Target className="h-4 w-4" />
                         Opportunity Confidence
@@ -821,7 +821,7 @@ export default function OpportunityEnginePage() {
                 </section>
 
                 <section className="mb-6 grid gap-4 md:grid-cols-3">
-                  <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+                  <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-6 shadow-xl shadow-black/20">
                     <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-slate-500">
                       <UserRound className="h-4 w-4" />
                       Prospect
@@ -832,7 +832,7 @@ export default function OpportunityEnginePage() {
                     </p>
                   </div>
 
-                  <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+                  <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-6 shadow-xl shadow-black/20">
                     <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-slate-500">
                       <BarChart3 className="h-4 w-4" />
                       Lead Details
@@ -844,7 +844,7 @@ export default function OpportunityEnginePage() {
                     </p>
                   </div>
 
-                  <div className="rounded-[1.75rem] border border-slate-800 bg-slate-950/70 p-6 shadow-xl shadow-black/20">
+                  <div className="rounded-[1.75rem] border border-white/10 bg-[#162d46] p-6 shadow-xl shadow-black/20">
                     <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-slate-500">
                       <FileText className="h-4 w-4" />
                       Assessment Status
@@ -862,7 +862,7 @@ export default function OpportunityEnginePage() {
                   {opportunities.map((opportunity, index) => (
                     <article
                       key={`${opportunity.title}-${index}`}
-                      className="rounded-[2rem] border border-slate-800 bg-slate-950/70 p-5 shadow-xl shadow-black/20 sm:p-6"
+                      className="rounded-[2rem] border border-white/10 bg-[#162d46] p-5 shadow-xl shadow-black/20 sm:p-6"
                     >
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div>
@@ -885,7 +885,7 @@ export default function OpportunityEnginePage() {
                       </div>
 
                       <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                           <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                             Estimated Savings
                           </p>
@@ -894,7 +894,7 @@ export default function OpportunityEnginePage() {
                           </p>
                         </div>
 
-                        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+                        <div className="rounded-2xl border border-white/10 bg-[#1b334d]/80 p-4">
                           <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">
                             Revenue Potential
                           </p>
@@ -909,7 +909,7 @@ export default function OpportunityEnginePage() {
                       </p>
 
                       <div className="mt-5 rounded-2xl border border-blue-500/20 bg-blue-500/10 p-4">
-                        <p className="text-xs font-black uppercase tracking-[0.16em] text-blue-300">
+                        <p className="text-xs font-black uppercase tracking-[0.16em] text-[#d6bc87]">
                           Next Best Action
                         </p>
                         <p className="mt-2 text-sm font-bold leading-6 text-blue-50/90">
@@ -919,7 +919,7 @@ export default function OpportunityEnginePage() {
 
                       <div className="mt-6 grid gap-4 lg:grid-cols-2">
                         <div>
-                          <p className="mb-3 text-xs font-black uppercase tracking-[0.16em] text-blue-300">
+                          <p className="mb-3 text-xs font-black uppercase tracking-[0.16em] text-[#d6bc87]">
                             Questions to Ask
                           </p>
 
@@ -927,7 +927,7 @@ export default function OpportunityEnginePage() {
                             {opportunity.questions.map((question) => (
                               <p
                                 key={question}
-                                className="rounded-xl border border-slate-800 bg-slate-900 p-3 text-sm font-bold leading-6 text-slate-300"
+                                className="rounded-xl border border-white/10 bg-[#1b334d] p-3 text-sm font-bold leading-6 text-slate-300"
                               >
                                 {question}
                               </p>
@@ -944,7 +944,7 @@ export default function OpportunityEnginePage() {
                             {opportunity.documents.map((document) => (
                               <p
                                 key={document}
-                                className="rounded-xl border border-slate-800 bg-slate-900 p-3 text-sm font-bold leading-6 text-slate-300"
+                                className="rounded-xl border border-white/10 bg-[#1b334d] p-3 text-sm font-bold leading-6 text-slate-300"
                               >
                                 {document}
                               </p>
