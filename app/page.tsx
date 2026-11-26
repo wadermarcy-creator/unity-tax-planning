@@ -53,7 +53,7 @@ export default function Home() {
       </section>
       <section className="border-y border-[#ded7ca] bg-white">
         <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-2">
-          <div><p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#806330]">Our approach</p><h2 className="mt-4 font-serif text-4xl sm:text-5xl">Strategy before filing. Coordination after planning.</h2><p className="mt-6 text-lg leading-8 text-slate-600">Tax preparation and proactive planning are complementary. We help identify decisions worth evaluating while there is still time to act.</p><Link href="/example-plans" className="mt-7 inline-block font-semibold underline underline-offset-4">Explore sample tax plans</Link></div>
+          <div><p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#806330]">Our approach</p><h2 className="mt-4 font-serif text-4xl sm:text-5xl">Strategy before filing. Coordination after planning.</h2><p className="mt-6 text-lg leading-8 text-slate-600">Tax preparation and proactive planning are complementary. We help identify decisions worth evaluating while there is still time to act.</p><Link href="/example-plans" className="mt-7 inline-block font-semibold underline underline-offset-4">Explore sample tax plans</Link><Link href="/insights" className="mt-4 block font-semibold underline underline-offset-4">Explore Tax Strategy Insights</Link></div>
           <div className="divide-y divide-[#ded7ca]">{steps.map(([title,description],i)=><div key={title} className="flex gap-5 py-5"><span className="text-[#806330]">0{i+1}</span><div><h3 className="font-serif text-2xl">{title}</h3><p className="mt-2 leading-7 text-slate-600">{description}</p></div></div>)}</div>
         </div>
       </section>
